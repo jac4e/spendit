@@ -3,7 +3,7 @@ import validator from 'validator';
 
 const schema = new mongoose.Schema({
     date: { type: Date, required: true },
-    ccid: { type: String, required: true },
+    accountid: { type: String, required: true },
     type: { type: String, required: true },
     reason: { type: String, required: true },
     products: { type: Array, required: true},

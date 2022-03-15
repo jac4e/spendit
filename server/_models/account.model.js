@@ -16,4 +16,4 @@ schema.set('toJSON', {
     }
 })
 
-export default mongoose.model('User',schema);
+export default mongoose.model('Account',schema);

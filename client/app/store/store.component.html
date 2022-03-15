@@ -1,0 +1,20 @@
+<div class="row justify-content-center">
+    <div class="col-12">
+        <h1>Products</h1>
+    </div>
+    <div class="mb-3 col-6 col-sm-4 col-md-3 col-xl-2" *ngFor="let product of products">
+        <div class="card">
+            <img [src]="(product.image !== '') ? product.image : 'https://via.placeholder.com/150'" class="card-img-top">
+            <div class="product-info card-body">
+                <h5 class="card-title">{{product.name}}</h5>
+                <p class="card-text">{{product.description}}</p>
+            </div>
+            <div class="row justify-content-center product-info card-body">
+                <span class="product-price">${{product.price}}</span>
+            </div>
+            <div class="row justify-content-center product-info card-body">
+                <a class="btn btn-primary" (click)="addToCart(product)">Add to cart</a>
+            </div>
+        </div>
+    </div>
+</div>

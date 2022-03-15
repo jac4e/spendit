@@ -1,0 +1,25 @@
+<header>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+    <div class="container">
+        <a class="navbar-brand">{{ brand.name }}</a>
+        <span *ngIf="isLoggedIn | async" class="balance navbar-text" >Balance: ${{balance | async}}</span>
+        <!-- Step 3: Toggle the value of the property when the toggler button is clicked. -->
+        <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
+            &#9776;
+        </button>
+
+        <!-- Step 2: Add the ngbCollapse directive to the element below. -->
+        <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse flex-row-reverse">
+            <ul ngbNav #nav="ngbNav" class="navbar-nav">
+                <li [ngbNavItem]="link.route" *ngFor="let link of links">
+                    <a *ngIf="(link.guard==='loggedIn' && (isLoggedIn | async) )||(link.guard==='loggedOut' && !(isLoggedIn | async))||(link.guard==='admin' && (isLoggedIn | async) && isAdmin)||(link.guard==='none')" ngbNavLink [routerLink]="link.route">{{ link.title }}</a>
+                </li>
+                <li class="nav-item">
+                    <a *ngIf="isLoggedIn | async" (click)="logout()" class="nav-link">Logout</a>
+                    <a *ngIf="!(isLoggedIn | async)" (click)="login()" class="nav-link">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</header>

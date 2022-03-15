@@ -1,0 +1,7 @@
+{
+    "apiBaseUrl": "https://localhost:5001",
+    "brand": {
+        "name": "Spendit",
+        "image": "image"
+    }
+}

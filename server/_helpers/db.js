@@ -1,6 +1,7 @@
 
 import mongoose from 'mongoose';
-mongoose.connect('mongodb://127.0.0.1:27017/');
+import config from '../config.js';
+mongoose.connect(`mongodb://{config.db.user}:{config.db.password}@{config.db.url}:{config.db.port}/{config.db.name}`);
 mongoose.Promise = global.Promise;
 
 import user from '../_models/account.model.js';

@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import config from '../config.js';
 import db from '../_helpers/db.js';
 
 const Account = db.account;
-const secret = 'thisismysecret';
+const secret = config.secret;
 
 async function auth({
   ccid,

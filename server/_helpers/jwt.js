@@ -1,8 +1,9 @@
 import expressJwt from 'express-jwt';
+import config from '../config.js';
 import accountService from '../account/service.js';
 
 export default function jwt() {
-    const secret = 'thisismysecret';
+    const secret = config.secret;
     return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
         path: [
             // public routes that don't require authentication

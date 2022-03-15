@@ -1,10 +1,11 @@
 import db from '../_helpers/db.js';
 import jwt from 'jsonwebtoken';
+import config from '../config.js';
 import transactionService from '../_helpers/transaction.js';
 import accountService from '../account/service.js';
 
 const Product = db.product;
-const secret = 'thisismysecret';
+const secret = config.secret;
 
 async function getAllProducts() {
     return await Product.find({});

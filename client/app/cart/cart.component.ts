@@ -10,26 +10,27 @@ import { Product } from '../_models';
 })
 export class CartComponent implements OnInit {
   public cart!: Observable<Product[]>;
-  public imagePlaceholder: string = "https://via.placeholder.com/150";
-  constructor(
-    private storeService: StoreService,
-  ) { 
+  public imagePlaceholder: string = 'https://via.placeholder.com/150';
+  constructor(private storeService: StoreService) {
     this.cart = storeService.getCart();
   }
 
-  ngOnInit(): void {
-  }
-  
-  total(){
+  ngOnInit(): void {}
+
+  total() {
     return this.storeService.getCartTotal();
   }
 
-  buy(){
+  removeItem(index: number) {
+    console.log(`removine ${index}`);
+    this.storeService.removeFromCart(index);
+  }
+
+  buy() {
     this.storeService.purchaseCart();
   }
 
-  clear(){
+  clear() {
     this.storeService.clearCart();
   }
-
 }

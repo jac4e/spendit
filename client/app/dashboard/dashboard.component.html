@@ -1,0 +1,7 @@
+<ul ngbNav class="nav-tabs">
+  <li [ngbNavItem]="link.route" *ngFor="let link of links">
+    <a ngbNavLink routerLink="." [routerLink]="link.route">{{ link.title }}</a>
+  </li>
+</ul>
+
+<router-outlet></router-outlet>

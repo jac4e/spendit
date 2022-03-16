@@ -28,11 +28,15 @@ async function create(transactionParam) {
     await transaction.save()
 }
 
+async function getByID(id){
+
+}
+
 async function getByDate(date){
 
 }
 
-async function getByCCID(ccid){
+async function getByAccountID(accountid){
 
 }
 

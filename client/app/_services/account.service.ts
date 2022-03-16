@@ -1,50 +1,77 @@
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpResponse
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, map, retry } from 'rxjs/operators';
+import { Backend } from '../_helpers';
 import { User } from '../_models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private isLogin = new BehaviorSubject<boolean>(false);
   private credits = new BehaviorSubject<number>(10);
-  constructor() {
+
+  private accountSubject!: BehaviorSubject<User | null>;
+  public account!: Observable<User | null>;
+  private backend = new Backend();
+
+  constructor(private http: HttpClient) {
+    const storage = localStorage.getItem('account');
+    this.accountSubject = new BehaviorSubject<User | null>(
+      storage ? JSON.parse(storage) : null
+    );
+    this.account = this.accountSubject.asObservable();
   }
 
-  login(){
-    this.isLogin.next(true);
+  login(ccid: string, password: string) {
+    console.log('logging in');
+    console.log(`${this.backend.api.account}/auth`);
+    return this.http
+      .post<User>(`${this.backend.api.account}/auth`, { ccid, password })
+      .pipe(
+        map((account) => {
+          localStorage.setItem('account', JSON.stringify(account));
+          this.accountSubject.next(account);
+          return account;
+        })
+      );
   }
 
-  logout(){
-    this.isLogin.next(false);
+  logout() {
+    localStorage.removeItem('account');
+    this.accountSubject.next(null);
   }
 
-  isLoggedIn(){
-    return this.isLogin.asObservable();
-  }
-
-  getRole(){
+  getRole() {
     return 'admin';
   }
 
   // Credit related
 
-  addCredits(amount: number){
-    if(amount<=0){
+  addCredits(amount: number) {
+    if (amount <= 0) {
       return;
     }
-    this.credits.next( this.credits.value + amount);
+    this.credits.next(this.credits.value + amount);
   }
 
-  removeCredits(amount:number){
-    if(amount<=0){
+  removeCredits(amount: number) {
+    if (amount <= 0) {
       return;
     }
-    this.credits.next( this.credits.value - amount);
+    this.credits.next(this.credits.value - amount);
   }
 
-  getCredits(){
+  getBalance() {
     return this.credits;
   }
 
+  updateCredits() {
+    return this.credits;
+  }
 }

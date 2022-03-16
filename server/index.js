@@ -16,10 +16,10 @@ app.use('/api', api);
 app.use(express.static(`${__dirname}/dist/repair-pos`))
 app.get('/', (req,res) => {
   console.log(req)
-  res.sendFile('/dist/repair-pos/index.html',{root: __dirname})
+  // res.sendFile('/dist/repair-pos/index.html',{root: __dirname})
 });
 app.get('/*', (req,res) => {
-  res.sendFile('/dist/repair-pos/index.html',{root: __dirname})
+  // res.sendFile('/dist/repair-pos/index.html',{root: __dirname})
 });
 
 // global error handler

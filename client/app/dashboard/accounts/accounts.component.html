@@ -1,0 +1,58 @@
+<p>needs:</p>
+<p>remove/edit account</p>
+<form class="row mt-3 gy-2 gx-3 align-items-center" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-group col-auto">
+    <!-- <label class="sr-only" for="ccid">CCID</label> -->
+    <input type="text" formControlName="ccid" class="form-control" id="ccid"
+      [ngClass]="{ 'is-invalid': submitted && f?.['ccid']?.errors }" placeholder="CCID">
+    <div *ngIf="submitted && f?.['ccid']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['ccid']?.errors?.['required']">
+        CCID is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-auto">
+    <!-- <label class="sr-only" for="password">Password</label> -->
+    <input type="text" formControlName="password" class="form-control" id="password"
+      [ngClass]="{ 'is-invalid': submitted && f?.['password']?.errors }" placeholder="Password">
+    <div *ngIf="submitted && f?.['password']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['password']?.errors?.['required']">
+        Password is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-auto">
+    <button [disabled]="loading" class="btn btn-primary">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Add Account
+    </button>
+  </div>
+</form>
+<div class="row">
+  <div class="col-12 table-responsive-sm">
+    <table class="table table-hover table-flush">
+      <thead>
+        <tr>
+          <th scope="col">CCID</th>
+          <th scope="col">Balance</th>
+          <th scope="col">Roles</th>
+          <th scope="col">ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let account of accounts">
+          <th scope="row">{{ account.ccid }}</th>
+          <td>{{ account.balance }}</td>
+          <td>{{ account.roles }}</td>
+          <td>{{ account.id }}</td>
+          <td>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary">Modify</button>
+              <button type="button" class="btn btn-secondary">Remove</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

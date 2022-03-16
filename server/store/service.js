@@ -11,6 +11,22 @@ async function getAllProducts() {
     return await Product.find({});
 }
 
+async function getProductById(productId) {
+    return await Product.findById(productId);
+}
+
+async function createProduct(productParam) {
+    // validate
+    if (await Product.findOne({
+        name: productParam.name
+    })) {
+        throw `Product '${productParam.name}' already exists`;
+    }
+    const product = new Product(productParam);
+
+    await product.save();
+}
+
 async function purchaseCart(token, cart) {
     // cart is array of objects
     //[ ...,
@@ -48,4 +64,4 @@ async function purchaseCart(token, cart) {
     transactionService.create(transactionParams);
 }
 
-export default { getAllProducts, purchaseCart}
+export default { getAllProducts, purchaseCart, createProduct, getProductById}

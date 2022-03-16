@@ -1,17 +1,41 @@
 import express from 'express';
-import guard from 'express-jwt-permissions';
+import Guard from 'express-jwt-permissions';
 import storeService from './service.js';
 
 const router = express.Router();
+const guard = Guard();
 
 // Routes
 router.get('/products', getProducts)
 router.post('/purchase', purchase)
 
+router.post('/products', createProduct)
+router.put('/products/:productId', guard.check('admin'), updateProductById)
+router.get('/products/:productId', getProductById)
+router.delete('/products/:productId', guard.check('admin'), deleteProductById)
+
 function getProducts(req, res, next){
     storeService.getAllProducts()
     .then(resp => res.json(resp))
     .catch(err => next(err))
+}
+
+function createProduct(req, res, next){
+    storeService.createProduct(req.body)
+    .then(() => res.json({}))
+    .catch(err => next(err))
+}
+
+function updateProductById(req, res, next){
+}
+
+function getProductById(req, res, next){
+    storeService.getProductById()
+    .then(resp => res.json(resp))
+    .catch(err => next(err))
+}
+
+function deleteProductById(req, res, next){
 }
 
 function purchase(req, res, next){

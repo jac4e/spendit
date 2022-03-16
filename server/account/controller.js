@@ -6,12 +6,21 @@ const router = express.Router();
 const guard = Guard()
 
 // Routes
-router.post('/auth', auth)
-router.post('/register', guard.check('admin'), register)
-router.get('/getAll', guard.check('admin'), getAll)
+router.post('/auth', auth);
+
+router.get('/self', getSelf);
+router.get('/self/balance', getSelfBalance);
+router.put('/self', updateSelf);
+
+router.post('/register', guard.check('admin'), register);
+// router.get('/:accountId', guard.check('admin'), getAccountById);
+// router.get('/:accountId/balance', guard.check('admin'), getBalance);
+// router.put('/:accountId', guard.check('admin'), updateAccountById);
+router.get('/getAll', guard.check('admin'), getAll);
 // router.get('/search', search)
 
 function auth(req, res, next) {
+    console.log('authing');
     accountService.auth(req.body)
     .then(account => account ? res.json(account) : res.status(400).json({ message: 'ccid or password is incorrect'}))
     .catch(err => next(err))
@@ -29,7 +38,23 @@ function getAll(req, res, next) {
     .catch(err => next(err))
 }
 
-function getTransactions(req, res, next){
+function getSelf(req, res, next){
+
+}
+
+function getSelfBalance(req, res, next){
+
+}
+
+function updateSelf(req, res, next){
+
+}
+
+function getAccountById(req, res, next){
+
+}
+
+function updateAccountById(req, res, next){
 
 }
 

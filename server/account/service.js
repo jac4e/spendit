@@ -11,7 +11,7 @@ async function auth({
   password
 }) {
   const account = await Account.findOne({
-    ccid
+    ccid: ccid
   });
   const match = await bcrypt.compare(password, account.hash)
   if (account && match) {
@@ -25,11 +25,14 @@ async function auth({
       ...account.toJSON(),
       token
     }
+  } else {
+    throw `Auth error username or password is incorrect`
   }
 }
 
 async function create(accountParam) {
   // validate
+  console.log(JSON.stringify(accountParam))
   if (await Account.findOne({
       ccid: accountParam.ccid
     })) {
@@ -70,11 +73,15 @@ async function getAll() {
   return await Account.find({});
 }
 
+async function getSelf(jwt) {
+  return await Account.findById(id);
+}
+
 async function getById(id) {
   return await Account.findById(id);
 }
 
-async function pay(token) {
+async function pay(jwt) {
   // get account by JWT
 }
 

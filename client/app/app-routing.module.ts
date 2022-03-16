@@ -1,23 +1,38 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccountComponent } from './account/account.component';
-import { StoreComponent } from './store/store.component';
-import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
-import { AuthGuard } from './_helpers';
-import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './_interceptors';
 import { CartComponent } from './cart/cart.component';
+import { LoginComponent } from './login/login.component';
+import { NgModule } from '@angular/core';
+import { StoreComponent } from './store/store.component';
 
 const routes: Routes = [
-  { path: 'account', component: AccountComponent, canActivate: [AuthGuard], data: {role: 'all'}},
-  { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: {role: 'all'}},
-  { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard], data: {role: 'admin'} },
+  {
+    path: 'account',
+    component: AccountComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['all'] }
+  },
+  {
+    path: 'cart',
+    component: CartComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['all'] }
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+    canActivate: [AuthGuard],
+    data: { roles: ['admin'] }
+  },
   { path: 'login', component: LoginComponent },
   { path: '', component: StoreComponent },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

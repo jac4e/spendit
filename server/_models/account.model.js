@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 
 const schema = new mongoose.Schema({
-    roles: { type: Array, required: true },
+    role: { type: String, required: true },
     balance: { type: Number },
     ccid: { type: String, unique: true, required: true},
     hash: { type: String, required: true }

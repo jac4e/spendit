@@ -39,25 +39,25 @@ export class NavbarComponent implements OnInit {
     if (!guards) {
       return true;
     }
-    console.log('guards', guards);
+    // console.log('guards', guards);
     let truthy = true;
     for (const guard of guards) {
       switch (guard) {
         case 'loggedIn':
           truthy = truthy && this.account !== null;
-          console.log('loggedin', this.account !== null);
+          // console.log('loggedin', this.account !== null);
           break;
         case 'loggedOut':
           truthy = truthy && this.account === null;
-          console.log('loggedout', this.account === null);
+          // console.log('loggedout', this.account === null);
           break;
         case 'admin':
           truthy = truthy && this.account?.role === 'admin';
-          console.log('admin', this.account?.role === 'admin');
+          // console.log('admin', this.account?.role === 'admin');
           break;
         case 'notAdmin':
           truthy = truthy && this.account?.role !== undefined;
-          console.log('notadmin', this.account?.role !== undefined);
+          // console.log('notadmin', this.account?.role !== undefined);
           break;
         default:
           truthy = truthy && false;
@@ -65,7 +65,7 @@ export class NavbarComponent implements OnInit {
       }
       if (!truthy) break;
     }
-    console.log('truthy:', truthy);
+    // console.log('truthy:', truthy);
     return truthy;
   }
 

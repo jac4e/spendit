@@ -1,7 +1,7 @@
 
 "use strict";
 import express from 'express';
-import {dirname} from 'path'
+import {dirname} from 'path';
 import { fileURLToPath } from 'url';
 // import errorHandler from './_helper/error-handler.js';
 import api from './api.controller.js';
@@ -13,7 +13,7 @@ const app = express();
 app.use('/api', api);
 
 // app route
-app.use(express.static(`${__dirname}/dist/repair-pos`))
+// app.use(express.static(`${__dirname}/dist/spendit`))
 app.get('/', (req,res) => {
   console.log(req)
   // res.sendFile('/dist/repair-pos/index.html',{root: __dirname})

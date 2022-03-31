@@ -1,10 +1,14 @@
 import express from 'express';
+import mongoose from 'mongoose';
+import db from './_helpers/db.js';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import accounts from './account/controller.js';
 import admin from './admin/controller.js';
 import store from './store/controller.js';
-import jwt from './_helpers/jwt.js';
+// import jwt from './_helpers/jwt.js';
 
-import guard from 'express-jwt-permissions';
+// import guard from 'express-jwt-permissions';
 import bodyParser from 'body-parser';
 import cors from 'cors'
 
@@ -14,7 +18,16 @@ router.use(bodyParser.urlencoded({
 }));
 router.use(bodyParser.json());
 router.use(cors());
-router.use(jwt());
+// router.use(jwt());
+// no more jwt, using session cookie
+router.use(session({
+  store: MongoStore.create({ 
+    client: mongoose.connection.getClient(),
+    crypto: {
+      secret: 'squirrel'
+    }
+  })
+}));
 router.get('/status', (req, res) => {
   res.status(200).send('200');
 });

@@ -102,7 +102,7 @@ export class StoreService {
 
   removeFromCart(index: number) {
     console.log(index);
-    var newCart = this.cart.value;
+    let newCart = this.cart.value;
     console.log(newCart);
     newCart.splice(index, 1);
     console.log(newCart);
@@ -139,7 +139,7 @@ export class StoreService {
     if (this.cart.value.length === 0) {
       return 0;
     }
-    var sum = 0;
+    let sum = 0;
     this.cart.value.forEach((item) => {
       sum += +item.price;
     });

@@ -23,6 +23,13 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     const isApiUrl = request.url.includes('/api/');
+    const isAuthUrl = request.url.includes('/auth');
+
+    if (isAuthUrl) {
+      // if auth url don't include token, it is unnecessary
+      return next.handle(request);
+    }
+
     // console.log("intercept");
     if (this.account && isApiUrl) {
       request = request.clone({

@@ -13,9 +13,9 @@ export class DashboardComponent implements OnInit {
     { title: 'Transactions', route: 'transactions' }
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
     this.router.navigate(['/dashboard/accounts']);
   }
-
-  ngOnInit(): void {}
 }

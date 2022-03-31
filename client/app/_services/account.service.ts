@@ -25,6 +25,7 @@ export class AccountService {
     this.accountSubject = new BehaviorSubject<User | null>(
       storage ? JSON.parse(storage) : null
     );
+    console.log(this.accountSubject.value);
     this.account = this.accountSubject.asObservable();
   }
 

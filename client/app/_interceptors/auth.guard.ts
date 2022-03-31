@@ -28,12 +28,12 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const userRoles = this.account?.roles;
+    const userRole = this.account?.role;
     if (this.account) {
       if (
         route.data['roles'] &&
         route.data['roles'] &&
-        route.data['roles'].filter((role: string) => userRoles?.includes(role))
+        route.data['roles'].filter((role: string) => userRole?.includes(role))
           .length > 0
       ) {
         return true;

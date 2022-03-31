@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AccountService } from '../_services';
 import { Router } from '@angular/router';
-import { User } from '../_models';
+import { User, Link } from '../_models';
 
 @Component({
   selector: 'app-navbar',
@@ -14,15 +14,15 @@ export class NavbarComponent implements OnInit {
     name: 'cryptoPhrydge',
     image: ''
   };
-  links = [
-    { title: 'Store', route: '', guard: 'none' },
-    { title: 'Cart', route: 'cart', guard: 'loggedIn' },
-    { title: 'Dashboard', route: 'dashboard', guard: 'admin' },
-    { title: 'Account', route: 'account', guard: 'loggedIn' },
-    { title: 'Login', route: 'login', guard: 'loggedOut' }
+  links: Link[] = [
+    { title: 'Store', route: '', guards: ['none'] },
+    { title: 'Dashboard', route: 'dashboard', guards: ['admin'] },
+    { title: 'Account', route: 'account', guards: ['loggedIn'] },
+    { title: 'Login', route: 'login', guards: ['loggedOut'] }
   ];
 
   public isMenuCollapsed = true;
+  public isCartCollapsed = true;
   account!: User | null;
   balance: number | undefined;
   fragment!: string;
@@ -35,30 +35,38 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  tabGuard(guard: string) {
-    var test = false;
-    switch (guard) {
-      case 'loggedIn':
-        if (this.account) {
-          test = true;
-        }
-        break;
-      case 'loggedOut':
-        if (this.account === null) {
-          test = true;
-        }
-        break;
-      case 'admin':
-        if (this.account?.roles?.includes('admin')) {
-          test = true;
-        }
-        break;
-      default:
-        test = true;
-        break;
+  tabGuard(guards: string[] | undefined) {
+    if (!guards) {
+      return true;
     }
-    // console.log(test)
-    return test;
+    console.log('guards', guards);
+    let truthy = true;
+    for (const guard of guards) {
+      switch (guard) {
+        case 'loggedIn':
+          truthy = truthy && this.account !== null;
+          console.log('loggedin', this.account !== null);
+          break;
+        case 'loggedOut':
+          truthy = truthy && this.account === null;
+          console.log('loggedout', this.account === null);
+          break;
+        case 'admin':
+          truthy = truthy && this.account?.role === 'admin';
+          console.log('admin', this.account?.role === 'admin');
+          break;
+        case 'notAdmin':
+          truthy = truthy && this.account?.role !== undefined;
+          console.log('notadmin', this.account?.role !== undefined);
+          break;
+        default:
+          truthy = truthy && false;
+          break;
+      }
+      if (!truthy) break;
+    }
+    console.log('truthy:', truthy);
+    return truthy;
   }
 
   logout() {

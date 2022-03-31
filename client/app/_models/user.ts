@@ -1,5 +1,5 @@
 export class User {
-  roles!: string;
+  role!: string;
   balance!: number;
   ccid!: string;
   id!: string;

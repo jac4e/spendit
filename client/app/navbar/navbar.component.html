@@ -1,40 +1,53 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
     <div class="container">
-      <a class="navbar-brand">{{ brand.name }}</a>
-      <span *ngIf="tabGuard('loggedIn')" class="balance navbar-text"
-        >{{ account?.ccid }}: ${{ account?.balance }}</span
-      >
-      <!-- Step 3: Toggle the value of the property when the toggler button is clicked. -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        (click)="isMenuCollapsed = !isMenuCollapsed"
-      >
-        &#9776;
-      </button>
-
-      <!-- Step 2: Add the ngbCollapse directive to the element below. -->
-      <div
-        [ngbCollapse]="isMenuCollapsed"
-        class="collapse navbar-collapse flex-row-reverse"
-      >
-        <ul ngbNav #nav="ngbNav" class="navbar-nav">
-          <li [ngbNavItem]="link.route" *ngFor="let link of links">
-            <a
-              *ngIf="tabGuard(link.guard)"
-              ngbNavLink
-              [routerLink]="link.route"
-              >{{ link.title }}</a
-            >
-          </li>
-          <li class="nav-item">
-            <a *ngIf="tabGuard('loggedIn')" (click)="logout()" class="nav-link"
-              >Logout</a
-            >
-          </li>
-        </ul>
+      <div class="col-auto">
+        <a class="navbar-brand">{{ brand.name }}</a>
+      </div>
+      <div class="col-auto">
+        <span *ngIf="tabGuard(['loggedIn'])" class="balance navbar-text">{{ account?.ccid }}: ${{ account?.balance }}</span>
+      </div>
+      <div class="d-none d-lg-flex justify-content-end col-12 col-lg-8">
+          <ul ngbNav #nav="ngbNav" class="navbar-nav">
+            <li [ngbNavItem]="link.route" *ngFor="let link of links">
+              <a *ngIf="tabGuard(link.guards)" ngbNavLink [routerLink]="link.route">{{ link.title }}</a>
+            </li>
+            <li class="nav-item">
+              <a *ngIf="tabGuard(['loggedIn'])" (click)="logout()" class="nav-link">Logout</a>
+            </li>
+          </ul>
+      </div>
+      <div class="d-none d-lg-flex col-auto btn-group" role="group">
+        <button *ngIf="account" type="button" title="cart"
+          class="oi oi-cart btn {{isCartCollapsed ? 'btn-outline-primary' : 'btn-primary'}}"
+          (click)="isCartCollapsed = !isCartCollapsed"></button>
+      </div>
+      <div class="d-lg-none col-auto btn-group" role="group">
+        <button *ngIf="account" type="button" title="cart"
+          class="oi oi-cart btn {{isCartCollapsed ? 'btn-outline-primary' : 'btn-primary'}}"
+          (click)="isCartCollapsed = !isCartCollapsed"></button>
+        <button class="oi oi-menu btn {{isMenuCollapsed ? 'btn-outline-primary' : 'btn-primary'}}" type="button"
+          (click)="isMenuCollapsed = !isMenuCollapsed"></button>
+      </div>
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="isMenuCollapsed" class="d-lg-none col-12">
+          <ul ngbNav #nav="ngbNav" class="navbar-nav">
+            <li [ngbNavItem]="link.route" *ngFor="let link of links">
+              <a *ngIf="tabGuard(link.guards)" ngbNavLink [routerLink]="link.route">{{ link.title }}</a>
+            </li>
+            <li class="nav-item">
+              <a *ngIf="tabGuard(['loggedIn'])" (click)="logout()" class="nav-link">Logout</a>
+            </li>
+          </ul>
       </div>
     </div>
   </nav>
 </header>
+<div *ngIf="account" class="container" #collapse="ngbCollapse" [(ngbCollapse)]="isCartCollapsed">
+  <div class="row">
+    <div class="card">
+      <div class="card-body">
+        <app-cart></app-cart>
+      </div>
+    </div>
+  </div>
+</div>

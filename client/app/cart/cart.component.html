@@ -1,11 +1,12 @@
 <div class="row">
-  <h1>Cart</h1>
+  <h1 class="title-centered">Cart</h1>
 </div>
 <div class="row justify-content-center cart">
   <div class="col-12">
+    <h3 class="title-centered" *ngIf="(cart | async)?.length === 0">Your Cart is empty</h3>
     <div class="card mb-3" *ngFor="let product of cart | async;; let i = index">
       <div class="row g-0">
-        <div class="col-4 col-md-2">
+        <!-- <div class="col-4 col-md-2">
           <img
             [src]="
               product.image !== ''
@@ -14,18 +15,18 @@
             "
             class="cart-image img-fluid rounded-start"
           />
-        </div>
-        <div class="cart-info col-5 col-md-7 my-auto">
+        </div> -->
+        <div class="cart-info col-8 my-auto">
           <div class="card-body">
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text">{{ product.description }}</p>
           </div>
         </div>
-        <div class="col-2 my-auto">
+        <div class="col-auto mx-auto my-auto">
           <p class="cart-price card-text">${{ product.price }}</p>
         </div>
-        <div class="col-1 my-auto">
-          <a class="btn btn-primary" (click)="removeItem(i)">Remove</a>
+        <div class="col-auto mx-auto my-auto">
+          <button type="button" class="btn-close" (click)="removeItem(i)" aria-label="Close"></button>
         </div>
       </div>
     </div>

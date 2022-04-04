@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User, Product } from '../_models';
+import { User, Product, Transaction } from '../_models';
 import { Backend } from '../_helpers';
 import { retry } from 'rxjs';
 
@@ -11,6 +11,10 @@ export class AdminService {
   private backend = new Backend();
   // eslint-disable-next-line no-unused-vars
   constructor(private http: HttpClient) {}
+
+  api(crumb: string) {
+    return `${this.backend.api.admin}/${crumb}`;
+  }
 
   addAccount(account: User) {
     return this.http.post<User>(
@@ -25,9 +29,19 @@ export class AdminService {
     );
   }
 
+  addTransaction(transaction: Transaction) {
+    return this.http.post<Transaction>(this.api('transactions'), transaction);
+  }
+
   getAllAccounts() {
+    return this.http.get<User[]>(`${this.backend.api.account}`).pipe(retry(1));
+  }
+
+  getAllTransactions() {
+    console.log('getting transactions');
+    console.log(this.api('transactions'));
     return this.http
-      .get<User[]>(`${this.backend.api.account}/getAll`)
+      .get<Transaction[]>(this.api('transactions'))
       .pipe(retry(1));
   }
 }

@@ -21,6 +21,7 @@ async function auth({
     }, secret, {
       expiresIn: '7d'
     })
+    account.balance = await getBalance(account.id);
     return {
       ...account.toJSON(),
       token
@@ -69,6 +70,28 @@ async function create(accountParam) {
 //   }
 // }
 
+// Private account functions
+
+async function getBalance(id){
+  // transaction based balance
+  console.log(`id: ${id}`)
+  const res = await transaction.getBalanceByAccountId(id)
+  console.log(res)
+
+  // if no transactions, balance is 0
+  if (res.length === 0){
+    return 0;
+  }
+  return res[0].balance;
+}
+
+async function resetSession(id) {
+  let account = await Account.findById(id);
+  account.sessionid = randomUUID();
+  await account.save();
+  return;
+}
+
 async function getAll() {
   return await Account.find({});
 }
@@ -90,6 +113,7 @@ export default {
   create,
   getAll,
   getById,
+  getBalance,
   pay
   // search
 }

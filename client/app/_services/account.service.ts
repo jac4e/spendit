@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { Backend } from '../_helpers';
-import { User } from '../_models';
+import { User, Transaction } from '../_models';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,9 @@ export class AccountService {
     this.account = this.accountSubject.asObservable();
   }
 
+  api(crumb: string) {
+    return `${this.backend.api.account}/${crumb}`;
+  }
   login(ccid: string, password: string) {
     console.log('logging in');
     console.log(`${this.backend.api.account}/auth`);
@@ -72,7 +75,9 @@ export class AccountService {
     return this.credits;
   }
 
-  updateCredits() {
-    return this.credits;
+  getTransactions() {
+    return this.http
+      .get<Transaction[]>(this.api('self/transactions'))
+      .pipe(retry(1));
   }
 }

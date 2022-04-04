@@ -1,4 +1,97 @@
 <p>needs:</p>
-<p>view transaction history</p>
-<p>create transaction history</p>
 <p>export transaction history</p>
+<p>view transaction</p>
+
+<form class="row mt-3 gy-2 gx-3 align-items-center" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-group col-auto">
+    <!-- <label class="sr-only" for="accountid">Account ID</label> -->
+    <input type="text" formControlName="accountid" class="form-control" id="accountid"
+      [ngClass]="{ 'is-invalid': submitted && f?.['accountid']?.errors }" placeholder="accountid">
+    <div *ngIf="submitted && f?.['accountid']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['accountid']?.errors?.['required']">
+        accountid is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-2">
+    <!-- <label class="sr-only" for="type">Type</label> -->
+    <input type="text" formControlName="type" class="form-control" id="type"
+      [ngClass]="{ 'is-invalid': submitted && f?.['type']?.errors }" placeholder="Type">
+    <div *ngIf="submitted && f?.['type']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['type']?.errors?.['required']">
+        Type is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-auto">
+    <!-- <label class="sr-only" for="reason">Reason</label> -->
+    <input type="text" formControlName="reason" class="form-control" id="reason"
+      [ngClass]="{ 'is-invalid': submitted && f?.['reason']?.errors }" placeholder="Reason">
+    <div *ngIf="submitted && f?.['reason']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['reason']?.errors?.['required']">
+        Reason is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-2">
+    <!-- <label class="sr-only" for="amount">Amount</label> -->
+    <div class="input-group">
+      <div class="input-group-text">$</div>
+      <input type="text" formControlName="amount" class="form-control" id="amount"
+        [ngClass]="{ 'is-invalid': submitted && f?.['amount']?.errors }" placeholder="0.00">
+    </div>
+    <div *ngIf="submitted && f?.['amount']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['amount']?.errors?.['required']">
+        Amount is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-auto">
+    <button [disabled]="loading" class="btn btn-primary">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Add Transaction
+    </button>
+  </div>
+</form>
+<div class="row">
+  <div class="col-12 table-responsive-sm">
+    <table class="table table-hover table-flush">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Date</th>
+          <th scope="col">Account ID</th>
+          <th scope="col">Type</th>
+          <th scope="col">Reason</th>
+          <th scope="col">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions">
+          <th scope="row">{{ transaction.id }}</th>
+          <td>{{ transaction.date }}</td>
+          <td>{{ transaction.accountid }}</td>
+          <td>{{ transaction.type }}</td>
+          <td>{{ transaction.reason }}</td>
+          <td>${{ transaction.amount }}</td>
+          <td>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary">View</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="collectionSize > 10" class="d-flex justify-content-between p-2">
+      <ngb-pagination [collectionSize]="collectionSize" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
+        [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshTransactions()">
+      </ngb-pagination>
+
+      <!-- <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshTransactions()">
+            <option [ngValue]="10">2 items per page</option>
+            <option [ngValue]="50">4 items per page</option>
+            <option [ngValue]="100">6 items per page</option>
+          </select> -->
+    </div>
+  </div>
+</div>

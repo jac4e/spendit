@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { StoreService } from '../_services';
+import { first, Observable } from 'rxjs';
+import { AccountService, StoreService } from '../_services';
 import { Product } from '../_models';
+import { AccountComponent } from '../account/account.component';
 
 @Component({
   selector: 'app-cart',
@@ -10,8 +11,12 @@ import { Product } from '../_models';
 })
 export class CartComponent implements OnInit {
   public cart!: Observable<Product[]>;
-  public imagePlaceholder: string = 'https://via.placeholder.com/150';
-  constructor(private storeService: StoreService) {
+  public imagePlaceholder = 'https://via.placeholder.com/150';
+  loading = false;
+  constructor(
+    private storeService: StoreService,
+    private accountService: AccountService
+  ) {
     this.cart = storeService.getCart();
   }
 
@@ -27,7 +32,18 @@ export class CartComponent implements OnInit {
   }
 
   buy() {
-    this.storeService.purchaseCart();
+    this.loading = true;
+    this.storeService.purchaseCart()?.subscribe({
+      next: () => {
+        this.storeService.clearCart();
+        this.accountService.refreshBalance();
+        this.loading = false;
+      },
+      error: error => {
+        // this.alertService.error(error);
+        this.loading = false;
+      }
+    });
   }
 
   clear() {

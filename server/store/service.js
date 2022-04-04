@@ -8,11 +8,11 @@ const Product = db.product;
 const secret = config.secret;
 
 async function getAllProducts() {
-    return await Product.find({});
+    return await Product.find({}).lean();
 }
 
 async function getProductById(productId) {
-    return await Product.findById(productId);
+    return await Product.findById(productId).lean();
 }
 
 async function createProduct(productParam) {
@@ -28,40 +28,69 @@ async function createProduct(productParam) {
 }
 
 async function purchaseCart(token, cart) {
-    // cart is array of objects
-    //[ ...,
-    //    { id: amount: }
-    //]
+    // cart is array of ids
+    //
+    //    [ ids ... ]
+    //
 
     // check product count
-    if (cart.length <= 0) {
-        return;
+    // console.log("buying cart")
+    if (cart.length < 1) {
+        throw "cart length cannot be less than 1"
     }
 
     // currently productIds can't contain duplicates i.e. cart can not have duplicates
-    const products = await Product.find({'_id': { $in: productIds } }).lean();
-    
+    const products = await Product.find({'_id': { $in: cart } });
+    // console.log(products)
     // check if cart length == products length
 
-    if (cart.length !== products.length){
-        throw `Not all products found`
-    }
+    // if (cart.length !== products.length){
+    //     throw `Not all products found`
+    // }
+
+    let amount = new Array(products.length).fill(0);;
     
-    sum = 0;
+    let sum = 0;
     for (let index = 0; index < cart.length; index++) {
-        sum += cart[index].amount * products[index].price;
+        const productIndex = products.findIndex((product) => product._id.toString() === cart[index])
+        if(!products[productIndex]){
+            throw `Product with id: ${cart[index]} could not be found`
+        }
+        // calc product amt in cart
+        amount[productIndex]++;
+        // calc sum
+        sum += products[productIndex].price;
     }
 
-    const decoded = jwt.verify(token, secret);
-    const purchaser = await Account.findById(decoded.sub);
-    transactionParams = {
-        accountid: purchaser.id,
+    // check if enough stock
+    for (let index = 0; index < products.length; index++) {
+        // console.log(amount[index],products[index].stock)
+        if (amount[index]>products[index].stock){
+            throw `product ${products[index].name} does not have enough stock left`
+        }
+    }
+
+    let transactionParams = {
+        accountid: token.sub,
         type: 'credit',
         reason: 'Web Purchase',
+        products: cart,
         amount: sum
     }
-    accopuntService.pay(accountid, sum);
-    transactionService.create(transactionParams);
+    // console.log(transactionParams)
+    if (await accountService.pay(transactionParams.amount, transactionParams.accountid) !== true){
+        // payment error
+        throw "Payment error"
+    }
+
+    // payment has complete, can now reduce stock levels
+    for (let index = 0; index < products.length; index++) {
+        products[index].stock -= amount[index];
+        // console.log(products[index])
+        products[index].save();
+    }
+
+    await transactionService.create(transactionParams);
 }
 
 export default { getAllProducts, purchaseCart, createProduct, getProductById}

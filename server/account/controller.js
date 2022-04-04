@@ -11,11 +11,10 @@ router.post('/auth', auth);
 
 router.get('/self', getSelf);
 router.get('/self/balance', getSelfBalance);
-router.put('/self', updateSelf);
+router.get('/self/transactions', getSelfTransactions);
 
 router.post('/register', guard.check('admin'), register);
-// router.get('/:accountId', guard.check('admin'), getAccountById);
-// router.get('/:accountId/balance', guard.check('admin'), getBalance);
+router.get('/:accountId/transaction', guard.check('admin'), getTransactions);
 // router.put('/:accountId', guard.check('admin'), updateAccountById);
 router.get('/getAll', guard.check('admin'), getAll);
 // router.get('/search', search)

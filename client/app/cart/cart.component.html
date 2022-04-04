@@ -26,7 +26,11 @@
           <p class="cart-price card-text">${{ product.price }}</p>
         </div>
         <div class="col-auto mx-auto my-auto">
-          <button type="button" class="btn-close" (click)="removeItem(i)" aria-label="Close"></button>
+          <button type="button" [disabled]="loading" class="btn-close" (click)="removeItem(i)" aria-label="Close">
+            <span
+              *ngIf="loading"
+              class="spinner-border spinner-border-sm mr-1"
+            ></span></button>
         </div>
       </div>
     </div>

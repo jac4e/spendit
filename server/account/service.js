@@ -104,8 +104,17 @@ async function getById(id) {
   return await Account.findById(id);
 }
 
-async function pay(jwt) {
-  // get account by JWT
+async function pay(amount, id) {
+  // makes payment on account based on the account Id
+  // returns true on success, false on failure
+  const account = await Account.findById(id);
+  const balance = await getBalance(id);
+
+  if (amount > balance){
+    return false;
+  }
+
+  return true;
 }
 
 export default {

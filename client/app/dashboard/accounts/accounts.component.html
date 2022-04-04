@@ -42,11 +42,13 @@
       <tbody>
         <tr *ngFor="let account of accounts">
           <th scope="row">{{ account.ccid }}</th>
-          <td>{{ account.balance }}</td>
-          <td>{{ account.roles }}</td>
+          <td>{{ account.balance < 0 ? '-' : '' }}${{ account.balance < 0 ? account.balance * -1 : account.balance }}
+          </td>
+          <td>{{ account.role }}</td>
           <td>{{ account.id }}</td>
           <td>
             <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary">View</button>
               <button type="button" class="btn btn-secondary">Modify</button>
               <button type="button" class="btn btn-secondary">Remove</button>
             </div>

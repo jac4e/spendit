@@ -1,5 +1,49 @@
 <p>Needs:</p>
-<p>view transaction history</p>
-<p>view account balance</p>
 <p>add debit</p>
-<p>request refund</p>
+<p>view transaction</p>
+
+<div class="row justify-content-center">
+    <div class="col-12">
+        <h1 class="title-centered">Your Account</h1>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <h3 class="title-centered">Balance: ${{ account.balance }}</h3>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <h3 class="title-centered">Transaction History:</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 table-responsive-sm">
+        <table class="table table-hover table-flush">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let transaction of transactions">
+                    <th scope="row">{{ transaction.id }}</th>
+                    <td>{{ transaction.date }}</td>
+                    <td>{{ transaction.type }}</td>
+                    <td>{{ transaction.reason }}</td>
+                    <td>${{ transaction.amount }}</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-secondary">View</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

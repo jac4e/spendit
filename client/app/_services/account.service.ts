@@ -14,17 +14,18 @@ import { User, Transaction } from '../_models';
   providedIn: 'root'
 })
 export class AccountService {
-  private credits = new BehaviorSubject<number>(10);
-
   private accountSubject!: BehaviorSubject<User | null>;
   public account!: Observable<User | null>;
   private backend = new Backend();
 
   constructor(private http: HttpClient) {
-    const storage = localStorage.getItem('account');
+    // should just store token in storage and getSelf on construct
+    const storageAcc = localStorage.getItem('account');
+
     this.accountSubject = new BehaviorSubject<User | null>(
-      storage ? JSON.parse(storage) : null
+      storageAcc ? JSON.parse(storageAcc) : null
     );
+
     // console.log(this.accountSubject.value);
     this.account = this.accountSubject.asObservable();
   }
@@ -32,47 +33,89 @@ export class AccountService {
   api(crumb: string) {
     return `${this.backend.api.account}/${crumb}`;
   }
+
   login(ccid: string, password: string) {
     console.log('logging in');
-    console.log(`${this.backend.api.account}/auth`);
-    return this.http
-      .post<User>(`${this.backend.api.account}/auth`, { ccid, password })
-      .pipe(
-        map((account) => {
-          localStorage.setItem('account', JSON.stringify(account));
-          this.accountSubject.next(account);
-          return account;
-        })
-      );
+    console.log(this.api('auth'));
+    return this.http.post<User>(this.api('auth'), { ccid, password }).pipe(
+      map((account) => {
+        localStorage.setItem('account', JSON.stringify(account));
+        this.accountSubject.next(account);
+        return account;
+      })
+    );
   }
 
   logout() {
-    localStorage.removeItem('account');
-    this.accountSubject.next(null);
+    // call reset session on api
+    // logs out all instances of account session
+    this.http
+      .post(this.api('self/resetSession'), {})
+      .pipe(retry(1))
+      .subscribe({
+        next: () => {
+          localStorage.removeItem('account');
+          // call reset session on api
+          this.accountSubject.next(null);
+        },
+        error: () => {
+          // this.alertService.error(error);
+        }
+      });
   }
 
   getRole() {
     return 'admin';
   }
 
+  getAccount() {
+    return this.http.get<User>(this.api('self')).pipe(retry(1));
+  }
+
   // Credit related
 
-  addCredits(amount: number) {
-    if (amount <= 0) {
-      return;
-    }
-    this.credits.next(this.credits.value + amount);
-  }
+  // addCredits(amount: number) {
+  //   if (amount <= 0) {
+  //     return;
+  //   }
+  //   this.credits.next(this.credits.value + amount);
+  // }
 
-  removeCredits(amount: number) {
-    if (amount <= 0) {
-      return;
-    }
-    this.credits.next(this.credits.value - amount);
-  }
+  // removeCredits(amount: number) {
+  //   if (amount <= 0) {
+  //     return;
+  //   }
+  //   this.credits.next(this.credits.value - amount);
+  // }
 
   getBalance() {
-    return this.credits;
+    return this.http.get<number>(this.api('self/balance')).pipe(retry(1));
+  }
+  refreshBalance() {
+    this.getBalance().subscribe({
+      next: (balance) => {
+        console.log(balance);
+        const account = this.accountSubject.value || new User();
+        account.balance = balance;
+        localStorage.setItem('account', JSON.stringify(account));
+        this.accountSubject.next(account);
+      },
+      error: (error) => {
+        // this.alertService.error(error);
+      }
+    });
+  }
+  refreshAccount() {
+    this.getAccount().subscribe({
+      next: (account) => {
+        account.token = this.accountSubject.value?.token || '';
+        localStorage.setItem('account', JSON.stringify(account));
+        this.accountSubject.next(account);
+      },
+      error: (error) => {
+        // this.alertService.error(error);
+      }
+    });
   }
 
   getTransactions() {

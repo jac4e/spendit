@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import config from '../config.js';
 import db from '../_helpers/db.js';
+import { randomUUID } from 'crypto';
+import transaction from '../_helpers/transaction.js';
 
 const Account = db.account;
 const secret = config.secret;
@@ -17,7 +19,8 @@ async function auth({
   if (account && match) {
     const token = jwt.sign({
       sub: account.id,
-      permissions: account.roles
+      sid: account.sessionid,
+      permissions: account.role
     }, secret, {
       expiresIn: '7d'
     })
@@ -34,18 +37,25 @@ async function auth({
 async function create(accountParam) {
   // validate
   console.log(JSON.stringify(accountParam))
+
+  // make sure ccid is not taken
   if (await Account.findOne({
       ccid: accountParam.ccid
     })) {
     throw `CCID '${accountParam.ccid}' is already taken`
   }
   const account = new Account(accountParam)
+
   // hash password
   if (accountParam.password) {
     account.hash = bcrypt.hashSync(accountParam.password, 10);
   }
+
+  // create session ID
+  account.sessionid = randomUUID();
+
   // save account
-  await account.save()
+  await account.save();
 }
 
 // async function search({
@@ -93,15 +103,23 @@ async function resetSession(id) {
 }
 
 async function getAll() {
-  return await Account.find({});
+  const accounts = await Account.find({}).lean();
+  console.log(accounts)
+  for (let index = 0; index < accounts.length; index++) {
+    accounts[index].balance = await getBalance(accounts[index].id) 
+  }
+  // console.log(test);
+  return accounts;
 }
 
-async function getSelf(jwt) {
-  return await Account.findById(id);
-}
 
 async function getById(id) {
-  return await Account.findById(id);
+  // console.log("getbyid",id)
+  const account = await Account.findById(id).lean();
+  const balance = await getBalance(id);
+  account.balance = balance;
+  // console.log(test);
+  return account;
 }
 
 async function pay(amount, id) {
@@ -123,6 +141,7 @@ export default {
   getAll,
   getById,
   getBalance,
+  resetSession,
   pay
   // search
 }

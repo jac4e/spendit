@@ -22,6 +22,7 @@ export class AdminService {
       account
     );
   }
+
   addProduct(product: Product) {
     return this.http.post<Product>(
       `${this.backend.api.store}/products`,
@@ -43,5 +44,9 @@ export class AdminService {
     return this.http
       .get<Transaction[]>(this.api('transactions'))
       .pipe(retry(1));
+  }
+  getInventory() {
+    console.log(this.api('products'));
+    return this.http.get<Product[]>(this.api('products')).pipe(retry(1));
   }
 }

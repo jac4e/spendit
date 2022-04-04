@@ -37,7 +37,7 @@ export class AccountsComponent implements OnInit {
     this.form = this.formBuilder.group({
       ccid: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      isAdmin: [false]
+      role: 'user'
     });
   }
 

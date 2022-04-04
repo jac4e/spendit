@@ -5,8 +5,15 @@ const Account = db.account
 const Product = db.product
 
 async function createTransaction(transactionParam) {
-    transactionParam.reason = 'Admin Override';
+    transactionParam.reason = `Admin: ${transactionParam.reason}`;
     transaction.create(transactionParam);
 }
 
-export default { createTransaction }
+async function getAllTransactions() {
+    return await transaction.getAll();
+}
+
+export default {
+    createTransaction,
+    getAllTransactions
+}

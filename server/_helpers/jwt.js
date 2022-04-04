@@ -1,24 +1,30 @@
 import expressJwt from 'express-jwt';
+import jwt from 'jsonwebtoken';
 import config from '../config.js';
-import accountService from '../account/service.js';
+import db from '../_helpers/db.js';
 
-export default function jwt() {
+const Account = db.account;
+
+export default function jwtAuthGuard() {
     const secret = config.secret;
-    return expressJwt({ secret, algorithms: ['HS256'], isRevoked }).unless({
+    return expressJwt({ secret: secret,algorithms: ['HS256'], isRevoked: isRevokedCallback }).unless({
         path: [
             // public routes that don't require authentication
             '/api/status',
             '/api/store/products',
-            '/api/accounts/auth'
+            '/api/accounts/auth',
         ]
     });
 }
 
-async function isRevoked(req, payload, done) {
-    const account = await accountService.getById(payload.sub);
-
+async function isRevokedCallback(req, payload, done) {
+    const account = await Account.findById(payload.sub);
     // revoke token if user no longer exists
     if (!account) {
+        return done(null, true);
+    }
+    // revoke if session id past date
+    if ((account.sessionid || '') !== payload.sid) {
         return done(null, true);
     }
 

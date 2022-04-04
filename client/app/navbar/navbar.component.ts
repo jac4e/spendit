@@ -27,9 +27,14 @@ export class NavbarComponent implements OnInit {
   balance: number | undefined;
   fragment!: string;
   constructor(private accountService: AccountService, private router: Router) {
+    // get observable account
     this.accountService.account.subscribe((account) => {
       this.account = account;
     });
+
+    // update account
+    this.accountService.refreshAccount();
+
     this.balance = this.account?.balance;
   }
 
@@ -58,6 +63,9 @@ export class NavbarComponent implements OnInit {
         case 'notAdmin':
           truthy = truthy && this.account?.role !== undefined;
           // console.log('notadmin', this.account?.role !== undefined);
+          break;
+        case 'none':
+          truthy = truthy && true;
           break;
         default:
           truthy = truthy && false;

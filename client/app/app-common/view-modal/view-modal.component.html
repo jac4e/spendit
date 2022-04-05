@@ -1,0 +1,39 @@
+View
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ name }}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div *ngFor="let prop of modelProperties">
+            <h3>{{ titleCase(prop) }}:</h3>
+            <p *ngIf="!isArray(model[prop])">{{ prop === 'total' || prop === 'price' ? '$' : ''}}{{ model[prop] }}</p>
+            <div *ngIf="isArray(model[prop])">
+                <p *ngIf="model[prop].length === 0"> N/A </p>
+                        <div *ngIf="isObject(model[prop][0])" class="col-12 table-responsive">
+                            <table class="table table-hover table-flush">
+                                <thead>
+                                    <tr>
+                                        <th *ngFor="let nestedProp of getProperties(model[prop][0])">{{titleCase(nestedProp)}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>                    
+                                    <tr *ngFor="let element of model[prop]">
+                                        <td *ngFor="let nestedProp of getProperties(element)">{{ nestedProp === 'total' || nestedProp === 'price' ? '$' : ''}}{{ element[nestedProp] }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        <!-- <div class="row" *ngFor="let nestedProp of getProperties(element)">
+                            <p>{{titleCase(nestedProp)}}: {{element[nestedProp]}}</p>
+                        </div> -->
+                    </div>
+                    <div *ngIf="model[prop] === 'products'">
+                        
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button> -->
+    </div>
+</ng-template>

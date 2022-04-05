@@ -1,0 +1,40 @@
+<div class="col-12 table-responsive">
+    <table class="table table-hover table-flush">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Date</th>
+                <th *ngIf="transactions[0].accountid !== undefined" scope="col">Account ID</th>
+                <th scope="col">Type</th>
+                <th scope="col">Reason</th>
+                <th scope="col">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let transaction of transactions" class="{{ transaction.type === 'credit' ? 'table-danger' : 'table-success' }}">
+                <th scope="row">{{ transaction.id }}</th>
+                <td>{{ transaction.date }}</td>
+                <td *ngIf="transactions[0].accountid !== undefined"> {{ transaction.accountid }}</td>
+                <td>{{ transaction.type }}</td>
+                <td>{{ transaction.reason }}</td>
+                <td>${{ transaction.total }}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <app-view-modal class="btn btn-secondary" [name]="'Transaction View'" [model]="transaction">View</app-view-modal>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="collectionSize > 10" class="d-flex justify-content-between p-2">
+    <ngb-pagination [collectionSize]="collectionSize" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
+        [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshTransactions()">
+    </ngb-pagination>
+
+    <!-- <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshTransactions()">
+        <option [ngValue]="10">2 items per page</option>
+        <option [ngValue]="50">4 items per page</option>
+        <option [ngValue]="100">6 items per page</option>
+    </select> -->
+</div>

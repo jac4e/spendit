@@ -54,8 +54,8 @@ async function getBalanceByAccountId(accountid) {
                 $sum: {
                     $cond: [{
                         $eq: ["$type", "debit"]
-                    }, '$amount', {
-                        $multiply: ['$amount', -1]
+                    }, '$total', {
+                        $multiply: ['$total', -1]
                     }]
                 }
             }

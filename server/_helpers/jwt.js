@@ -23,7 +23,7 @@ async function isRevokedCallback(req, payload, done) {
     if (!account) {
         return done(null, true);
     }
-    // revoke if session id past date
+    // revoke if account session id != payload session id
     if ((account.sessionid || '') !== payload.sid) {
         return done(null, true);
     }

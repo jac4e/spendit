@@ -23,7 +23,7 @@ const schema = new mongoose.Schema({
         type: Array,
         required: true
     },
-    amount: {
+    total: {
         type: Number,
         required: true
     },

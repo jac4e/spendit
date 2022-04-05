@@ -24,9 +24,10 @@ async function auth({
     }, secret, {
       expiresIn: '7d'
     })
-    account.balance = await getBalance(account.id);
+    const balance = await getBalance(account.id);
     return {
       ...account.toJSON(),
+      balance,
       token
     }
   } else {
@@ -80,13 +81,20 @@ async function create(accountParam) {
 //   }
 // }
 
+
+async function getSelfTransactions(id) {
+  // need this specific function to remove account id from transaction list
+  const transactions = await transaction.getByAccountId(id);
+  return transactions.map(({accountid, ...keepAttrs}) => keepAttrs);
+}
+
 // Private account functions
 
 async function getBalance(id){
   // transaction based balance
-  console.log(`id: ${id}`)
+  // console.log(`id: ${id}`)
   const res = await transaction.getBalanceByAccountId(id)
-  console.log(res)
+  // console.log(res)
 
   // if no transactions, balance is 0
   if (res.length === 0){
@@ -104,7 +112,7 @@ async function resetSession(id) {
 
 async function getAll() {
   const accounts = await Account.find({}).lean();
-  console.log(accounts)
+  // console.log(accounts)
   for (let index = 0; index < accounts.length; index++) {
     accounts[index].balance = await getBalance(accounts[index].id) 
   }
@@ -127,7 +135,7 @@ async function pay(amount, id) {
   // returns true on success, false on failure
   const account = await Account.findById(id);
   const balance = await getBalance(id);
-
+  // console.log('pay',amount,balance)
   if (amount > balance){
     return false;
   }
@@ -142,6 +150,7 @@ export default {
   getById,
   getBalance,
   resetSession,
+  getSelfTransactions,
   pay
   // search
 }

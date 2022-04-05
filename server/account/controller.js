@@ -51,8 +51,7 @@ function getSelfBalance(req, res, next) {
 
 function getSelfTransactions(req, res, next) {
     // console.log(`self transactions: ${JSON.stringify(req.user)}`)
-    transaction.getByAccountId(req.user.sub).then(resp => res.json(resp)).catch(err => next(err));
-
+    accountService.getSelfTransactions(req.user.sub).then(resp => res.json(resp)).catch(err => next(err));
 }
 
 // Private routes

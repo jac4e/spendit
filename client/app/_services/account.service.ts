@@ -1,12 +1,8 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpResponse
-} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map, retry } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, retry } from 'rxjs/operators';
 import { Backend } from '../_helpers';
 import { User, Transaction } from '../_models';
 
@@ -18,7 +14,7 @@ export class AccountService {
   public account!: Observable<User | null>;
   private backend = new Backend();
 
-  constructor(private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient) {
     // should just store token in storage and getSelf on construct
     const storageAcc = localStorage.getItem('account');
 
@@ -35,8 +31,8 @@ export class AccountService {
   }
 
   login(ccid: string, password: string) {
-    console.log('logging in');
-    console.log(this.api('auth'));
+    // console.log('logging in');
+    // console.log(this.api('auth'));
     return this.http.post<User>(this.api('auth'), { ccid, password }).pipe(
       map((account) => {
         localStorage.setItem('account', JSON.stringify(account));
@@ -54,16 +50,16 @@ export class AccountService {
       .pipe(retry(1))
       .subscribe({
         next: () => {
-          localStorage.removeItem('account');
-          // call reset session on api
-          this.accountSubject.next(null);
-        },
-        error: () => {
-          // this.alertService.error(error);
+          this.clientLogout();
         }
       });
   }
-
+  clientLogout() {
+    localStorage.removeItem('account');
+    // call reset session on api
+    this.accountSubject.next(null);
+    this.router.navigate(['/']);
+  }
   getRole() {
     return 'admin';
   }
@@ -94,14 +90,11 @@ export class AccountService {
   refreshBalance() {
     this.getBalance().subscribe({
       next: (balance) => {
-        console.log(balance);
+        // console.log(balance);
         const account = this.accountSubject.value || new User();
         account.balance = balance;
         localStorage.setItem('account', JSON.stringify(account));
         this.accountSubject.next(account);
-      },
-      error: (error) => {
-        // this.alertService.error(error);
       }
     });
   }
@@ -111,9 +104,6 @@ export class AccountService {
         account.token = this.accountSubject.value?.token || '';
         localStorage.setItem('account', JSON.stringify(account));
         this.accountSubject.next(account);
-      },
-      error: (error) => {
-        // this.alertService.error(error);
       }
     });
   }

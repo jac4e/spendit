@@ -39,14 +39,14 @@ export class AdminService {
   }
 
   getAllTransactions() {
-    console.log('getting transactions');
-    console.log(this.api('transactions'));
+    // console.log('getting transactions');
+    // console.log(this.api('transactions'));
     return this.http
       .get<Transaction[]>(this.api('transactions'))
       .pipe(retry(1));
   }
   getInventory() {
-    console.log(this.api('products'));
+    // console.log(this.api('products'));
     return this.http.get<Product[]>(this.api('products')).pipe(retry(1));
   }
 }

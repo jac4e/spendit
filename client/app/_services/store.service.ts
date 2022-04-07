@@ -31,11 +31,11 @@ export class StoreService {
     return `${this.backend.api.store}/${crumb}`;
   }
 
-  addToCart(product: Product, amt: number) {
+  addToCart(product: Product, amount: number) {
     if (!product) {
       return 1;
     }
-    if (amt <= 0) {
+    if (amount <= 0) {
       return 1;
     }
     if (!this.account) {
@@ -43,7 +43,17 @@ export class StoreService {
     }
 
     const currentCart = this.cart.value;
-    const updatedCart = [...currentCart, product];
+
+    const index = currentCart.findIndex((item) => item.id === product.id);
+
+    if (index !== -1) {
+      currentCart[index].amount = (currentCart[index].amount || 0) + 1;
+    }
+
+    const updatedCart =
+      index !== -1
+        ? [...currentCart]
+        : [...currentCart, { ...product, amount: amount }];
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     this.cart.next(updatedCart);
 
@@ -51,11 +61,11 @@ export class StoreService {
   }
 
   removeFromCart(index: number) {
-    console.log(index);
+    // console.log(index);
     const updatedCart = this.cart.value;
-    console.log(updatedCart);
+    // console.log(updatedCart);
     updatedCart.splice(index, 1);
-    console.log(updatedCart);
+    // console.log(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     this.cart.next(updatedCart);
   }
@@ -70,7 +80,7 @@ export class StoreService {
 
   serializeCart(cart: Product[]) {
     return cart.map((cart: Product) => {
-      return cart.id;
+      return { id: cart.id, amount: cart.amount };
     });
   }
 
@@ -78,9 +88,9 @@ export class StoreService {
     if (!this.account) {
       return;
     }
-    console.log(this.serializeCart(this.cart.value));
-    console.log('purchasing');
-    console.log(`${this.backend.api.store}/purchase`);
+    // console.log(this.serializeCart(this.cart.value));
+    // console.log('purchasing');
+    // console.log(`${this.backend.api.store}/purchase`);
     return this.http.post<Product[]>(this.api('purchase'), {
       cart: this.serializeCart(this.cart.value)
     });
@@ -92,7 +102,7 @@ export class StoreService {
     }
     let sum = 0;
     this.cart.value.forEach((item) => {
-      sum += +item.price;
+      sum += (item.amount || 0) * item.price;
     });
 
     return sum;

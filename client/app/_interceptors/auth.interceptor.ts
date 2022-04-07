@@ -3,9 +3,10 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
+  HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { AccountService } from '../_services';
 import { User } from '../_models';
 
@@ -30,7 +31,6 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    // console.log("intercept");
     if (this.account && isApiUrl) {
       request = request.clone({
         setHeaders: {
@@ -38,6 +38,13 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
     }
-    return next.handle(request);
+    return next.handle(request).pipe(
+      catchError((err: HttpErrorResponse) => {
+        if (err.error.includes('The token has been revoked')) {
+          this.accountService.clientLogout();
+        }
+        return throwError(() => err.message);
+      })
+    );
   }
 }

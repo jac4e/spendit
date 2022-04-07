@@ -1,5 +1,7 @@
 <p>needs:</p>
 <p>remove/edit account</p>
+<p>fix account export</p>
+<h5 class="mt-3">Add account</h5>
 <form class="row mt-3 gy-2 gx-3 align-items-center" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="ccid">CCID</label> -->
@@ -28,8 +30,9 @@
     </button>
   </div>
 </form>
+<h5 class="mt-3">Accounts</h5>
 <div class="row">
-  <div class="col-12 table-responsive-sm">
+  <div class="col-12 table-responsive">
     <table class="table table-hover table-flush">
       <thead>
         <tr>
@@ -42,13 +45,13 @@
       <tbody>
         <tr *ngFor="let account of accounts">
           <th scope="row">{{ account.ccid }}</th>
-          <td>{{ account.balance < 0 ? '-' : '' }}${{ account.balance < 0 ? account.balance * -1 : account.balance }}
+          <td>{{ account.balance < 0 ? '-' : '' }}¢{{ account.balance < 0 ? account.balance * -1 : account.balance }}
           </td>
           <td>{{ account.role }}</td>
           <td>{{ account.id }}</td>
           <td>
             <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-secondary">View</button>
+              <app-view-modal class="btn btn-secondary" [name]="'Account View'" [model]="account">View</app-view-modal>
               <button type="button" class="btn btn-secondary">Modify</button>
               <button type="button" class="btn btn-secondary">Remove</button>
             </div>
@@ -58,3 +61,4 @@
     </table>
   </div>
 </div>
+<button class="btn btn-secondary" (click)="export()">Export</button>

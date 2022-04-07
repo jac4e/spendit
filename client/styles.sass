@@ -1,14 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap'
+// @import '~bootstrap/scss/bootstrap'
 
 /* Importing open-iconic */
 $icon-font-path: '~open-iconic/font/fonts/'
-@import "~open-iconic/font/css/open-iconic-bootstrap.scss"
+@import '~open-iconic/font/css/open-iconic-bootstrap.scss'
 
 body
     height: 100vh
 
 .title-centered
     text-align: center
+
+.round
+    border-radius: 0.75rem
+
+.depth
+    box-shadow: 0 0.5rem 1rem rgba(#000, .15)
+.collapsing
+    // overflow: visible !important
+    // padding: 5px !important
+
+
+.bg-accent 
+     background-color: rgba(175,175,175,0.12)
+
+.card
+    box-shadow: 0 0.5rem 1rem rgba(#000, .15)
+    background-color: rgba(175,175,175,0.1)
+    border: none
+    border-radius: 0.75rem
+
+.nav-pills .nav-link
+    border-radius: 0.5rem
+
+.nav-item.first
+    border-bottom-left-radius: 0.5rem
+    border-top-left-radius: 0.5rem
+.nav-item.last
+    border-bottom-right-radius: 0.5rem
+    border-top-right-radius: 0.5rem
+
+.btn
+    border-radius: 0.5rem
+.btn.btn-primary
+    box-shadow: 0 .125rem .25rem rgba(#000, .15)
+.btn.btn-secondary
+    box-shadow: 0 .125rem .25rem rgba(#000, .15)

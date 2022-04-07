@@ -1,10 +1,11 @@
+Needs product grouping compatible with backend
 <div class="row">
   <h1 class="title-centered">Cart</h1>
 </div>
 <div class="row justify-content-center cart">
   <div class="col-12">
     <h3 class="title-centered" *ngIf="(cart | async)?.length === 0">Your Cart is empty</h3>
-    <div class="card mb-3" *ngFor="let product of cart | async;; let i = index">
+    <div class="card mb-3" *ngFor="let product of cart | async; let i = index">
       <div class="row g-0">
         <!-- <div class="col-4 col-md-2">
           <img
@@ -23,14 +24,17 @@
           </div>
         </div>
         <div class="col-auto mx-auto my-auto">
-          <p class="cart-price card-text">${{ product.price }}</p>
+          <p class="cart-price card-text">¢{{ product.price }}</p>
         </div>
         <div class="col-auto mx-auto my-auto">
-          <button type="button" [disabled]="loading" class="btn-close" (click)="removeItem(i)" aria-label="Close">
-            <span
-              *ngIf="loading"
-              class="spinner-border spinner-border-sm mr-1"
-            ></span></button>
+          <p class="cart-price card-text">{{ product.amount }}</p>
+        </div>
+        <div class="col-auto mx-auto my-auto">
+          <p class="cart-price card-text">¢{{ product.price * (product.amount || 0) }}</p>
+        </div>
+        <div class="col-auto mx-auto my-auto">
+          <button type="button" class="btn-close" (click)="removeItem(i)"
+            aria-label="Close"></button>
         </div>
       </div>
     </div>
@@ -39,7 +43,7 @@
 
 <div class="row justify-content-center">
   <div class="col-4">
-    <h5 class="cart-price">Total: ${{ total() }}</h5>
+    <h5 class="cart-price">Total: ¢{{ total() }}</h5>
   </div>
 </div>
 
@@ -48,6 +52,9 @@
     <a class="btn btn-primary" (click)="clear()">Clear</a>
   </div>
   <div class="col-md-2 col-4 justify-content-center">
-    <a class="btn btn-primary" (click)="buy()">Buy</a>
+    <button class="btn btn-primary" [disabled]="loading" (click)="buy()">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+      Buy
+    </button>
   </div>
 </div>

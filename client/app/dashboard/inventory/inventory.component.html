@@ -1,7 +1,7 @@
 <p>needs:</p>
 <p>remove/edit inventory</p>
-<p>complete inventory check</p>
-<form class="row mt-3 gy-2 gx-3 align-items-center" [formGroup]="form" (ngSubmit)="onSubmit()">
+<h5 class="mt-3">Add product</h5>
+<form class="row gy-2 gx-3 align-items-center" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group col-auto">
     <input type="text" formControlName="name" class="form-control" id="name"
       [ngClass]="{ 'is-invalid': submitted && f?.['name']?.errors }" placeholder="Name">
@@ -13,7 +13,7 @@
   </div>
   <div class="form-group col-2">
     <div class="input-group">
-      <div class="input-group-text">$</div>
+      <div class="input-group-text">¢</div>
       <input type="number" formControlName="price" class="form-control" id="price"
         [ngClass]="{ 'is-invalid': submitted && f?.['price']?.errors }" placeholder="0.00">
     </div>
@@ -51,7 +51,8 @@
     </button>
   </div>
 </form>
-<div class="col-12 table-responsive-sm">
+<h5 class="mt-3">Products</h5>
+<div class="col-12 table-responsive">
   <table class="table table-hover table-flush">
     <thead>
       <tr>
@@ -65,13 +66,13 @@
     <tbody>
       <tr *ngFor="let product of inventory">
         <th scope="row">{{ product.name }}</th>
-        <td>${{ product.price }}</td>
+        <td>¢{{ product.price }}</td>
         <td>{{ product.description }}</td>
         <td>{{ product.stock }}</td>
         <td>{{ product.id }}</td>
         <td>
           <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-secondary">View</button>
+            <app-view-modal class="btn btn-secondary" [name]="'Product View'" [model]="product">View</app-view-modal>
             <button type="button" class="btn btn-secondary">Modify</button>
             <button type="button" class="btn btn-secondary">Remove</button>
           </div>
@@ -80,3 +81,4 @@
     </tbody>
   </table>
 </div>
+<button class="btn btn-secondary" (click)="export()">Export</button>

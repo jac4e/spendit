@@ -13,25 +13,29 @@
         <tbody>
             <tr *ngFor="let transaction of transactions" class="{{ transaction.type === 'credit' ? 'table-danger' : 'table-success' }}">
                 <th scope="row">{{ transaction.id }}</th>
-                <td>{{ transaction.date }}</td>
+                <td>{{ transaction.date.toLocaleString('en-us',{timeZoneName:'short'}) }}</td>
                 <td *ngIf="transactions[0].accountid !== undefined"> {{ transaction.accountid }}</td>
                 <td>{{ transaction.type }}</td>
                 <td>{{ transaction.reason }}</td>
-                <td>${{ transaction.total }}</td>
+                <td>¢{{ transaction.total }}</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <app-view-modal class="btn btn-secondary" [name]="'Transaction View'" [model]="transaction">View</app-view-modal>
+                        <app-view-modal class="btn btn-secondary" [name]="'Transaction Receipt'" [model]="transaction">View</app-view-modal>
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-<div *ngIf="collectionSize > 10" class="d-flex justify-content-between p-2">
-    <ngb-pagination [collectionSize]="collectionSize" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
-        [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshTransactions()">
-    </ngb-pagination>
-
+<div  class="d-flex justify-content-between">
+    <div *ngIf="collectionSize > 10">
+        <ngb-pagination [collectionSize]="collectionSize" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
+            [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshTransactions()">
+        </ngb-pagination>
+    </div>
+    <div>
+        <button class="btn btn-primary" (click)="export()">Export</button>
+    </div>
     <!-- <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshTransactions()">
         <option [ngValue]="10">2 items per page</option>
         <option [ngValue]="50">4 items per page</option>

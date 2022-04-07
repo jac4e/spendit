@@ -9,7 +9,8 @@ import { StoreComponent } from './store/store.component';
 const routes: Routes = [
   {
     path: 'account',
-    component: AccountComponent,
+    loadChildren: () =>
+      import('./account/account.module').then((m) => m.AccountModule),
     canActivate: [AuthGuard],
     data: { roles: ['all'] }
   },

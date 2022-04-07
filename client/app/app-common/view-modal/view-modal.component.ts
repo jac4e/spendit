@@ -25,6 +25,7 @@ export class ViewModalComponent implements OnInit {
   }
 
   open(content: any) {
+    // console.log(this.model['date'].toLocaleString());
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -42,6 +43,17 @@ export class ViewModalComponent implements OnInit {
   }
   titleCase(string: string){
     return string[0].toUpperCase() + string.slice(1).toLowerCase();
+  }
+  print(){
+    let printContent = document.getElementById('print')?.innerHTML.replace('table-flush','table-striped');
+    var printWindow = window.open('', 'PRINT', 'height=400,width=600');
+    printWindow?.document.write('<html><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"><body>' + printContent + '</body></html>');
+    printWindow?.document.close();
+    printWindow?.focus();
+    printWindow?.print();
+    setTimeout(function() {
+      printWindow?.close();
+    }, 200);
   }
 
   private getDismissReason(reason: any): string {

@@ -4,10 +4,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs';
 import { Product } from 'client/app/_models';
-import { StoreService } from 'client/app/_services';
+import { CommonService, StoreService } from 'client/app/_services';
 
 @Component({
-  selector: 'app-inventory',
+  selector: 'app-dashboard-inventory',
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.sass']
 })
@@ -22,6 +22,7 @@ export class InventoryComponent implements OnInit {
     private router: Router,
     private storeService: StoreService,
     private adminService: AdminService,
+    private commonService: CommonService
     ) {
     this.storeService.getInventory().subscribe((inventory: Product[]) => {
       this.inventory = inventory;
@@ -31,7 +32,13 @@ export class InventoryComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
-      price: [null, [Validators.required, Validators.min(0)]],
+      price: [
+        null,
+        [
+          Validators.required,
+          Validators.min(0)
+        ]
+      ],
       stock: [
         0,
         [Validators.required, Validators.min(0), Validators.pattern('^[0-9]*$')]
@@ -41,6 +48,14 @@ export class InventoryComponent implements OnInit {
   }
   get f() {
     return this.form.controls;
+  }
+  export() {
+    this.storeService.getInventory().subscribe((data: Product[]) => {
+      this.commonService.export(
+        data,
+        `inventory_${this.commonService.localeISOTime()}.csv`
+      );
+    });
   }
   onSubmit() {
     this.submitted = true;
@@ -63,10 +78,6 @@ export class InventoryComponent implements OnInit {
           this.storeService.getInventory().subscribe((inventory: Product[]) => {
             this.inventory = inventory;
           });
-        },
-        error: (error) => {
-          // this.alertService.error(error);
-          this.loading = false;
         }
       });
   }

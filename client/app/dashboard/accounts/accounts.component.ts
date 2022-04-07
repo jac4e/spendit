@@ -8,11 +8,11 @@ import {
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
-import { AccountService } from 'client/app/_services';
+import { AccountService, CommonService } from 'client/app/_services';
 import { first } from 'rxjs';
 
 @Component({
-  selector: 'app-accounts',
+  selector: 'app-dashboard-accounts',
   templateUrl: './accounts.component.html',
   styleUrls: ['./accounts.component.sass']
 })
@@ -26,7 +26,8 @@ export class AccountsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private commonService: CommonService
   ) {
     this.adminService.getAllAccounts().subscribe((accounts: User[]) => {
       this.accounts = accounts;
@@ -43,6 +44,15 @@ export class AccountsComponent implements OnInit {
 
   get f() {
     return this.form.controls;
+  }
+
+  export() {
+    this.adminService.getAllAccounts().subscribe((data: User[]) => {
+      this.commonService.export(
+        data,
+        `accounts_${this.commonService.localeISOTime()}.csv`
+      );
+    });
   }
 
   onSubmit() {
@@ -66,10 +76,6 @@ export class AccountsComponent implements OnInit {
           this.adminService.getAllAccounts().subscribe((accounts: User[]) => {
             this.accounts = accounts;
           });
-        },
-        error: (error) => {
-          // this.alertService.error(error);
-          this.loading = false;
         }
       });
   }

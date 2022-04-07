@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Transaction } from 'client/app/_models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from 'client/app/_services';
-import { first } from 'rxjs';
+import { first, Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-transactions',
+  selector: 'app-dashboard-transactions',
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.sass']
 })
@@ -15,16 +15,19 @@ export class TransactionsComponent implements OnInit {
   loading = false;
   submitted = false;
 
+  refreshTransactions: Observable<Transaction[]>;
+
   // page stuff
   page = 1;
   pageSize = 10;
   collectionSize = 0;
+  showTransactions = true;
 
   constructor(
     private formBuilder: FormBuilder,
     private adminService: AdminService
   ) {
-    this.refreshTransactions();
+    this.refreshTransactions = this.adminService.getAllTransactions();
   }
 
   ngOnInit(): void {
@@ -32,10 +35,7 @@ export class TransactionsComponent implements OnInit {
       accountid: ['', Validators.required],
       type: ['', [Validators.required, Validators.pattern('^(credit|debit)$')]],
       reason: ['', Validators.required],
-      amount: [
-        null,
-        [Validators.required, Validators.min(0), Validators.pattern('^[0-9]*$')]
-      ]
+      total: [null, [Validators.required, Validators.min(0)]]
     });
   }
 
@@ -60,25 +60,12 @@ export class TransactionsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loading = false;
-          this.refreshTransactions();
-        },
-        error: (error) => {
-          // this.alertService.error(error);
-          this.loading = false;
+          // refresh transaction list
+          this.showTransactions = false;
+          setTimeout(() => {
+            this.showTransactions = true;
+          }, 100);
         }
-      });
-  }
-
-  refreshTransactions() {
-    this.adminService
-      .getAllTransactions()
-      .subscribe((transactions: Transaction[]) => {
-        this.transactions = transactions;
-        this.collectionSize = transactions.length;
-        this.transactions = transactions.slice(
-          (this.page - 1) * this.pageSize,
-          (this.page - 1) * this.pageSize + this.pageSize
-        );
       });
   }
 }

@@ -3,6 +3,7 @@
 import express from 'express';
 import {dirname} from 'path';
 import { fileURLToPath } from 'url';
+import admin from './deploy/admin.js'
 // import errorHandler from './_helper/error-handler.js';
 import api from './api.controller.js';
 

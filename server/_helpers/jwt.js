@@ -1,6 +1,6 @@
 import expressJwt from 'express-jwt';
 import jwt from 'jsonwebtoken';
-import config from '../config.js';
+import config from '../deploy/config.js';
 import db from '../_helpers/db.js';
 
 const Account = db.account;

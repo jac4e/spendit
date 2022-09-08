@@ -8,6 +8,9 @@
 $icon-font-path: '~open-iconic/font/fonts/'
 @import '~open-iconic/font/css/open-iconic-bootstrap.scss'
 
+:root
+    --ng-icon__size: 1rem
+
 body
     height: 100vh
 
@@ -55,11 +58,10 @@ body
         --ui-layer-1: rgb(49, 49, 49)
         --ui-layer-2: rgb(62, 62, 62)
 
-// // add badge colors
-// .badge-primary 
-//     color: #fafafa
-//     background-color: var(--bs-primary)
-//     border-color: var(--bs-primary)
+// Change btn badge style
+.btn .badge 
+    padding: 0.15em 0.5em
+    top: -50%
 
 .card
     box-shadow: 0 0.5rem 1rem rgba(#000, .10)
@@ -84,6 +86,8 @@ body
 .btn
     border-radius: 0.5rem
     touch-action: manipulation
+.btn.btn-icon
+    line-height: var(--ng-icon__size)
 .btn.btn-primary
     box-shadow: 0 .125rem .25rem rgba(#000, .10)
 .btn.btn-secondary
@@ -103,3 +107,7 @@ body
     .btn-primary:hover
         background-color: var(--bs-primary)
         border-color: var(--bs-primary)
+
+svg
+  vertical-align: top
+//   pointer-events: none

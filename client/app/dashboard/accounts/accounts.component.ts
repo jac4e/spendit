@@ -3,8 +3,8 @@ import { AdminService } from 'client/app/_services/admin.service';
 import { User } from 'client/app/_models';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
@@ -18,12 +18,12 @@ import { first } from 'rxjs';
 })
 export class AccountsComponent implements OnInit {
   accounts!: User[];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   loading = false;
   submitted = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private adminService: AdminService,

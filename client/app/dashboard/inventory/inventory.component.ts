@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from 'client/app/_services/admin.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs';
 import { Product } from 'client/app/_models';
 import {
@@ -17,12 +17,12 @@ import {
 })
 export class InventoryComponent implements OnInit {
   inventory!: Product[];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   loading = false;
   submitted = false;
   updateProduct;
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private storeService: StoreService,

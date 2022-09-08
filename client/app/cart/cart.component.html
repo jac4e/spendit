@@ -34,13 +34,11 @@
             <p class="cart-price card-text">= {{ product.price * (product.amount || 0) }} PHYC</p>
           </div>
         </span>
-        <div class="col-auto mx-auto my-auto">
-          <button type="button" class="btn" [disabled]="loading" (click)="decrementItem(i)"
+        <div class="col-auto mx-auto my-auto btn-group">
+          <button type="button" class="btn btn-primary btn-icon" [disabled]="loading" (click)="decrementItem(i)"
             aria-label="Decrease"><ng-icon name="dripMinus"></ng-icon></button>
-        </div>
-        <div class="col-auto mx-auto my-auto">
-          <button type="button" class="btn" [disabled]="loading" (click)="removeItem(i)"
-            aria-label="Remove"><ng-icon name="DripCross"></ng-icon></button>
+          <button type="button" class="btn btn-primary btn-icon" [disabled]="loading" (click)="removeItem(i)"
+            aria-label="Remove"><ng-icon name="dripCross"></ng-icon></button>
         </div>
       </div>
     </div>

@@ -12,8 +12,8 @@ import {
   NgbModalRef
 } from '@ng-bootstrap/ng-bootstrap';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
@@ -39,12 +39,12 @@ export class EditModalComponent implements OnInit {
     this.open(this.content);
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   loading = false;
   submitted = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private modalService: NgbModal,
     private alertService: AlertService
   ) {}

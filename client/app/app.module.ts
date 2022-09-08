@@ -13,7 +13,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { StoreComponent } from './store/store.component';
 import { httpInterceptorProviders } from './_interceptors';
 import { NgIconsModule } from '@ng-icons/core';
-import { dripMinus, dripBasket, dripCross } from '@ng-icons/dripicons';
+import { dripMinus, dripBasket, dripCross, dripMenu } from '@ng-icons/dripicons';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,7 @@ import { dripMinus, dripBasket, dripCross } from '@ng-icons/dripicons';
   ],
   imports: [
     BrowserModule,
-    NgIconsModule.withIcons({ dripMinus, dripBasket, dripCross }),
+    NgIconsModule.withIcons({ dripMinus, dripBasket, dripCross, dripMenu }),
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,

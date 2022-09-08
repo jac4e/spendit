@@ -9,16 +9,23 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class AppComponent {
   title = 'spendit';
 
+  // Click listener to make tap on mobile device work a bit better
   @HostListener('click', ['$event.target'])
   click(target: HTMLElement) {
-    const oldClass = target.className;
-    if (oldClass.includes('btn')){
-      target.className = `${oldClass} tap`;
-      console.log(target.className);
-      setTimeout(() => {
-        target.className = oldClass;
-        console.log(target.className);
-      }, 100);
+    if (!target.classList.value.includes('btn')) {
+      // If it does not include btn as class, there is chance it is child of button
+      const potentialBtn = target.closest('.btn');
+      if (potentialBtn !== null) {
+        target = potentialBtn as HTMLElement;
+      } else {
+        // no parent btn so we do not care
+        return;
+      }
     }
+    const oldClass = target.className;
+    target.className = `${oldClass} tap`;
+    setTimeout(() => {
+      target.className = oldClass;
+    }, 100);
   }
 }

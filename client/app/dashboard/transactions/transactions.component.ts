@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Transaction } from 'client/app/_models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { first, Observable } from 'rxjs';
 })
 export class TransactionsComponent implements OnInit {
   transactions!: Transaction[];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   loading = false;
   submitted = false;
 
@@ -24,7 +24,7 @@ export class TransactionsComponent implements OnInit {
   showTransactions = true;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private adminService: AdminService,
     private alertService: AlertService
   ) {

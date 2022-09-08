@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Transaction } from 'client/app/_models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AdminService } from 'client/app/_services';
+import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';
 
 @Component({
@@ -25,7 +25,8 @@ export class TransactionsComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private alertService: AlertService
   ) {
     this.refreshTransactions = this.adminService.getAllTransactions();
   }
@@ -35,7 +36,10 @@ export class TransactionsComponent implements OnInit {
       accountid: ['', Validators.required],
       type: ['', [Validators.required, Validators.pattern('^(credit|debit)$')]],
       reason: ['', Validators.required],
-      total: [null, [Validators.required, Validators.min(0)]]
+      total: [
+        null,
+        [Validators.required, Validators.min(0), Validators.pattern('^[0-9]*$')]
+      ]
     });
   }
 
@@ -44,9 +48,6 @@ export class TransactionsComponent implements OnInit {
   }
   onSubmit() {
     this.submitted = true;
-
-    // reset alerts on submit
-    // this.alertService.clear();
 
     // stop here if form is invalid
     if (this.form.invalid) {
@@ -59,12 +60,20 @@ export class TransactionsComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: () => {
+          this.alertService.success('Successfully added new transaction', {
+            autoClose: true,
+            id: 'dashboard-alert'
+          });
           this.loading = false;
           // refresh transaction list
           this.showTransactions = false;
           setTimeout(() => {
             this.showTransactions = true;
           }, 100);
+        },
+        error: (resp) => {
+          this.alertService.error(resp.error.message, {id: 'dashboard-alert'});
+          this.loading = false;
         }
       });
   }

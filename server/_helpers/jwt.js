@@ -27,6 +27,5 @@ async function isRevokedCallback(req, payload, done) {
     if ((account.sessionid || '') !== payload.sid) {
         return done(null, true);
     }
-
     done();
 };

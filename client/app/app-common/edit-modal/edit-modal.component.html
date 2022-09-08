@@ -1,1 +1,35 @@
-<p>edit-modal works!</p>
+Edit
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ name }}</h4>
+        <button type="button" class="btn-close d-print-none" aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="modal-body">
+            <app-common-alerts id="modal-alert"></app-common-alerts>
+            <div class="row mt-3 gy-2 gx-3 align-items-center">
+            <ng-container *ngFor="let prop of modelProperties">
+                <div *ngIf="prop !== 'id' && prop !== 'balance'" class="form-group col-auto">
+                    <h5>{{titleCase(prop)}}:</h5>
+                    <!-- <label class="sr-only" for="username">username</label> -->
+                    <input type="text" formControlName="{{ prop }}" class="form-control" id="{{ prop }}"
+                        [ngClass]="{ 'is-invalid': submitted && f?.['{{ prop }}']?.errors }" placeholder="{{ prop }}">
+                    <div *ngIf="submitted && f?.['{{ prop }}']?.errors" class="invalid-feedback">
+                        <div *ngIf="f?.['{{ prop }}']?.errors?.['required']">
+                            {{titleCase(prop)}} is required
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Submit
+            </button>
+        </div>
+    </form>
+</ng-template>

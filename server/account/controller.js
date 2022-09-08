@@ -20,6 +20,7 @@ router.post('/register', guard.check('admin'), register);
 router.get('/:accountId/resetSession', guard.check('admin'), resetSession);
 router.get('/:accountId/balance', guard.check('admin'), getBalance);
 router.get('/:accountId/transaction', guard.check('admin'), getTransactions);
+// router.delete('/:accountId', guard.check('admin'), deleteAccountById);
 // router.put('/:accountId', guard.check('admin'), updateAccountById);
 router.get('/', guard.check('admin'), getAll);
 // router.get('/search', search)
@@ -28,7 +29,7 @@ router.get('/', guard.check('admin'), getAll);
 function auth(req, res, next) {
     accountService.auth(req.body)
         .then(account => account ? res.json(account) : res.status(401).json({
-            message: 'ccid or password is incorrect'
+            message: 'username or password is incorrect'
         })).catch(err => next(err));
 }
 

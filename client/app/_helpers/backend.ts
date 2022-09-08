@@ -4,6 +4,7 @@ export class Backend {
     status: this.url + '/status',
     store: this.url + '/store',
     admin: this.url + '/admin',
-    account: this.url + '/accounts'
+    account: this.url + '/accounts',
+    log: this.url + '/log'
   };
 }

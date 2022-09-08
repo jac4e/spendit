@@ -10,7 +10,7 @@
       </div>
     </div>
   </div>
-  <div class="form-group col-2">
+  <div class="form-group col-auto">
     <!-- <label class="sr-only" for="type">Type</label> -->
     <input type="text" formControlName="type" class="form-control" id="type"
       [ngClass]="{ 'is-invalid': submitted && f?.['type']?.errors }" placeholder="Type">
@@ -30,10 +30,10 @@
       </div>
     </div>
   </div>
-  <div class="form-group col-2">
+  <div class="form-group col-auto">
     <!-- <label class="sr-only" for="total">Amount</label> -->
     <div class="input-group">
-      <div class="input-group-text">¢</div>
+      <div class="input-group-text">PHYC</div>
       <input type="text" formControlName="total" class="form-control" id="total"
         [ngClass]="{ 'is-invalid': submitted && f?.['total']?.errors }" placeholder="0">
     </div>

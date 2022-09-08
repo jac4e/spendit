@@ -1,7 +1,7 @@
-Needs product grouping compatible with backend
 <div class="row">
   <h1 class="title-centered">Cart</h1>
 </div>
+<app-common-alerts id="cart-alert"></app-common-alerts>
 <div class="row justify-content-center cart">
   <div class="col-12">
     <h3 class="title-centered" *ngIf="(cart | async)?.length === 0">Your Cart is empty</h3>
@@ -23,18 +23,24 @@ Needs product grouping compatible with backend
             <p class="card-text">{{ product.description }}</p>
           </div>
         </div>
+        <span class="col-auto mx-auto my-auto">
+          <div class="col-auto mx-auto my-auto">
+            <p class="cart-price card-text">{{ product.price }} PHYC</p>
+          </div>
+          <div class="col-auto mx-auto my-auto">
+            <p class="cart-price card-text">x {{ product.amount }}</p>
+          </div>
+          <div class="col-auto mx-auto my-auto">
+            <p class="cart-price card-text">= {{ product.price * (product.amount || 0) }} PHYC</p>
+          </div>
+        </span>
         <div class="col-auto mx-auto my-auto">
-          <p class="cart-price card-text">¢{{ product.price }}</p>
+          <button type="button" class="btn" [disabled]="loading" (click)="decrementItem(i)"
+            aria-label="Decrease"><ng-icon name="dripMinus"></ng-icon></button>
         </div>
         <div class="col-auto mx-auto my-auto">
-          <p class="cart-price card-text">{{ product.amount }}</p>
-        </div>
-        <div class="col-auto mx-auto my-auto">
-          <p class="cart-price card-text">¢{{ product.price * (product.amount || 0) }}</p>
-        </div>
-        <div class="col-auto mx-auto my-auto">
-          <button type="button" class="btn-close" (click)="removeItem(i)"
-            aria-label="Close"></button>
+          <button type="button" class="btn" [disabled]="loading" (click)="removeItem(i)"
+            aria-label="Remove"><ng-icon name="DripCross"></ng-icon></button>
         </div>
       </div>
     </div>
@@ -43,13 +49,13 @@ Needs product grouping compatible with backend
 
 <div class="row justify-content-center">
   <div class="col-4">
-    <h5 class="cart-price">Total: ¢{{ total() }}</h5>
+    <h5 class="cart-price">Total: {{ total() }} PHYC</h5>
   </div>
 </div>
 
 <div class="row cart-buttons justify-content-center">
   <div class="col-md-2 col-4 justify-content-center">
-    <a class="btn btn-primary" (click)="clear()">Clear</a>
+    <button class="btn btn-primary" [disabled]="loading" (click)="clear()">Clear</button>
   </div>
   <div class="col-md-2 col-4 justify-content-center">
     <button class="btn btn-primary" [disabled]="loading" (click)="buy()">

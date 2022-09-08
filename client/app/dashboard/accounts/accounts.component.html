@@ -1,15 +1,52 @@
-<p>needs:</p>
-<p>remove/edit account</p>
-<p>fix account export</p>
 <h5 class="mt-3">Add account</h5>
 <form class="row mt-3 gy-2 gx-3 align-items-center" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group col-auto">
-    <!-- <label class="sr-only" for="ccid">CCID</label> -->
-    <input type="text" formControlName="ccid" class="form-control" id="ccid"
-      [ngClass]="{ 'is-invalid': submitted && f?.['ccid']?.errors }" placeholder="CCID">
-    <div *ngIf="submitted && f?.['ccid']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['ccid']?.errors?.['required']">
-        CCID is required
+    <!-- <label class="sr-only" for="username">username</label> -->
+    <input type="text" formControlName="username" class="form-control" id="username"
+      [ngClass]="{ 'is-invalid': submitted && f?.['username']?.errors }" placeholder="username">
+    <div *ngIf="submitted && f?.['username']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['username']?.errors?.['required']">
+        username is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-auto">
+    <!-- <label class="sr-only" for="firstName">firstName</label> -->
+    <input type="text" formControlName="firstName" class="form-control" id="firstName"
+      [ngClass]="{ 'is-invalid': submitted && f?.['firstName']?.errors }" placeholder="firstName">
+    <div *ngIf="submitted && f?.['firstName']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['firstName']?.errors?.['required']">
+        firstName is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-auto">
+    <!-- <label class="sr-only" for="lastName">lastName</label> -->
+    <input type="text" formControlName="lastName" class="form-control" id="lastName"
+      [ngClass]="{ 'is-invalid': submitted && f?.['lastName']?.errors }" placeholder="lastName">
+    <div *ngIf="submitted && f?.['lastName']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['lastName']?.errors?.['required']">
+        lastName is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-auto">
+    <!-- <label class="sr-only" for="email">email</label> -->
+    <input type="text" formControlName="email" class="form-control" id="email"
+      [ngClass]="{ 'is-invalid': submitted && f?.['email']?.errors }" placeholder="email">
+    <div *ngIf="submitted && f?.['email']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['email']?.errors?.['required']">
+        email is required
+      </div>
+    </div>
+  </div>
+  <div class="form-group col-auto">
+    <!-- <label class="sr-only" for="role">role</label> -->
+    <input type="text" formControlName="role" class="form-control" id="role"
+      [ngClass]="{ 'is-invalid': submitted && f?.['role']?.errors }" placeholder="role">
+    <div *ngIf="submitted && f?.['role']?.errors" class="invalid-feedback">
+      <div *ngIf="f?.['role']?.errors?.['required']">
+        role is required
       </div>
     </div>
   </div>
@@ -36,7 +73,7 @@
     <table class="table table-hover table-flush">
       <thead>
         <tr>
-          <th scope="col">CCID</th>
+          <th scope="col">username</th>
           <th scope="col">Balance</th>
           <th scope="col">Roles</th>
           <th scope="col">ID</th>
@@ -44,16 +81,16 @@
       </thead>
       <tbody>
         <tr *ngFor="let account of accounts">
-          <th scope="row">{{ account.ccid }}</th>
-          <td>{{ account.balance < 0 ? '-' : '' }}¢{{ account.balance < 0 ? account.balance * -1 : account.balance }}
+          <th scope="row">{{ account.username }}</th>
+          <td>{{ account.balance < 0 ? '-' : '' }}{{ account.balance < 0 ? account.balance * -1 : account.balance }} PHYC
           </td>
           <td>{{ account.role }}</td>
           <td>{{ account.id }}</td>
           <td>
             <div class="btn-group" role="group" aria-label="Basic example">
               <app-view-modal class="btn btn-secondary" [name]="'Account View'" [model]="account">View</app-view-modal>
-              <button type="button" class="btn btn-secondary">Modify</button>
-              <button type="button" class="btn btn-secondary">Remove</button>
+              <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Account Modify'" [model]="account">Modify</app-edit-modal>
+              <!-- <button type="button" class="btn btn-secondary">Remove</button> -->
             </div>
           </td>
         </tr>

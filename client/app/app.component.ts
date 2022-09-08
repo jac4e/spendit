@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -8,4 +8,17 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class AppComponent {
   title = 'spendit';
+
+  @HostListener('click', ['$event.target'])
+  click(target: HTMLElement) {
+    const oldClass = target.className;
+    if (oldClass.includes('btn')){
+      target.className = `${oldClass} tap`;
+      console.log(target.className);
+      setTimeout(() => {
+        target.className = oldClass;
+        console.log(target.className);
+      }, 100);
+    }
+  }
 }

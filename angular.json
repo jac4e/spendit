@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/spendit",
+            "outputPath": "server/dist",
             "index": "client/index.html",
             "main": "client/main.ts",
             "polyfills": "client/polyfills.ts",

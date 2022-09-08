@@ -1,0 +1,22 @@
+const db = {
+    user: "",
+    pass: "",
+    url: "${DB_HOSTNAME}",
+    port: "${DB_PORT}",
+    name: "spendit-db"
+}
+
+const account = {
+    username: "${ADMIN_USER}",
+    password: "${ADMIN_PASSWORD}",
+    firstName: "${ADMIN_FIRST}",
+    lastName: "${ADMIN_LAST}",
+    email: "${ADMIN_EMAIL}",
+    role: "admin"
+}
+
+const port = ${BACKEND_PORT};
+
+const secret = "${JWT_SECRET}"
+
+export default { db, account, secret, port }

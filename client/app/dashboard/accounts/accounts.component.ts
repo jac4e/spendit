@@ -8,7 +8,7 @@ import {
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
-import { AccountService, CommonService } from 'client/app/_services';
+import { AccountService, AlertService, CommonService } from 'client/app/_services';
 import { first } from 'rxjs';
 
 @Component({
@@ -27,7 +27,8 @@ export class AccountsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private adminService: AdminService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private alertService: AlertService
   ) {
     this.adminService.getAllAccounts().subscribe((accounts: User[]) => {
       this.accounts = accounts;
@@ -36,9 +37,15 @@ export class AccountsComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      ccid: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      role: 'user'
+      username: ['', [Validators.required]],
+      role: [
+        'user',
+        [Validators.required, Validators.pattern('^(user|admin)$')]
+      ],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -73,9 +80,17 @@ export class AccountsComponent implements OnInit {
       .subscribe({
         next: () => {
           this.loading = false;
+          this.alertService.success('Successfully added new user', {
+            autoClose: true,
+            id: 'dashboard-alert'
+          });
           this.adminService.getAllAccounts().subscribe((accounts: User[]) => {
             this.accounts = accounts;
           });
+        },
+        error: (resp) => {
+          this.alertService.error(resp.error.message, {id: 'dashboard-alert'});
+          this.loading = false;
         }
       });
   }

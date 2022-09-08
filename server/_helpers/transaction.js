@@ -4,11 +4,15 @@ import accountService from '../account/service.js';
 const Transaction = db.transaction;
 
 async function create(transactionParam) {
-    // should store entire acocunt and products in transaction incase product or user is deleted
+    // should store entire account and products in transaction incase product or user is deleted
     // this way proper invoices can still be generated
 
+    // check total type
+    if (typeof transactionParam.total !== 'string') {
+        transactionParam.total = BigInt(transactionParam.total).toString()
+    }
 
-    // Check if ccid valid
+    // Check if username valid
     if (await accountService.getById(transactionParam.accountid)) {
         // valid
     } else {
@@ -27,7 +31,9 @@ async function create(transactionParam) {
 }
 
 async function getAll() {
-    return await Transaction.find({}).sort({ date : -1}).lean();
+    return await Transaction.find({}).sort({
+        date: -1
+    }).lean();
 }
 
 
@@ -53,9 +59,13 @@ async function getBalanceByAccountId(accountid) {
             balance: {
                 $sum: {
                     $cond: [{
-                        $eq: ["$type", "debit"]
-                    }, '$total', {
-                        $multiply: ['$total', -1]
+                        $eq: ['$type', 'debit']
+                    }, {
+                        '$toLong': '$total'
+                    }, {
+                        $multiply: [{
+                            '$toLong': '$total'
+                        }, -1]
                     }]
                 }
             }
@@ -67,7 +77,9 @@ async function getByAccountId(accountid) {
     // console.log(`get trans by id: ${accountid}`);
     return await Transaction.find({
         accountid: accountid
-    }).sort({ date : -1}).lean();
+    }).sort({
+        date: -1
+    }).lean();
 
 }
 

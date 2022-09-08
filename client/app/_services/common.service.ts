@@ -8,22 +8,33 @@ export class CommonService {
   constructor() {}
 
   export(data: any, name: string) {
+    // Create table header from key names
     const array = [Object.keys(data[0])].concat(data);
+    console.log(array);
+
+    // Parse object array
     const csv = array
-      .map((it: Array<Object>) => {
-        // console.log(Object.values(it));
-        let it2 = Object.values(it).map((el: any) => {
-          if (Array.isArray(el)) {
-            el = el.map((el2)=>{
-              // console.log(el2);
-              return Object.values(el2);
-            });
-            return el;
-          } else {
-            return el;
+      .map((array_item: Array<Object>) => {
+        console.log(array_item);
+        // console.log(Object.values(row_item));
+        // Convert array item to CSV row item
+        // Basically just creating an array of the values
+        const row_item = Object.values(array_item).map(
+          (array_item_element: any) => {
+            // Concat nested arrays so they are one cell
+            if (Array.isArray(array_item_element)) {
+              return array_item_element
+                .map((nested_array_element) => {
+                  console.log(nested_array_element);
+                  return Object.values(nested_array_element).join(', ');
+                })
+                .join('; ');
+            } else {
+              return array_item_element;
+            }
           }
-        });
-        return it2.join('\t');
+        );
+        return row_item.join('\t');
       })
       .join('\n');
     const element = document.createElement('a');

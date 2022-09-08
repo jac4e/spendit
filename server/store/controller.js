@@ -26,15 +26,23 @@ function createProduct(req, res, next) {
         .catch(err => next(err))
 }
 
-function updateProductById(req, res, next) {}
+function updateProductById(req, res, next) {
+    storeService.updateProductById(req.params['productId'],req.body)
+        .then(() => res.json({}))
+        .catch(err => next(err))
+}
 
 function getProductById(req, res, next) {
-    storeService.getProductById()
+    storeService.getProductById(req.params['productId'])
         .then(resp => res.json(resp))
         .catch(err => next(err))
 }
 
-function deleteProductById(req, res, next) {}
+function deleteProductById(req, res, next) {
+    storeService.deleteProductById(req.params['productId'])
+        .then(resp => res.json(resp))
+        .catch(err => next(err))
+}
 
 function purchase(req, res, next) {
     // console.log("purchasing")

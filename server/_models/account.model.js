@@ -3,18 +3,17 @@ import validator from 'validator';
 
 const schema = new mongoose.Schema({
     role: { type: String, required: true },
-    ccid: { type: String, unique: true, required: true},
+    username: { type: String, unique: true, required: true},
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true },
     hash: { type: String, required: true },
     sessionid: { type: String, unique: true, required: true }
 });
 schema.set('toJSON', {
     virtuals: true,
     versionKey: false,
-    transform: function (doc, ret) {
-        delete ret._id;
-        delete ret.hash;
-        delete ret.sessionid;
-    }
+    transform: transformDoc
 })
 
 schema.post(['find', 'findOne', 'findOneAndUpdate'], function (res) {

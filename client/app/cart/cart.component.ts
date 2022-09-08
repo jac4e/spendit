@@ -3,6 +3,7 @@ import { first, Observable } from 'rxjs';
 import { AccountService, StoreService } from '../_services';
 import { Product } from '../_models';
 import { AccountComponent } from '../account/account.component';
+import { AlertService } from '../_services/';
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +16,8 @@ export class CartComponent implements OnInit {
   loading = false;
   constructor(
     private storeService: StoreService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    protected alertService: AlertService
   ) {
     this.cart = storeService.getCart();
   }
@@ -27,21 +29,29 @@ export class CartComponent implements OnInit {
   }
 
   removeItem(index: number) {
-    console.log(`removine ${index}`);
+    // console.log(`removine ${index}`);
     this.storeService.removeFromCart(index);
+  }
+  decrementItem(index: number) {
+    // console.log(`removine ${index}`);
+    this.storeService.decrementFromCart(index);
   }
 
   buy() {
+    // check if cart is empty
     this.loading = true;
     this.storeService.purchaseCart()?.subscribe({
       next: () => {
         this.storeService.clearCart();
         this.accountService.refreshBalance();
+        this.alertService.success('Your purchase was successful', {id: 'cart-alert', autoClose: true});
         this.loading = false;
       },
-      error: error => {
-        // this.alertService.error(error);
+      error: (resp) => {
+        // console.log(e);
+        this.alertService.error(resp.error.message, {id: 'cart-alert'});
         this.loading = false;
+        throw resp.error.message;
       }
     });
   }

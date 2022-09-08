@@ -7,5 +7,5 @@ export class Transaction {
   type!: string;
   reason!: string;
   products!: Product[];
-  amount!: number;
+  total!: number;
 }

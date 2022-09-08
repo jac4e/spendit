@@ -24,17 +24,14 @@ const schema = new mongoose.Schema({
         required: true
     },
     total: {
-        type: Number,
+        type: String,
         required: true
     },
     // hash: { type: String, required: true}
 });
 schema.set('toJSON', {
     virtuals: true,
-    transform: function (doc, ret) {
-        delete ret._id;
-        delete doc.__v;
-    }
+    transform: transformDoc
 })
 
 schema.post(['find', 'findOne', 'findOneAndUpdate'], function (res) {
@@ -48,7 +45,7 @@ schema.post(['find', 'findOne', 'findOneAndUpdate'], function (res) {
     transformDoc(res);
 });
 
-function transformDoc(doc) {
+function transformDoc(doc, ret) {
     doc.id = doc._id.toString();
     delete doc._id;
     delete doc.__v;

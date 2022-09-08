@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import config from '../config.js';
+import config from '../deploy/config.js';
 import db from '../_helpers/db.js';
 import { randomUUID } from 'crypto';
 import transaction from '../_helpers/transaction.js';
@@ -9,11 +9,11 @@ const Account = db.account;
 const secret = config.secret;
 
 async function auth({
-  ccid,
+  username,
   password
 }) {
   const account = await Account.findOne({
-    ccid: ccid
+    username: username
   });
   const match = await bcrypt.compare(password, account.hash)
   if (account && match) {
@@ -37,13 +37,13 @@ async function auth({
 
 async function create(accountParam) {
   // validate
-  console.log(JSON.stringify(accountParam))
+  // console.log(JSON.stringify(accountParam))
 
-  // make sure ccid is not taken
+  // make sure username is not taken
   if (await Account.findOne({
-      ccid: accountParam.ccid
+      username: accountParam.username
     })) {
-    throw `CCID '${accountParam.ccid}' is already taken`
+    throw `username '${accountParam.username}' is already taken`
   }
   const account = new Account(accountParam)
 

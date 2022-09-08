@@ -30,10 +30,10 @@ export class AccountService {
     return `${this.backend.api.account}/${crumb}`;
   }
 
-  login(ccid: string, password: string) {
+  login(username: string, password: string) {
     // console.log('logging in');
     // console.log(this.api('auth'));
-    return this.http.post<User>(this.api('auth'), { ccid, password }).pipe(
+    return this.http.post<User>(this.api('auth'), { username, password }).pipe(
       map((account) => {
         localStorage.setItem('account', JSON.stringify(account));
         this.accountSubject.next(account);

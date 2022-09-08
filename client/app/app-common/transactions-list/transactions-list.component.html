@@ -4,7 +4,7 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Date</th>
-                <th *ngIf="transactions[0].accountid !== undefined" scope="col">Account ID</th>
+                <th scope="col">Account ID</th>
                 <th scope="col">Type</th>
                 <th scope="col">Reason</th>
                 <th scope="col">Total</th>
@@ -14,10 +14,10 @@
             <tr *ngFor="let transaction of transactions" class="{{ transaction.type === 'credit' ? 'table-danger' : 'table-success' }}">
                 <th scope="row">{{ transaction.id }}</th>
                 <td>{{ transaction.date.toLocaleString('en-us',{timeZoneName:'short'}) }}</td>
-                <td *ngIf="transactions[0].accountid !== undefined"> {{ transaction.accountid }}</td>
+                <td> {{ transaction.accountid }}</td>
                 <td>{{ transaction.type }}</td>
                 <td>{{ transaction.reason }}</td>
-                <td>¢{{ transaction.total }}</td>
+                <!-- <td>{{ transaction.total }} PHYC</td> -->
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <app-view-modal class="btn btn-secondary" [name]="'Transaction Receipt'" [model]="transaction">View</app-view-modal>

@@ -17,7 +17,7 @@ View
                     <ng-container *ngIf="prop !== 'date'">
                         <p class="fs-5 fw-bold mx-1 my-auto">{{ titleCase(prop) }}:</p>
                         <p class="fs-5 my-auto mx-1" *ngIf="!isArray(model[prop])">
-                            {{ prop === 'total' || prop === 'price' ? '¢' : ''}}{{ model[prop] }}</p>
+                            {{ model[prop] }}{{ prop === 'total' || prop === 'price' || prop === 'balance' ? ' PHYC' : ''}}</p>
                     </ng-container>
                     <ng-container *ngIf="isArray(model[prop])">
                         <p class="fs-5 my-auto mx-1" *ngIf="model[prop].length === 0"> {{ model['type'] === 'debit' || model['type'] === 'credit' ? 'Account '+titleCase(model['type']) : 'N/A'}} </p>
@@ -32,7 +32,7 @@ View
                                 <tbody>
                                     <tr *ngFor="let element of model[prop]">
                                         <td *ngFor="let nestedProp of getProperties(element)">
-                                            {{ nestedProp === 'total' || nestedProp === 'price' ? '¢' : ''}}{{ element[nestedProp] }}
+                                            {{ element[nestedProp] }}{{ nestedProp === 'total' || nestedProp === 'price' ? ' PHYC' : ''}}
                                         </td>
                                     </tr>
                                 </tbody>

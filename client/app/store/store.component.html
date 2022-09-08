@@ -1,30 +1,22 @@
-<div class="row justify-content-center">
-  <div class="col-12">
-    <h1 class="title-centered">Products</h1>
-  </div>
-  <div
-    class="mb-3 col-6 col-sm-4 col-md-3 col-xl-2"
-    *ngFor="let product of inventory"
-  >
-    <div class="card">
-      <img
-        [src]="
-          product.image !== ''
-            ? product.image
-            : 'https://via.placeholder.com/150'
-        "
-        class="card-img-top"
-      />
-      <div class="product-info card-body">
-        <h5 class="card-title title-centered">{{ product.name }}</h5>
-        <p class="card-text title-centered">{{ product.description }}</p>
+<div class="row">
+  <h1 class="title-centered">Products</h1>
+</div>
+<div class="row" *ngIf="inventory.length > 0" (window:resize)="refreshLayout()" class="row" id="wall">
+  <div *ngFor="let column of columns" class="col-{{12/col}}">
+    <ng-container *ngIf="column">
+      <div class="pb-4" *ngFor="let product of column.products">
+        <div class="d-grid product">
+          <div class="card bg-product">
+          </div>
+          <img [src]="product.image === undefined ? '' : product.image" class="card-img-top mx-auto d-block" />
+          <span class="product-title title-centered">{{ product.name }}</span>
+          <span class="product-desc title-centered">{{ product.description }}</span>
+          <span class="product-price">{{ product.price }} PHYC</span>
+          <div class="product-add mx-auto mb-2">
+            <a class="btn btn-primary no-hover" (click)="addToCart(product)">Add to cart</a>
+          </div>
+        </div>
       </div>
-      <div class="row justify-content-center product-info card-body">
-        <span class="product-price">${{ product.price }}</span>
-      </div>
-      <div class="row justify-content-center product-info card-body">
-        <a class="btn btn-primary" (click)="addToCart(product)">Add to cart</a>
-      </div>
-    </div>
+    </ng-container>
   </div>
 </div>

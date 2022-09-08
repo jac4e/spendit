@@ -15,7 +15,7 @@ const schema = new mongoose.Schema({
         type: String
     },
     price: {
-        type: Number,
+        type: String,
         required: true
     },
     stock: {
@@ -25,10 +25,7 @@ const schema = new mongoose.Schema({
 });
 schema.set('toJSON', {
     virtuals: true,
-    transform: function (doc, ret) {
-        delete ret._id;
-        delete ret.__v
-    }
+    transform: transformDoc
 })
 
 schema.post(['find', 'findOne', 'findOneAndUpdate'], function (res) {

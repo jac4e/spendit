@@ -4,7 +4,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs';
 import { Product } from 'client/app/_models';
-import { CommonService, StoreService } from 'client/app/_services';
+import {
+  AlertService,
+  CommonService,
+  StoreService
+} from 'client/app/_services';
 
 @Component({
   selector: 'app-dashboard-inventory',
@@ -16,17 +20,20 @@ export class InventoryComponent implements OnInit {
   form!: FormGroup;
   loading = false;
   submitted = false;
+  updateProduct;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private storeService: StoreService,
     private adminService: AdminService,
-    private commonService: CommonService
-    ) {
+    private commonService: CommonService,
+    private alertService: AlertService
+  ) {
     this.storeService.getInventory().subscribe((inventory: Product[]) => {
       this.inventory = inventory;
     });
+    this.updateProduct = this.adminService.boundedUpdateProduct;
   }
 
   ngOnInit() {
@@ -34,16 +41,14 @@ export class InventoryComponent implements OnInit {
       name: ['', Validators.required],
       price: [
         null,
-        [
-          Validators.required,
-          Validators.min(0)
-        ]
+        [Validators.required, Validators.min(0), Validators.pattern('^[0-9]*$')]
       ],
       stock: [
         0,
         [Validators.required, Validators.min(0), Validators.pattern('^[0-9]*$')]
       ],
-      description: ['']
+      description: [''],
+      image: ['https://pngimg.com/uploads/cocacola/cocacola_PNG0.png']
     });
   }
   get f() {
@@ -55,6 +60,19 @@ export class InventoryComponent implements OnInit {
         data,
         `inventory_${this.commonService.localeISOTime()}.csv`
       );
+    });
+  }
+  remove(id: string) {
+    console.log('remove', id);
+    this.adminService.removeProduct(id).subscribe({
+      next: () => {
+        this.storeService.getInventory().subscribe((inventory: Product[]) => {
+          this.inventory = inventory;
+        });
+      },
+      error: (resp) => {
+        this.alertService.error(resp.error.message);
+      }
     });
   }
   onSubmit() {
@@ -74,10 +92,18 @@ export class InventoryComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: () => {
+          this.alertService.success('Successfully added new inventory item', {
+            autoClose: true,
+            id: 'dashboard-alert'
+          });
           this.loading = false;
           this.storeService.getInventory().subscribe((inventory: Product[]) => {
             this.inventory = inventory;
           });
+        },
+        error: (resp) => {
+          this.alertService.error(resp.error.message, {id: 'dashboard-alert'});
+          this.loading = false;
         }
       });
   }

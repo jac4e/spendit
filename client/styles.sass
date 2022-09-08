@@ -2,6 +2,7 @@
 
 /* Importing Bootstrap SCSS file. */
 // @import '~bootstrap/scss/bootstrap'
+@import 'assets/css/bootstrap-dark.css'
 
 /* Importing open-iconic */
 $icon-font-path: '~open-iconic/font/fonts/'
@@ -17,20 +18,58 @@ body
     border-radius: 0.75rem
 
 .depth
-    box-shadow: 0 0.5rem 1rem rgba(#000, .15)
-.collapsing
-    // overflow: visible !important
-    // padding: 5px !important
+    box-shadow: 0 0.5rem 1rem rgba(#000, .10)
 
+.bg-ui-main 
+    background-color: var(--ui-main)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .12)
+.bg-ui-layer-1 
+    background-color: var(--ui-layer-1)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .10)
+.bg-ui-layer-2 
+    background-color: var(--ui-layer-2)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .08)
 
-.bg-accent 
-     background-color: rgba(175,175,175,0.12)
+.card-img-top
+    // float: left
+    // position: absolute
+    // padding-bottom: 50%
+    // top: -10rem
+    // opacity: 0.5
+
+@media  (prefers-color-scheme: light)
+    :root 
+        --ui-main: rgb(240,240,240)
+        --ui-layer-1: rgb(242,242,242)
+        --ui-layer-2: rgb(231,231,231)
+
+    // add badge colors
+    .badge-primary 
+        color: #fafafa
+        background-color: #375a7f
+        border-color: #375a7f
+
+@media  (prefers-color-scheme: dark)
+    :root
+        --ui-main: rgb(51, 51, 51)
+        --ui-layer-1: rgb(49, 49, 49)
+        --ui-layer-2: rgb(62, 62, 62)
+
+// // add badge colors
+// .badge-primary 
+//     color: #fafafa
+//     background-color: var(--bs-primary)
+//     border-color: var(--bs-primary)
 
 .card
-    box-shadow: 0 0.5rem 1rem rgba(#000, .15)
-    background-color: rgba(175,175,175,0.1)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .10)
+    background-color: var(--ui-layer-1)
     border: none
     border-radius: 0.75rem
+
+.card .card
+    background-color: var(--ui-layer-2)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .08)
 
 .nav-pills .nav-link
     border-radius: 0.5rem
@@ -44,7 +83,23 @@ body
 
 .btn
     border-radius: 0.5rem
+    touch-action: manipulation
 .btn.btn-primary
-    box-shadow: 0 .125rem .25rem rgba(#000, .15)
+    box-shadow: 0 .125rem .25rem rgba(#000, .10)
 .btn.btn-secondary
-    box-shadow: 0 .125rem .25rem rgba(#000, .15)
+    box-shadow: 0 .125rem .25rem rgba(#000, .10)
+.btn.btn-primary:active
+    box-shadow: none
+.btn.btn-secondary:active
+    box-shadow: none
+@media (hover: none)
+    .btn.btn-primary.tap
+        box-shadow: none
+    .btn.btn-secondary.tap
+        box-shadow: none
+    .btn-outline-primary:hover
+        background-color: rgba(0,0,0,0)
+        color: var(--bs-primary)
+    .btn-primary:hover
+        background-color: var(--bs-primary)
+        border-color: var(--bs-primary)

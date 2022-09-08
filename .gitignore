@@ -2,5 +2,6 @@ node_modules
 .angular
 server/config.js
 .DS_Store
-server/deploy/admin.js
 server/deploy/config.js
+server/deploy/config.js
+dist/

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AccountService } from './account.service';
 import { User, Product } from '../_models';
-import { BehaviorSubject, retry } from 'rxjs';
+import { BehaviorSubject, retry, catchError } from 'rxjs';
 import { Backend } from '../_helpers';
 import { HttpClient } from '@angular/common/http';
+import { AlertService } from './alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class StoreService {
   credits!: number;
   constructor(
     private accountService: AccountService,
-    private http: HttpClient
+    private http: HttpClient,
+    private alertService: AlertService
   ) {
     this.accountService.account.subscribe((account: User | null) => {
       this.account = account;
@@ -70,6 +72,20 @@ export class StoreService {
     this.cart.next(updatedCart);
   }
 
+  decrementFromCart(index: number) {
+    // console.log(index);
+    const updatedCart = this.cart.value;
+    // console.log(updatedCart);
+    if ((updatedCart[index].amount || 0) > 1) {
+      updatedCart[index].amount = (updatedCart[index].amount || 1) - 1;
+    } else {
+      this.removeFromCart(index);
+    }
+    // console.log(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    this.cart.next(updatedCart);
+  }
+
   getInventory() {
     return this.http.get<Product[]>(this.api('products')).pipe(retry(1));
   }
@@ -85,9 +101,10 @@ export class StoreService {
   }
 
   purchaseCart() {
-    if (!this.account) {
-      return;
-    }
+    // if (!this.account) {
+    //   this.alertService.warn('You must have an account to make purchases.');
+    //   return;
+    // }
     // console.log(this.serializeCart(this.cart.value));
     // console.log('purchasing');
     // console.log(`${this.backend.api.store}/purchase`);
@@ -106,6 +123,10 @@ export class StoreService {
     });
 
     return sum;
+  }
+
+  getCartLength() {
+    return this.cart.value.length;
   }
 
   clearCart() {

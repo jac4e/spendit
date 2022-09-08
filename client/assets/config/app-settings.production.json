@@ -1,7 +1,7 @@
 {
-    "apiBaseUrl": "https://localhost:5001",
+    "apiBaseUrl": "https://localhost:3001",
     "brand": {
-        "name": "Spendit",
+        "name": "cryptoPhyrdge",
         "image": "image"
     }
 }

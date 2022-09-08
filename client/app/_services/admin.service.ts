@@ -23,12 +23,35 @@ export class AdminService {
     );
   }
 
+  removeAccount(id: string) {
+    return this.http.delete<User>(`${this.backend.api.account}/${id}`);
+  }
+  updateAccount(id: string, account: User) {
+    return this.http.put<Product>(`${this.backend.api.account}/${id}`, account);
+  }
+  public boundedUpdateAccount = this.updateAccount.bind(this);
+
   addProduct(product: Product) {
     return this.http.post<Product>(
       `${this.backend.api.store}/products`,
       product
     );
   }
+
+  updateProduct(id: string, product: Product) {
+    console.log(`${this.backend.api.store}/products/${id}`, product);
+    return this.http.put<Product>(
+      `${this.backend.api.store}/products/${id}`,
+      product
+    );
+  }
+
+  removeProduct(id: string) {
+    return this.http.delete<Product>(
+      `${this.backend.api.store}/products/${id}`
+    );
+  }
+  public boundedUpdateProduct = this.updateProduct.bind(this);
 
   addTransaction(transaction: Transaction) {
     return this.http.post<Transaction>(this.api('transactions'), transaction);

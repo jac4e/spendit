@@ -10,6 +10,7 @@ const routes: Routes = [
     path: '',
     component: AccountComponent,
     children: [
+      { path: '', pathMatch: 'full', redirectTo: 'overview'},
       { path: 'overview', component: OverviewComponent },
       { path: 'settings', component: SettingsComponent },
       { path: 'transactions', component: TransactionsComponent }

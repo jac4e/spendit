@@ -2,22 +2,24 @@
 
 ## Pre beta launch
 
-- [ ] All todo notes in frontend templates
-- [ ] split frontend and backend into seperate parts
+- [x] All todo notes in frontend templates
+- [ ] split frontend and backend into seperate repos
 
 ### frontend
 
 - [ ] proper feedback and bug reporting*
-- [ ] Product add: Coin default text should be whole number
+- [x] Product add: Coin default text should be whole number
 - [ ] spacing under add products in dashboard incorrect*
-- [ ] add "contact us" to change password or username in account view*
-- [ ] improve account overview view*
+- [x] add "contact us" to change password or username in account view*
+- [x] improve account overview view*
 - [ ] export buttons not matching*
+- [ ] add transaction type should be dropdown
+- [ ] add user role should be dropdown
 
-- [ ] alert system*
+- [x] alert system*
 - [ ] email notifications
   - [ ] admin notification system
-- [ ] Fix double click dashboard and account nav taken to wrong place*
+- [x] Fix double click dashboard and account nav taken to wrong place*
 - [ ] proper inventory handling*
   - [ ] out of stock messsage on product display*
 - [ ] improve configuration

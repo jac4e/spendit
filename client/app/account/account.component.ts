@@ -27,15 +27,9 @@ export class AccountComponent implements OnInit {
       this.account = account || new User();
     });
     this.url = this.router.url;
-    if (this.router.url === '/account'){
-      this.router.navigate([this.links[0].route]);
-    }
   }
 
   ngOnInit(): void {
     this.url = this.router.url;
-    if (this.router.url === '/account'){
-      this.router.navigate([this.links[0].route]);
-    }
   }
 }

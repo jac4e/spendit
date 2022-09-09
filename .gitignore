@@ -3,5 +3,5 @@ node_modules
 server/config.js
 .DS_Store
 server/deploy/config.js
-server/deploy/config.js
 dist/
+client/app/_helpers/backend.ts

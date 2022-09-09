@@ -1,7 +1,7 @@
 // This backend port MUST be the public facing backend port, not internal port
 
 export class Backend {
-    url = '/api';
+    url = '${BACKEND_URL}';
     api = {
       status: this.url + '/status',
       store: this.url + '/store',

@@ -1,17 +1,25 @@
 FROM node:16-bullseye-slim
-# ENV NODE_ENV=production
+
+ENV CI=1
+
+RUN apt-get update && apt-get install -y gettext
 
 RUN mkdir /spendit
 WORKDIR /spendit
 
-RUN npm install -g @angular/cli@13.2.6
+RUN npm install -g @angular/cli@14.2.1
 
 COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
 
-RUN ng build
+# How to get the password..
+RUN ./setup.sh production
+
+RUN ng build --progress
+
+ENV NODE_ENV=production
 
 WORKDIR /spendit/server
 

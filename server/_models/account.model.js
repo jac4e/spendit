@@ -3,6 +3,7 @@ import validator from 'validator';
 
 const schema = new mongoose.Schema({
     role: { type: String, required: true },
+    verified: { type: Boolean, required: true },
     username: { type: String, unique: true, required: true},
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },

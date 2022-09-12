@@ -130,6 +130,12 @@ async function getById(id) {
   return account;
 }
 
+async function verify(id) {
+  let account = await Account.findById(id);
+  account.verified = true;
+  account.save();
+}
+
 async function pay(amount, id) {
   // makes payment on account based on the account Id
   // returns true on success, false on failure
@@ -151,6 +157,7 @@ export default {
   getBalance,
   resetSession,
   getSelfTransactions,
-  pay
+  pay,
+  verify
   // search
 }

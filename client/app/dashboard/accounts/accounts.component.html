@@ -88,6 +88,7 @@
           <td>{{ account.id }}</td>
           <td>
             <div class="btn-group" role="group" aria-label="Basic example">
+              <button *ngIf="!account.verified" (click)="verify(account.id)" class="btn btn-secondary" >Verify</button>
               <app-view-modal class="btn btn-secondary" [name]="'Account View'" [model]="account">View</app-view-modal>
               <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Account Modify'" [model]="account">Modify</app-edit-modal>
               <!-- <button type="button" class="btn btn-secondary">Remove</button> -->

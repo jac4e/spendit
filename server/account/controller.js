@@ -20,6 +20,7 @@ router.post('/register', guard.check('admin'), register);
 router.get('/:accountId/resetSession', guard.check('admin'), resetSession);
 router.get('/:accountId/balance', guard.check('admin'), getBalance);
 router.get('/:accountId/transaction', guard.check('admin'), getTransactions);
+router.put('/:accountId/verify', guard.check('admin'), verify);
 // router.delete('/:accountId', guard.check('admin'), deleteAccountById);
 // router.put('/:accountId', guard.check('admin'), updateAccountById);
 router.get('/', guard.check('admin'), getAll);
@@ -66,6 +67,10 @@ function getAll(req, res, next) {
     accountService.getAll()
         .then(resp => res.json(resp))
         .catch(err => next(err))
+}
+
+function verify(req, res, next) {
+    accountService.verify(req.params['accountId']).then(resp => res.json(resp)).catch(err => next(err));
 }
 
 function resetSession(req, res, next) {

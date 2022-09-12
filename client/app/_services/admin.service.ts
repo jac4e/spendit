@@ -46,6 +46,10 @@ export class AdminService {
     );
   }
 
+  verify(id: string) {
+    return this.http.put<User>(`${this.backend.api.account}/${id}/verify`, {});
+  }
+
   removeProduct(id: string) {
     return this.http.delete<Product>(
       `${this.backend.api.store}/products/${id}`

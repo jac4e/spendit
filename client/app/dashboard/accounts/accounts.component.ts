@@ -62,6 +62,25 @@ export class AccountsComponent implements OnInit {
     });
   }
 
+  verify(id: string) {
+    this.adminService.verify(id).subscribe({
+      next: () => {
+        this.loading = false;
+        this.alertService.success('Successfully verified user!', {
+          autoClose: true,
+          id: 'dashboard-alert'
+        });
+        this.adminService.getAllAccounts().subscribe((accounts: User[]) => {
+          this.accounts = accounts;
+        });
+      },
+      error: (resp) => {
+        this.alertService.error(resp.error.message, {id: 'dashboard-alert'});
+        this.loading = false;
+      }
+    });
+  }
+
   onSubmit() {
     this.submitted = true;
 

@@ -5,6 +5,7 @@ import { CartComponent } from './cart/cart.component';
 import { LoginComponent } from './login/login.component';
 import { NgModule } from '@angular/core';
 import { StoreComponent } from './store/store.component';
+import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
     data: { roles: ['admin'] }
   },
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: '', component: StoreComponent },
   { path: '**', redirectTo: '' }
 ];

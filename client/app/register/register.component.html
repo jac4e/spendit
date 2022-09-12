@@ -1,0 +1,87 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <h4 class="card-header">Register</h4>
+            <div class="card-body">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="form-group mb-3">
+                        <label for="username">Username</label>
+                        <input (focusout)="onFocusOut('username')" type="username" formControlName="username" class="form-control"
+                            [ngClass]="{ 'is-invalid': showErrors['username'] && f['username'].errors }" />
+                        <div *ngIf="showErrors['username'] && f['username'].errors" class="invalid-feedback">
+                            <div *ngIf="f['username'].errors?.['required']">
+                                Username is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="firstName">First Name</label>
+                        <input (focusout)="onFocusOut('firstName')" type="firstName" formControlName="firstName" class="form-control"
+                            [ngClass]="{ 'is-invalid': showErrors['firstName'] && f['firstName'].errors }" />
+                        <div *ngIf="showErrors['firstName'] && f['firstName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['firstName'].errors?.['required']">
+                                First name is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="lastName">Last Name</label>
+                        <input (focusout)="onFocusOut('lastName')" type="lastName" formControlName="lastName" class="form-control"
+                            [ngClass]="{ 'is-invalid': showErrors['lastName'] && f['lastName'].errors }" />
+                        <div *ngIf="showErrors['lastName'] && f['lastName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['lastName'].errors?.['required']">
+                                Last name is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="email">UAlbeta Email</label>
+                        <input (focusout)="onFocusOut('email')" type="email" formControlName="email" class="form-control"
+                            [ngClass]="{ 'is-invalid': showErrors['email'] && f['email'].errors }" />
+                        <div *ngIf="showErrors['email'] && f['email'].errors" class="invalid-feedback">
+                            <div *ngIf="f['email'].errors?.['required']">
+                                A UAlberta email is required
+                            </div>
+                            <div *ngIf="f['email'].errors?.['email']">
+                                A UAlberta email is not valid
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password">Password</label>
+                        <input (focusout)="onFocusOut('password')" type="password" formControlName="password" class="form-control"
+                            [ngClass]="{ 'is-invalid': showErrors['password'] && f['password'].errors }" />
+                        <div *ngIf="showErrors['password'] && f['password'].errors" class="invalid-feedback">
+                            <div *ngIf="f['password'].errors?.['required']">
+                                Password is required
+                            </div>
+                            <div *ngIf="f['password'].errors?.['passwordMatch']">
+                                Passwords do not match
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="confirmPassword">Confirm password</label>
+                        <input (focusout)="onFocusOut('password')" type="confirmPassword" formControlName="confirmPassword" class="form-control"
+                            [ngClass]="{ 'is-invalid': showErrors['password'] && f['confirmPassword'].errors }" />
+                        <div *ngIf="showErrors['password'] && f['confirmPassword'].errors" class="invalid-feedback">
+                            <div *ngIf="f['confirmPassword'].errors?.['required']">
+                                Confirm password is required
+                            </div>
+                            <div *ngIf="f['confirmPassword'].errors?.['passwordMatch']">
+                                Passwords do not match
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button [disabled]="loading" class="btn btn-primary">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                            Register
+                        </button>
+                        <a routerLink="../login" class="btn btn-link">Back to login...</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

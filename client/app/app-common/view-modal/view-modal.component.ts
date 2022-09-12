@@ -7,6 +7,7 @@ import {
   TemplateRef
 } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { CommonService } from 'client/app/_services';
 
 @Component({
   selector: 'app-view-modal',
@@ -24,7 +25,7 @@ export class ViewModalComponent implements OnInit {
     this.open(this.content);
   }
 
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal, public commonService: CommonService) {}
 
   ngOnInit(): void {
     this.modelProperties = Object.getOwnPropertyNames(this.model);
@@ -42,18 +43,6 @@ export class ViewModalComponent implements OnInit {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         }
       );
-  }
-  isArray(obj: any) {
-    return Array.isArray(obj);
-  }
-  isObject(A: any) {
-    return typeof A === 'object';
-  }
-  getProperties(obj: any) {
-    return Object.getOwnPropertyNames(obj);
-  }
-  titleCase(string: string) {
-    return string[0].toUpperCase() + string.slice(1).toLowerCase();
   }
   print() {
     const printContent = document

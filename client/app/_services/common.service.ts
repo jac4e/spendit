@@ -57,4 +57,26 @@ export class CommonService {
       date.toTimeString().replace(/:/g, '').replace(' GMT', '').split(' (')[0]
     }`;
   }
+  isBoolean(variable: any): boolean{
+    return typeof variable === 'boolean';
+  }
+  isString(variable: any): boolean{
+    return typeof variable === 'string';
+
+  }
+  isNumber(variable: any): boolean{
+    return typeof variable === 'number';
+  }
+  isArray(obj: any) {
+    return Array.isArray(obj);
+  }
+  isObject(A: any) {
+    return typeof A === 'object';
+  }
+  getProperties(obj: any) {
+    return Object.getOwnPropertyNames(obj);
+  }
+  titleCase(string: string) {
+    return string[0].toUpperCase() + string.slice(1).toLowerCase();
+  }
 }

@@ -12,33 +12,33 @@ View
                     <p class="fs-5 fw-bold mx-1 my-auto">Date:</p>
                     <p class="fs-5 my-auto mx-1">{{ this.model['date'].toLocaleString('en-us',{timeZoneName:'short'}) }}</p>
                 </div>
-                <div class="{{ isArray(model[prop]) && model[prop].length > 0 ? 'col-12 d-print-block' : 'd-flex d-print-block col-auto' }}"
+                <div class="{{ commonService.isArray(model[prop]) && model[prop].length > 0 ? 'col-12 d-print-block' : 'd-flex d-print-block col-auto' }}"
                     *ngFor="let prop of modelProperties">
                     <ng-container *ngIf="prop !== 'date'">
-                        <p class="fs-5 fw-bold mx-1 my-auto">{{ titleCase(prop) }}:</p>
-                        <p class="fs-5 my-auto mx-1" *ngIf="!isArray(model[prop])">
+                        <p class="fs-5 fw-bold mx-1 my-auto">{{ commonService.titleCase(prop) }}:</p>
+                        <p class="fs-5 my-auto mx-1" *ngIf="!commonService.isArray(model[prop])">
                             {{ model[prop] }}{{ prop === 'total' || prop === 'price' || prop === 'balance' ? ' PHYC' : ''}}</p>
                     </ng-container>
-                    <ng-container *ngIf="isArray(model[prop])">
-                        <p class="fs-5 my-auto mx-1" *ngIf="model[prop].length === 0"> {{ model['type'] === 'debit' || model['type'] === 'credit' ? 'Account '+titleCase(model['type']) : 'N/A'}} </p>
-                        <div *ngIf="isObject(model[prop][0])" class="table-responsive">
+                    <ng-container *ngIf="commonService.isArray(model[prop])">
+                        <p class="fs-5 my-auto mx-1" *ngIf="model[prop].length === 0"> {{ model['type'] === 'debit' || model['type'] === 'credit' ? 'Account '+commonService.titleCase(model['type']) : 'N/A'}} </p>
+                        <div *ngIf="commonService.isObject(model[prop][0])" class="table-responsive">
                             <table class="table table-hover table-flush">
                                 <thead>
                                     <tr>
-                                        <th *ngFor="let nestedProp of getProperties(model[prop][0])">
-                                            {{titleCase(nestedProp)}}</th>
+                                        <th *ngFor="let nestedProp of commonService.getProperties(model[prop][0])">
+                                            {{commonService.titleCase(nestedProp)}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let element of model[prop]">
-                                        <td *ngFor="let nestedProp of getProperties(element)">
+                                        <td *ngFor="let nestedProp of commonService.getProperties(element)">
                                             {{ element[nestedProp] }}{{ nestedProp === 'total' || nestedProp === 'price' ? ' PHYC' : ''}}
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <!-- <div class="row" *ngFor="let nestedProp of getProperties(element)">
-                                    <p>{{titleCase(nestedProp)}}: {{element[nestedProp]}}</p>
+                            <!-- <div class="row" *ngFor="let nestedProp of commonService.getProperties(element)">
+                                    <p>{{commonService.titleCase(nestedProp)}}: {{element[nestedProp]}}</p>
                                 </div> -->
                         </div>
                     </ng-container>

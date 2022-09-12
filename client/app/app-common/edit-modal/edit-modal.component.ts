@@ -14,11 +14,15 @@ import {
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
+  FormBuilder,
+  FormGroup,
   Validators,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  AbstractControlOptions
 } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AlertService } from 'client/app/_services';
+import { CommonService } from 'client/app/_services';
 
 @Component({
   selector: 'app-edit-modal',
@@ -39,30 +43,48 @@ export class EditModalComponent implements OnInit {
     this.open(this.content);
   }
 
-  form!: UntypedFormGroup;
+  form!: FormGroup;
+  controls: { [key: string]: any } = {};
   loading = false;
   submitted = false;
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private modalService: NgbModal,
-    private alertService: AlertService
+    private alertService: AlertService,
+    public commonService: CommonService
   ) {}
 
   ngOnInit(): void {
-    this.modelProperties = Object.getOwnPropertyNames(this.model);
-    const options: { [key: string]: any } = {};
-    this.modelProperties.forEach((prop) => {
-      if (prop !== 'id' && prop !== 'balance') {
-        options[prop] = [this.model[prop], [Validators.required]];
-      }
-    });
-    this.form = this.formBuilder.group(options);
   }
 
   get f() {
     return this.form.controls;
   }
+
+  generateForm() {
+    console.log("Begin form creation");
+    let abstractOptions: AbstractControlOptions = {};
+    Object.entries(this.model).forEach(
+      ([key, value]) => {
+        console.log(key,value);
+        // Don't create controls for these values 
+        if (key === 'id' || key === 'balance'){
+          return;
+        }
+        // setup validators
+        let validatorsArr = [Validators.required];
+        if (key === "email") {
+          validatorsArr.push(Validators.email);
+        }
+        this.controls[key] = [value, validatorsArr ]
+      }
+    );
+    console.log(this.controls);
+    this.form = this.formBuilder.group(this.controls);
+    console.log(this.form);
+  }
+
   onSubmit() {
     this.submitted = true;
 
@@ -87,18 +109,7 @@ export class EditModalComponent implements OnInit {
   open(content: any) {
     // console.log(this.model['date'].toLocaleString());
     this.modalRef = this.modalService.open(content);
-  }
-  isArray(obj: any) {
-    return Array.isArray(obj);
-  }
-  isObject(A: any) {
-    return typeof A === 'object';
-  }
-  getProperties(obj: any) {
-    return Object.getOwnPropertyNames(obj);
-  }
-  titleCase(string: string) {
-    return string[0].toUpperCase() + string.slice(1).toLowerCase();
+    this.generateForm();
   }
   print() {
     const printContent = document

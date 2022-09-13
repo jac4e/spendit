@@ -11,15 +11,7 @@ import {
   ModalDismissReasons,
   NgbModalRef
 } from '@ng-bootstrap/ng-bootstrap';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-  AbstractControlOptions
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AlertService } from 'client/app/_services';
 import { CommonService } from 'client/app/_services';
@@ -55,31 +47,27 @@ export class EditModalComponent implements OnInit {
     public commonService: CommonService
   ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   get f() {
     return this.form.controls;
   }
 
   generateForm() {
-    console.log("Begin form creation");
-    let abstractOptions: AbstractControlOptions = {};
-    Object.entries(this.model).forEach(
-      ([key, value]) => {
-        console.log(key,value);
-        // Don't create controls for these values 
-        if (key === 'id' || key === 'balance'){
-          return;
-        }
-        // setup validators
-        let validatorsArr = [Validators.required];
-        if (key === "email") {
-          validatorsArr.push(Validators.email);
-        }
-        this.controls[key] = [value, validatorsArr ]
+    console.log('Begin form creation');
+    Object.entries(this.model).forEach(([key, value]) => {
+      console.log(key, value);
+      // Don't create controls for these values
+      if (key === 'id' || key === 'balance') {
+        return;
       }
-    );
+      // setup validators
+      let validatorsArr = [Validators.required];
+      if (key === 'email') {
+        validatorsArr.push(Validators.email);
+      }
+      this.controls[key] = [value, validatorsArr];
+    });
     console.log(this.controls);
     this.form = this.formBuilder.group(this.controls);
     console.log(this.form);
@@ -96,11 +84,14 @@ export class EditModalComponent implements OnInit {
     this.submit(this.model['id'], this.form.value).subscribe({
       next: () => {
         this.loading = false;
-        this.alertService.success(`Successfully updated ${this.model['id']}`, { autoClose: true, id: this.successAlert});
+        this.alertService.success(`Successfully updated ${this.model['id']}`, {
+          autoClose: true,
+          id: this.successAlert
+        });
         this.modalRef.close();
       },
       error: (resp) => {
-        this.alertService.error(resp.error.message, {id: 'modal-alert'});
+        this.alertService.error(resp.error.message, { id: 'modal-alert' });
         this.loading = false;
       }
     });

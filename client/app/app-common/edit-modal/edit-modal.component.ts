@@ -91,7 +91,7 @@ export class EditModalComponent implements OnInit {
         this.modalRef.close();
       },
       error: (resp) => {
-        this.alertService.error(resp.error.message, { id: 'modal-alert' });
+        this.alertService.error(resp.error.message, { autoClose: true, id: 'modal-alert' });
         this.loading = false;
       }
     });

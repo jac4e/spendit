@@ -28,7 +28,7 @@ export class StoreComponent implements OnInit {
       },
       error: (resp) => {
         this.alertService.error(
-          `Could not get store inventory: ${resp.error.message}`
+          `Could not get store inventory: ${resp.error.message}`, {autoClose: true}
         );
       }
     });
@@ -98,7 +98,7 @@ export class StoreComponent implements OnInit {
           this.layout(inventory);
         },
         error: (resp) => {
-          this.alertService.error('Could not get store inventory');
+          this.alertService.error('Could not get store inventory', {autoClose: true});
         }
       });
     } else {

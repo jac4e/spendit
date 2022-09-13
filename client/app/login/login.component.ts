@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
         },
         error: (resp) => {
           this.alertService.error(resp.error.message, {
-            autoClose: false,
+            autoClose: true,
             keepAfterRouteChange: true
           });
           this.loading = false;

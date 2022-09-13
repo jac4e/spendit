@@ -49,7 +49,7 @@ export class CartComponent implements OnInit {
       },
       error: (resp) => {
         // console.log(e);
-        this.alertService.error(resp.error.message, {id: 'cart-alert'});
+        this.alertService.error(resp.error.message, {autoClose: true,id: 'cart-alert'});
         this.loading = false;
         throw resp.error.message;
       }

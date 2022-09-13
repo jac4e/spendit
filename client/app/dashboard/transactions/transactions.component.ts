@@ -72,7 +72,7 @@ export class TransactionsComponent implements OnInit {
           }, 100);
         },
         error: (resp) => {
-          this.alertService.error(resp.error.message, {id: 'dashboard-alert'});
+          this.alertService.error(resp.error.message, {autoClose: true,id: 'dashboard-alert'});
           this.loading = false;
         }
       });

@@ -56,7 +56,7 @@ export class RegisterComponent implements OnInit {
       this.alertService.error(
         'Registration form is invalid, invalid fields are highlighted below.',
         {
-          autoClose: false,
+          autoClose: true,
           keepAfterRouteChange: false
         }
       );
@@ -77,7 +77,7 @@ export class RegisterComponent implements OnInit {
         },
         error: (resp) => {
           this.alertService.error(resp.error.message, {
-            autoClose: false,
+            autoClose: true,
             keepAfterRouteChange: true
           });
           this.loading = false;

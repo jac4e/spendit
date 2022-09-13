@@ -75,7 +75,7 @@ export class AccountsComponent implements OnInit {
         });
       },
       error: (resp) => {
-        this.alertService.error(resp.error.message, {id: 'dashboard-alert'});
+        this.alertService.error(resp.error.message, {autoClose: true,id: 'dashboard-alert'});
         this.loading = false;
       }
     });
@@ -108,7 +108,7 @@ export class AccountsComponent implements OnInit {
           });
         },
         error: (resp) => {
-          this.alertService.error(resp.error.message, {id: 'dashboard-alert'});
+          this.alertService.error(resp.error.message, {autoClose: true,id: 'dashboard-alert'});
           this.loading = false;
         }
       });

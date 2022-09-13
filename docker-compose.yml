@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   web:
+    # TODO: add healthcheck
     build: .
     ports:
       - "80:3000"
@@ -11,15 +12,14 @@ services:
       - /spendit/node_modules
     restart: unless-stopped
   database:
-    # need to add mongodata for data storage
+    # TODO: add healthcheck
     image: mongo:6
     restart: unless-stopped
+    volumes: 
+      - data/db:/data/db
     networks:
       backend:
 
 networks:
   backend:
   frontend:
-
-volumes:
-  mongodata:

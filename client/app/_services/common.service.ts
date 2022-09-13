@@ -10,12 +10,12 @@ export class CommonService {
   export(data: any, name: string) {
     // Create table header from key names
     const array = [Object.keys(data[0])].concat(data);
-    console.log(array);
+    // console.log(array);
 
     // Parse object array
     const csv = array
       .map((array_item: Array<Object>) => {
-        console.log(array_item);
+        // console.log(array_item);
         // console.log(Object.values(row_item));
         // Convert array item to CSV row item
         // Basically just creating an array of the values
@@ -25,7 +25,7 @@ export class CommonService {
             if (Array.isArray(array_item_element)) {
               return array_item_element
                 .map((nested_array_element) => {
-                  console.log(nested_array_element);
+                  // console.log(nested_array_element);
                   return Object.values(nested_array_element).join(', ');
                 })
                 .join('; ');

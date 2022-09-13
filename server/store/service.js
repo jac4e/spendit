@@ -26,19 +26,19 @@ async function createProduct(productParam) {
 }
 
 async function updateProductById(id,productParam) {
-    console.log(id, productParam)
+    // console.log(id, productParam)
     let product = await Product.findById(id)
-    console.log(product)
+    // console.log(product)
     if (!product) {
         throw `Product '${id}' does not exist`;
     }
-    console.log(Object.getOwnPropertyNames(product))
+    // console.log(Object.getOwnPropertyNames(product))
     // update product
     for (const key in productParam) {
-        console.log(key)
-        console.log(product._doc.hasOwnProperty(key))
+        // console.log(key)
+        // console.log(product._doc.hasOwnProperty(key))
         if (product._doc.hasOwnProperty(key)) {
-            console.log(product[key], productParam[key])
+            // console.log(product[key], productParam[key])
             product[key] = productParam[key]
         }
     }
@@ -60,7 +60,7 @@ async function purchaseCart(token, cartSerialized) {
         throw "Cart is empty"
     }
     const products = await Product.find({'_id': { $in: cartSerialized.map((item) => item.id) } });
-    console.log(products)
+    // console.log(products)
     // create cart object for invoice
     let cart = (await Product.find({'_id': { $in: cartSerialized.map((item) => item.id) } }).lean()).map(({image, id, stock, price, ...keepAttrs}) => ({...keepAttrs, price: BigInt(price), amount: 0, total: 0n}));
     
@@ -82,7 +82,7 @@ async function purchaseCart(token, cartSerialized) {
         sum += cart[productIndex].total;
     }
 
-    console.log(cart)
+    // console.log(cart)
 
     let transactionParams = {
         accountid: token.sub,
@@ -91,7 +91,7 @@ async function purchaseCart(token, cartSerialized) {
         products: cart.map(({total, price, ...rest}) => ({total: total.toString(), price: price.toString(), ...rest})),
         total: sum.toString()
     }
-    console.log(transactionParams)
+    // console.log(transactionParams)
     // console.log(transactionParams)
     if (await accountService.pay(transactionParams.total, transactionParams.accountid) !== true){
         // payment error

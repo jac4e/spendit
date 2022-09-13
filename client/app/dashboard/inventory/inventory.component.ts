@@ -63,7 +63,7 @@ export class InventoryComponent implements OnInit {
     });
   }
   remove(id: string) {
-    console.log('remove', id);
+    // console.log('remove', id);
     this.adminService.removeProduct(id).subscribe({
       next: () => {
         this.storeService.getInventory().subscribe((inventory: Product[]) => {

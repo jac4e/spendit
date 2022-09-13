@@ -39,7 +39,7 @@ export class AdminService {
   }
 
   updateProduct(id: string, product: Product) {
-    console.log(`${this.backend.api.store}/products/${id}`, product);
+    // console.log(`${this.backend.api.store}/products/${id}`, product);
     return this.http.put<Product>(
       `${this.backend.api.store}/products/${id}`,
       product

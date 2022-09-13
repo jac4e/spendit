@@ -54,9 +54,9 @@ export class EditModalComponent implements OnInit {
   }
 
   generateForm() {
-    console.log('Begin form creation');
+    // console.log('Begin form creation');
     Object.entries(this.model).forEach(([key, value]) => {
-      console.log(key, value);
+      // console.log(key, value);
       // Don't create controls for these values
       if (key === 'id' || key === 'balance') {
         return;
@@ -68,9 +68,9 @@ export class EditModalComponent implements OnInit {
       }
       this.controls[key] = [value, validatorsArr];
     });
-    console.log(this.controls);
+    // console.log(this.controls);
     this.form = this.formBuilder.group(this.controls);
-    console.log(this.form);
+    // console.log(this.form);
   }
 
   onSubmit() {

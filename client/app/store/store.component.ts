@@ -43,14 +43,14 @@ export class StoreComponent implements OnInit {
   // 2 3 4 6
 
   layout(inv: Product[]) {
-    console.log('begin');
-    console.log(inv);
+    // console.log('begin');
+    // console.log(inv);
     const inventory = [...inv];
     const collectionSize = inventory.length;
-    console.log(inventory.length);
+    // console.log(inventory.length);
     const wall = document.getElementById('wall');
     const width = wall?.offsetWidth || 0;
-    console.log(this.col);
+    // console.log(this.col);
     if (width >= 1200) {
       this.col = 6;
     } else if (width >= 768) {
@@ -61,15 +61,15 @@ export class StoreComponent implements OnInit {
       this.col = 2;
     }
 
-    console.log(this.col);
-    console.log('change layout');
+    // console.log(this.col);
+    // console.log('change layout');
     const productPerColumn = Math.floor(collectionSize / this.col);
     const spareProduct = collectionSize % this.col;
-    console.log(productPerColumn, spareProduct);
+    // console.log(productPerColumn, spareProduct);
     this.columns = new Array(this.col);
     for (let index = 0; index < productPerColumn; index++) {
       for (let jndex = 0; jndex < this.col; jndex++) {
-        console.log(this.columns[jndex]);
+        // console.log(this.columns[jndex]);
         if (this.columns[jndex] === undefined) {
           this.columns[jndex] = { products: [] };
         }
@@ -78,16 +78,16 @@ export class StoreComponent implements OnInit {
     }
     if (spareProduct) {
       for (let index = 0; index < spareProduct; index++) {
-        console.log('Spare product');
-        console.log(this.columns[index]);
+        // console.log('Spare product');
+        // console.log(this.columns[index]);
         if (this.columns[index] === undefined) {
           this.columns[index] = { products: [] };
         }
         this.columns[index].products.push(inventory.pop() || new Product());
-        console.log(this.columns[index]);
+        // console.log(this.columns[index]);
       }
     }
-    console.log(this.columns);
+    // console.log(this.columns);
   }
 
   refreshLayout() {

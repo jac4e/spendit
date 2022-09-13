@@ -40,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        console.log(err);
+        // console.log(err);
         if (err.error.message.includes('The token has been revoked')) {
           this.accountService.clientLogout();
         }

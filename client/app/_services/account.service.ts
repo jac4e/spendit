@@ -30,6 +30,13 @@ export class AccountService {
     return `${this.backend.api.account}/${crumb}`;
   }
 
+  register(account: User) {
+    return this.http.post<User>(
+      `${this.backend.api.account}/register`,
+      account
+    );
+  }
+
   login(username: string, password: string) {
     // console.log('logging in');
     // console.log(this.api('auth'));

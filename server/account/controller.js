@@ -16,7 +16,8 @@ router.get('/self/balance', getSelfBalance);
 router.get('/self/transactions', getSelfTransactions);
 // router.put('/self', updateSelf);
 
-router.post('/register', guard.check('admin'), register);
+router.post('/register', register);
+router.post('/create', guard.check('admin'), create);
 router.get('/:accountId/resetSession', guard.check('admin'), resetSession);
 router.get('/:accountId/balance', guard.check('admin'), getBalance);
 router.get('/:accountId/transaction', guard.check('admin'), getTransactions);
@@ -56,10 +57,17 @@ function getSelfTransactions(req, res, next) {
     accountService.getSelfTransactions(req.user.sub).then(resp => res.json(resp)).catch(err => next(err));
 }
 
+function register(req, res, next) {
+    // Public registration, assume account is unverified and assign user role
+    req.body.role = 'user';
+    accountService.create(req.body, false).then(() => res.json({})).catch(err => next(err))
+}
+
 // Private routes
 
-function register(req, res, next) {
-    accountService.create(req.body).then(() => res.json({})).catch(err => next(err))
+function create(req, res, next) {
+    // Registration by admin, assume account is verified
+    accountService.create(req.body, true).then(() => res.json({})).catch(err => next(err))
 }
 
 function getAll(req, res, next) {
@@ -74,7 +82,7 @@ function verify(req, res, next) {
 }
 
 function resetSession(req, res, next) {
-    accountService.resetSession(req.body).then(() => res.json({})).catch(err => next(err));
+    accountService.resetSession(req.params['accountId']).then(() => res.json({})).catch(err => next(err));
 }
 
 function getAccountById(req, res, next) {
@@ -86,11 +94,11 @@ function updateAccountById(req, res, next) {
 }
 
 function getBalance(req, res, next) {
-    accountService.getBalance(req.body).then(resp => res.json(resp)).catch(err => next(err));
+    accountService.getBalance(req.params['accountId']).then(resp => res.json(resp)).catch(err => next(err));
 }
 
 function getTransactions(req, res, next) {
-    transaction.getById(req.body).then(resp => res.json(resp)).catch(err => next(err));
+    transaction.getById(req.params['accountId']).then(resp => res.json(resp)).catch(err => next(err));
 }
 
 

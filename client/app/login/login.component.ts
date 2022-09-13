@@ -56,14 +56,16 @@ export class LoginComponent implements OnInit {
           // get return url from query parameters or default to home page
           this.alertService.success('Login successful', {
             autoClose: true,
-            keepAfterRouteChange: true,
-            fade: false
+            keepAfterRouteChange: true
           });
           const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
           this.router.navigateByUrl(returnUrl);
         },
         error: (resp) => {
-          this.alertService.error(resp.error.message);
+          this.alertService.error(resp.error.message, {
+            autoClose: false,
+            keepAfterRouteChange: true
+          });
           this.loading = false;
         }
       });

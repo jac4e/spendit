@@ -13,6 +13,7 @@ export default function jwtAuthGuard() {
             '/api/status',
             '/api/store/products',
             '/api/accounts/auth',
+            '/api/accounts/register',
         ]
     });
 }

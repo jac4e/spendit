@@ -18,7 +18,7 @@ export class AdminService {
 
   addAccount(account: User) {
     return this.http.post<User>(
-      `${this.backend.api.account}/register`,
+      `${this.backend.api.account}/create`,
       account
     );
   }

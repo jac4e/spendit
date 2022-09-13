@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zxcvbn-ts/core": "^2.0.5",
+    "@zxcvbn-ts/language-common": "^2.0.1",
+    "@zxcvbn-ts/language-en": "^2.1.0",
     "bcrypt": "^5.0.1",
     "connect-mongo": "^4.6.0",
     "cors": "^2.8.5",

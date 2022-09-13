@@ -2,7 +2,6 @@
 
 /* Importing Bootstrap SCSS file. */
 // @import '~bootstrap/scss/bootstrap'
-@import 'assets/css/bootstrap-dark.css'
 
 /* Importing open-iconic */
 $icon-font-path: '~open-iconic/font/fonts/'
@@ -73,6 +72,9 @@ body
     background-color: var(--ui-layer-2)
     box-shadow: 0 0.5rem 1rem rgba(#000, .08)
 
+.card-header
+    border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0
+
 .nav-pills .nav-link
     border-radius: 0.5rem
 
@@ -111,3 +113,5 @@ body
 svg
   vertical-align: top
 //   pointer-events: none
+
+@import 'assets/css/bootstrap-dark.css'

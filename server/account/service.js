@@ -4,9 +4,24 @@ import config from '../deploy/config.js';
 import db from '../_helpers/db.js';
 import { randomUUID } from 'crypto';
 import transaction from '../_helpers/transaction.js';
+import { zxcvbn, zxcvbnOptions } from '@zxcvbn-ts/core'
+import zxcvbnCommonPackage from '@zxcvbn-ts/language-common'
+import zxcvbnEnPackage from '@zxcvbn-ts/language-en'
+
+const zxcvbnBaseSettings = {
+  translations: zxcvbnEnPackage.translations,
+  graphs: zxcvbnCommonPackage.adjacencyGraphs,
+  dictionary: {
+    ...zxcvbnCommonPackage.dictionary,
+    ...zxcvbnEnPackage.dictionary,
+  },
+}
+
+zxcvbnOptions.setOptions(zxcvbnBaseSettings)
 
 const Account = db.account;
 const secret = config.secret;
+const saltRounds = 10;
 
 async function auth({
   username,
@@ -15,7 +30,23 @@ async function auth({
   const account = await Account.findOne({
     username: username
   });
+
+  // Account not found
+  if (account === null) {
+    // compare to random hash to help mitigate timing attacks
+    // this may be foolish
+    // it may also prevent people from discovering user accounts through brute force
+    await bcrypt.compare(password, "$2b$10$rQweXBgpHcRXB8nblwv7JO4URRkvC7GjMhNgDPJA35HNcG383YG8W")
+    throw `Auth error username or password is incorrect`
+  }
+
+  // Do not login nonverified users
+  if (!account.verified) {
+    throw `Auth error account not verified`
+  }
+
   const match = await bcrypt.compare(password, account.hash)
+
   if (account && match) {
     const token = jwt.sign({
       sub: account.id,
@@ -35,7 +66,8 @@ async function auth({
   }
 }
 
-async function create(accountParam) {
+// Private registration of verified accounts
+async function create(accountParam, isVerified) {
   // validate
   // console.log(JSON.stringify(accountParam))
 
@@ -47,10 +79,19 @@ async function create(accountParam) {
   }
   const account = new Account(accountParam)
 
+  // Password validation
+  const result = zxcvbn(accountParam.password, [accountParam.username, accountParam.firstName, accountParam.lastName, accountParam.email]);
+  if (result.score < 2) {
+    throw `Registration error password is too weak: ${result.feedback.warning}`
+  }
+  
   // hash password
   if (accountParam.password) {
-    account.hash = bcrypt.hashSync(accountParam.password, 10);
+    account.hash = bcrypt.hashSync(accountParam.password, saltRounds);
   }
+
+  // set verification
+  account.verified = isVerified;
 
   // create session ID
   account.sessionid = randomUUID();

@@ -23,7 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const isApiUrl = request.url.includes('/api/');
+    const isApiUrl = request.url.includes('api/');
     const isAuthUrl = request.url.includes('/auth');
 
     if (isAuthUrl) {

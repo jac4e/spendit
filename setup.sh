@@ -7,7 +7,7 @@
 SCRIPT_DIR=$(dirname $(readlink -f $0))
 
 # Process Arguements
-if [[ $1 != "production" ]] && [[ ! -z $1 ]] && [[ $1 != "development" ]]; then
+if [[ $1 != "production" ]] && [[ $1 != "development" ]]; then
     echo "Environment must be 'development' or 'production'."
     exit 1
 fi
@@ -59,6 +59,7 @@ function user_prompt() {
 
     if [[ "${default}" = "randomly generated." ]]; then
         value=$(dd if=/dev/urandom bs=18 count=1 status=none | base64 | tr -d \\n)
+        echo "Your password is $value"
     fi
     export ${var}=${value:-${default}}
 }
@@ -98,7 +99,7 @@ WARNING: This are currently stored in plain text on the server, this may be a po
          Future versions will improve on this insecurity \n\n\
 password: "
 MSG_ADMIN_EMAIL="Enter the email for the admin user, default is '${DEFAULT_ADMIN_EMAIL}': "
-MSG_BACKEND_URL="Enter the backends port, default is '${DEFAULT_BACKEND_URL}': "
+MSG_BACKEND_URL="Enter the backends url, default is '${DEFAULT_BACKEND_URL}': "
 
 # Prompt user
 user_prompt DB_HOSTNAME

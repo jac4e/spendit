@@ -14,9 +14,6 @@ RUN npm ci
 
 COPY . .
 
-# How to get the password..
-RUN ./setup.sh production
-
 RUN ng build --progress
 
 ENV NODE_ENV=production

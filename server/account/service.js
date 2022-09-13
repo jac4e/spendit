@@ -56,8 +56,10 @@ async function auth({
       expiresIn: '7d'
     })
     const balance = await getBalance(account.id);
+    // toJSON sanitization is not working
+    const sanitizedAccount = await Account.findOne(account).lean();
     return {
-      ...account.toJSON(),
+      ...sanitizedAccount,
       balance,
       token
     }

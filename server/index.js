@@ -19,7 +19,7 @@ async function deploy() {
   if (users.length < 1){
     // add base admin account
     console.log("deploying")
-    await accountService.create(config.account)
+    await accountService.create(config.account, true)
   }
 }
 

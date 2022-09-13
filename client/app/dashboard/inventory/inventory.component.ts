@@ -48,7 +48,7 @@ export class InventoryComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.pattern('^[0-9]*$')]
       ],
       description: [''],
-      image: ['https://pngimg.com/uploads/cocacola/cocacola_PNG0.png']
+      image: ['']
     });
   }
   get f() {

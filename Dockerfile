@@ -1,6 +1,10 @@
 FROM node:16-bullseye-slim
+ARG jwt_secret
+ARG admin_password
 
 ENV CI=1
+ENV JWT_SECRET=$jwt_secret
+ENV ADMIN_PASSWORD=$admin_password
 
 RUN apt-get update && apt-get install -y gettext
 

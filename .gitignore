@@ -5,3 +5,6 @@ server/config.js
 server/deploy/config.js
 dist/
 client/app/_helpers/backend.ts
+config/nginx.conf
+config/ssl/cert.key
+config/ssl/cert.pem

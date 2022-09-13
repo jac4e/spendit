@@ -7,7 +7,7 @@
 
 ### frontend
 
-- [ ] proper feedback and bug reporting*
+- [x] proper feedback and bug reporting*
 - [x] Product add: Coin default text should be whole number
 - [x] spacing under add products in dashboard incorrect*
 - [x] add "contact us" to change password or username in account view*
@@ -25,8 +25,17 @@
 - [x] proper inventory handling*
 - [x] improve configuration
 
+### Before registration
+
+- [x] docker compose for https
+  - [x] remove web port exposure
+  - [x] create nginx service with ports 80 and 443
+  - [x] create mounts for nginx config and https certificates
+
 ### Finalize
 
+- [x] database volume not correctly set missing ./
+- [x] deploy folder does not exist in repo
 - [ ] split frontend and backend into seperate parts
 - [ ] Lint, spelling, format and code review!!!
 - [ ] ensure all version numbers are correct
@@ -53,6 +62,7 @@
 
 ## Pre full release
 
+- [ ] support podman and docker
 - [ ] add assistive tech compatibility
 - [ ] convert backend to typescript
 - [ ] Reload lists when item has been edited

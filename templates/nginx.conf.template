@@ -1,0 +1,32 @@
+events { }
+
+http {
+
+    map ${DOLLAR}http_upgrade ${DOLLAR}connection_upgrade {
+        default upgrade;
+        ''      close;
+    }
+
+    server {
+        listen 80;
+        server_name ${FRONTEND_URL};
+        return 301 https://${FRONTEND_URL}${DOLLAR}request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name ${FRONTEND_URL};
+
+        ssl_certificate /ssl/cert.pem;
+        ssl_certificate_key /ssl/cert.key;
+
+        location / {
+            proxy_pass http://web:${BACKEND_PORT};  
+            proxy_http_version 1.1;  
+            proxy_set_header Upgrade ${DOLLAR}http_upgrade;  
+            proxy_set_header Connection 'upgrade';  
+            proxy_set_header Host ${DOLLAR}host;  
+            proxy_cache_bypass ${DOLLAR}http_upgrade;  
+        }
+    }
+}

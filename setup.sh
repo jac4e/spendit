@@ -67,53 +67,65 @@ function user_prompt() {
 # Set defaults
 if [[ $ENV = "production" ]]; then
     # Production defaults
-    DEFAULT_DB_HOSTNAME="database"
+    DEFAULT_DB_URL="database"
     DEFAULT_DB_PORT="27017"
+    DEFAULT_BACKEND_URL="api"
+    DEFAULT_BACKEND_PORT="3000"
+    DEFAULT_FRONTEND_URL="localhost"
+    DEFAULT_DB_URL="database"
     DEFAULT_ADMIN_USER="admin"
     DEFAULT_ADMIN_PASSWORD="randomly generated."
     DEFAULT_ADMIN_FIRST="$DEFAULT_ADMIN_USER"
     DEFAULT_ADMIN_LAST="${DEFAULT_ADMIN_USER}son"
     DEFAULT_ADMIN_EMAIL="doesnotexist@ualberta.ca"
-    DEFAULT_BACKEND_URL="api"
 elif [[ $ENV = "development" ]]; then
     # Development defaults
-    DEFAULT_DB_HOSTNAME="database"
+    DEFAULT_DB_URL="database"
     DEFAULT_DB_PORT="27017"
+    DEFAULT_BACKEND_URL="http://localhost:3001/api"
+    DEFAULT_BACKEND_PORT="3001"
+    DEFAULT_FRONTEND_URL="localhost"
     DEFAULT_ADMIN_USER="dev"
     DEFAULT_ADMIN_PASSWORD="forthebirds"
     DEFAULT_ADMIN_FIRST="$DEFAULT_ADMIN_USER"
     DEFAULT_ADMIN_LAST="${DEFAULT_ADMIN_USER}son"
     DEFAULT_ADMIN_EMAIL='doesnotexist@ualberta.ca'
-    DEFAULT_BACKEND_URL="http://localhost:3001/api"
 fi
 
 # Define messages
-MSG_DB_HOSTNAME="Enter the database hostname, default is '${DEFAULT_DB_HOSTNAME}': "
+MSG_DB_URL="Enter the database url, default is '${DEFAULT_DB_URL}': "
 MSG_DB_PORT="Enter the database port, default is '${DEFAULT_DB_PORT}': "
+MSG_BACKEND_URL="Enter the backend url, default is '${DEFAULT_BACKEND_URL}': "
+MSG_BACKEND_PORT="Enter the backend port, default is '${DEFAULT_BACKEND_PORT}': "
+MSG_FRONTEND_URL="Enter the frontend url, default is '${DEFAULT_FRONTEND_URL}': "
 MSG_ADMIN_USER="Enter the username for the admin user, default is '${DEFAULT_ADMIN_USER}': "
 MSG_ADMIN_FIRST="Enter the username for the admin first name, default is '${DEFAULT_ADMIN_FIRST}': "
 MSG_ADMIN_LAST="Enter the username for the admin last name, default is '${DEFAULT_ADMIN_LAST}': "
 MSG_ADMIN_PASSWORD="Enter the password for the admin user, default is '${DEFAULT_ADMIN_PASSWORD}' \n\
-NOTE: It is highly recommended to use the default \n\
-WARNING: This are currently stored in plain text on the server, this may be a potential security risk \n\
-         Future versions will improve on this insecurity \n\n\
+NOTE: It is highly recommended to use the default \n\n\
 password: "
 MSG_ADMIN_EMAIL="Enter the email for the admin user, default is '${DEFAULT_ADMIN_EMAIL}': "
-MSG_BACKEND_URL="Enter the backends url, default is '${DEFAULT_BACKEND_URL}': "
 
 # Prompt user
-user_prompt DB_HOSTNAME
+user_prompt DB_URL
 user_prompt DB_PORT
+user_prompt BACKEND_URL
+user_prompt BACKEND_PORT
+user_prompt FRONTEND_URL
 user_prompt ADMIN_USER
+user_prompt ADMIN_EMAIL
 user_prompt ADMIN_FIRST
 user_prompt ADMIN_LAST
 user_prompt -s ADMIN_PASSWORD
-user_prompt ADMIN_EMAIL
-user_prompt BACKEND_URL
 
 # Generate JWT secret
 export JWT_SECRET=$(dd if=/dev/urandom bs=96 count=1 status=none | base64 | tr -d \\n)
 
+# export dollar sign for envsubst
+export DOLLAR='$'
 # Process templates
-cat ${SCRIPT_DIR}/templates/backend.ts.template | envsubst > ${SCRIPT_DIR}/client/app/_helpers/backend.ts
-cat ${SCRIPT_DIR}/templates/config.js.template | envsubst > ${SCRIPT_DIR}/server/deploy/config.js
+cat ${SCRIPT_DIR}/templates/backend.ts.template | envsubst  > ${SCRIPT_DIR}/client/app/_helpers/backend.ts
+mkdir ${SCRIPT_DIR}/server/deploy
+cat ${SCRIPT_DIR}/templates/config.js.template | envsubst  > ${SCRIPT_DIR}/server/deploy/config.js
+mkdir ${SCRIPT_DIR}/config
+cat ${SCRIPT_DIR}/templates/nginx.conf.template | envsubst  > ${SCRIPT_DIR}/config/nginx.conf

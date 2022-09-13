@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../_services';
-import { User, Transaction } from '../_models';
+import { User } from '../_models';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,10 +18,6 @@ export class AccountComponent implements OnInit {
   url: string;
 
   // page stuff
-  page = 1;
-  pageSize = 10;
-  collectionSize = 0;
-  transactions!: Transaction[];
   constructor(private accountService: AccountService, private router: Router) {
     this.accountService.account.subscribe((account) => {
       this.account = account || new User();

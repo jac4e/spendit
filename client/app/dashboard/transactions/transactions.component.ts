@@ -34,7 +34,7 @@ export class TransactionsComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       accountid: ['', Validators.required],
-      type: ['', [Validators.required, Validators.pattern('^(credit|debit)$')]],
+      type: ['', [Validators.required, Validators.pattern('^(debit|credit)$')]],
       reason: ['', Validators.required],
       total: [
         null,

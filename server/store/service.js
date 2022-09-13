@@ -86,7 +86,7 @@ async function purchaseCart(token, cartSerialized) {
 
     let transactionParams = {
         accountid: token.sub,
-        type: 'credit',
+        type: 'debit',
         reason: 'Web Purchase',
         products: cart.map(({total, price, ...rest}) => ({total: total.toString(), price: price.toString(), ...rest})),
         total: sum.toString()

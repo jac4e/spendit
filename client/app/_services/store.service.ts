@@ -14,7 +14,6 @@ export class StoreService {
   private cart: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
   private account!: User | null;
   isLoggedIn!: boolean;
-  credits!: number;
   constructor(
     private accountService: AccountService,
     private http: HttpClient,

@@ -9,35 +9,21 @@
 
 - [ ] proper feedback and bug reporting*
 - [x] Product add: Coin default text should be whole number
-- [ ] spacing under add products in dashboard incorrect*
+- [x] spacing under add products in dashboard incorrect*
 - [x] add "contact us" to change password or username in account view*
 - [x] improve account overview view*
-- [ ] export buttons not matching*
-- [ ] add transaction type should be dropdown
-- [ ] add user role should be dropdown
+- [x] export buttons not matching*
 
 - [x] alert system*
-- [ ] email notifications
-  - [ ] admin notification system
 - [x] Fix double click dashboard and account nav taken to wrong place*
-- [ ] proper inventory handling*
-  - [ ] out of stock messsage on product display*
-- [ ] improve configuration
-  - [ ] branding
-  - [ ] backend
+- [x] proper inventory handling*
+  - [x] out of stock messsage on product display*
 
 ### backend
 
 - [ ] must verfiy email to ualberta.ca email
-- [ ] email notifications
-  - [ ] admin notification system
-- [ ] proper inventory handling*
-- [ ] add hashing to transactions
-  - [ ] add verification algorythim
-  - [ ] add transaction processing queue to prevent timing issues
-- [ ] improve configuration
-  - [ ] branding
-  - [ ] backend
+- [x] proper inventory handling*
+- [x] improve configuration
 
 ### Finalize
 
@@ -46,6 +32,8 @@
 - [ ] ensure all version numbers are correct
 - [ ] brief documentation
 - [ ] Squash entire history
+- [ ] email notifications
+  - [ ] admin notification system
 
 ## Pre club demo
 
@@ -55,6 +43,13 @@
   - [ ] Proper erroring
     - [ ] invalid input, server errors
 - [ ] Demo data generation
+- [ ] add transaction type should be dropdown
+- [ ] add user role should be dropdown
+- [ ] improve configuration
+  - [ ] branding
+- [ ] add hashing to transactions
+  - [ ] add verification algorithm
+  - [ ] add transaction processing queue to prevent timing issues
 
 ## Pre full release
 

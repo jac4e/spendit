@@ -11,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let transaction of transactions" class="{{ transaction.type === 'credit' ? 'table-danger' : 'table-success' }}">
+            <tr *ngFor="let transaction of transactions" class="{{ transaction.type === 'debit' ? 'table-danger' : 'table-success' }}">
                 <th scope="row">{{ transaction.id }}</th>
                 <td>{{ transaction.date.toLocaleString('en-us',{timeZoneName:'short'}) }}</td>
                 <td> {{ transaction.accountid }}</td>
@@ -34,7 +34,7 @@
         </ngb-pagination>
     </div>
     <div>
-        <button class="btn btn-primary" (click)="export()">Export</button>
+        <button class="btn btn-secondary" (click)="export()">Export</button>
     </div>
     <!-- <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshTransactions()">
         <option [ngValue]="10">2 items per page</option>

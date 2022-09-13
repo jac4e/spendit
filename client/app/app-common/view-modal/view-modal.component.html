@@ -20,7 +20,7 @@ View
                             {{ model[prop] }}{{ prop === 'total' || prop === 'price' || prop === 'balance' ? ' PHYC' : ''}}</p>
                     </ng-container>
                     <ng-container *ngIf="commonService.isArray(model[prop])">
-                        <p class="fs-5 my-auto mx-1" *ngIf="model[prop].length === 0"> {{ model['type'] === 'debit' || model['type'] === 'credit' ? 'Account '+commonService.titleCase(model['type']) : 'N/A'}} </p>
+                        <p class="fs-5 my-auto mx-1" *ngIf="model[prop].length === 0"> {{ model['type'] === 'credit' || model['type'] === 'debit' ? 'Account '+commonService.titleCase(model['type']) : 'N/A'}} </p>
                         <div *ngIf="commonService.isObject(model[prop][0])" class="table-responsive">
                             <table class="table table-hover table-flush">
                                 <thead>

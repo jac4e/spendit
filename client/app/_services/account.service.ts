@@ -75,21 +75,6 @@ export class AccountService {
     return this.http.get<User>(this.api('self')).pipe(retry(1));
   }
 
-  // Credit related
-
-  // addCredits(amount: number) {
-  //   if (amount <= 0) {
-  //     return;
-  //   }
-  //   this.credits.next(this.credits.value + amount);
-  // }
-
-  // removeCredits(amount: number) {
-  //   if (amount <= 0) {
-  //     return;
-  //   }
-  //   this.credits.next(this.credits.value - amount);
-  // }
 
   getBalance() {
     return this.http.get<number>(this.api('self/balance')).pipe(retry(1));

@@ -21,8 +21,8 @@ async function create(transactionParam) {
 
     // Check type
 
-    if (!(transactionParam.type === 'debit' || transactionParam.type === 'credit')) {
-        throw `Transaction type must be 'credit' or 'debit'`
+    if (!(transactionParam.type === 'credit' || transactionParam.type === 'debit')) {
+        throw `Transaction type must be 'debit' or 'credit'`
     }
 
     const transaction = new Transaction(transactionParam)
@@ -59,7 +59,7 @@ async function getBalanceByAccountId(accountid) {
             balance: {
                 $sum: {
                     $cond: [{
-                        $eq: ['$type', 'debit']
+                        $eq: ['$type', 'credit']
                     }, {
                         '$toLong': '$total'
                     }, {

@@ -21,7 +21,7 @@
 
 ### backend
 
-- [ ] must verfiy email to ualberta.ca email
+- [x] must verfiy email to ualberta.ca email
 - [x] proper inventory handling*
 - [x] improve configuration
 

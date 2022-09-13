@@ -73,7 +73,7 @@ if [[ $ENV = "production" ]]; then
     DEFAULT_ADMIN_PASSWORD="randomly generated."
     DEFAULT_ADMIN_FIRST="$DEFAULT_ADMIN_USER"
     DEFAULT_ADMIN_LAST="${DEFAULT_ADMIN_USER}son"
-    DEFAULT_ADMIN_EMAIL="admin@admin.ca"
+    DEFAULT_ADMIN_EMAIL="doesnotexist@ualberta.ca"
     DEFAULT_BACKEND_URL="api"
 elif [[ $ENV = "development" ]]; then
     # Development defaults
@@ -83,7 +83,7 @@ elif [[ $ENV = "development" ]]; then
     DEFAULT_ADMIN_PASSWORD="forthebirds"
     DEFAULT_ADMIN_FIRST="$DEFAULT_ADMIN_USER"
     DEFAULT_ADMIN_LAST="${DEFAULT_ADMIN_USER}son"
-    DEFAULT_ADMIN_EMAIL='dev@dev.ca'
+    DEFAULT_ADMIN_EMAIL='doesnotexist@ualberta.ca'
     DEFAULT_BACKEND_URL="http://localhost:3001/api"
 fi
 

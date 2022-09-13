@@ -6,6 +6,8 @@ import { ViewModalComponent } from './view-modal/view-modal.component';
 import { EditModalComponent } from './edit-modal/edit-modal.component';
 import { AlertComponent } from './alert/alert.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgIconsModule } from '@ng-icons/core';
+import { dripCross } from '@ng-icons/dripicons';
 
 @NgModule({
   exports: [
@@ -20,6 +22,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     EditModalComponent,
     AlertComponent
   ],
-  imports: [CommonModule, ReactiveFormsModule, NgbModule]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgbModule,
+    NgIconsModule.withIcons({ dripCross })
+  ]
 })
 export class AppCommonModule { }

@@ -101,7 +101,7 @@ export class AlertComponent implements OnInit {
     }
   }
 
-  cssClass(alert: Alert) {
+  alertClass(alert: Alert) {
     if (!alert) return;
 
     const classes = ['alert', 'alert-dismissable'];
@@ -118,6 +118,20 @@ export class AlertComponent implements OnInit {
     if (alert.fade) {
       classes.push('fade');
     }
+
+    return classes.join(' ');
+  }
+  buttonClass(alert: Alert) {
+    const classes = ['btn', 'btn-icon']
+    const alertTypeClass = {
+      [AlertType.Success]: 'btn-success',
+      [AlertType.Error]: 'btn-danger',
+      [AlertType.Info]: 'btn-info',
+      [AlertType.Warning]: 'btn-warning'
+    };
+
+    classes.push(alertTypeClass[alert.type]);
+
 
     return classes.join(' ');
   }

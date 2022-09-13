@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,14 +9,17 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   links = [
-    { title: 'Accounts', route: 'accounts' },
-    { title: 'Inventory', route: 'inventory' },
-    { title: 'Transactions', route: 'transactions' }
+    { title: 'Accounts', route: '/dashboard/accounts' },
+    { title: 'Inventory', route: '/dashboard/inventory' },
+    { title: 'Transactions', route: '/dashboard/transactions' }
   ];
+  url: string;
 
-  constructor(private router: Router) {
-    this.router.navigate(['/dashboard/accounts']);
+  constructor(private router: Router, private location: Location) {
+    this.url = this.router.url;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.url = this.router.url;
+  }
 }

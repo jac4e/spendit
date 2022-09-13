@@ -1,7 +1,11 @@
 export class User {
-  roles!: string;
+  role!: string;
+  verified!: boolean;
   balance!: number;
-  ccid!: string;
+  username!: string;
+  firstName!: string;
+  lastName!: string;
+  email!: string;
   id!: string;
   token!: string;
   password!: string;

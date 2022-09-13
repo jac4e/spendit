@@ -1,40 +1,56 @@
 <header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-    <div class="container">
-      <a class="navbar-brand">{{ brand.name }}</a>
-      <span *ngIf="tabGuard('loggedIn')" class="balance navbar-text"
-        >{{ account?.ccid }}: ${{ account?.balance }}</span
-      >
-      <!-- Step 3: Toggle the value of the property when the toggler button is clicked. -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        (click)="isMenuCollapsed = !isMenuCollapsed"
-      >
-        &#9776;
-      </button>
-
-      <!-- Step 2: Add the ngbCollapse directive to the element below. -->
-      <div
-        [ngbCollapse]="isMenuCollapsed"
-        class="collapse navbar-collapse flex-row-reverse"
-      >
-        <ul ngbNav #nav="ngbNav" class="navbar-nav">
-          <li [ngbNavItem]="link.route" *ngFor="let link of links">
-            <a
-              *ngIf="tabGuard(link.guard)"
-              ngbNavLink
-              [routerLink]="link.route"
-              >{{ link.title }}</a
-            >
-          </li>
-          <li class="nav-item">
-            <a *ngIf="tabGuard('loggedIn')" (click)="logout()" class="nav-link"
-              >Logout</a
-            >
-          </li>
-        </ul>
+  <div class="badge rounded-pill text-bg-primary"></div>
+  <nav class="navbar navbar-expand-lg navbar-light  mb-3">
+    <div class="container py-2 mt-2 bg-ui-main round">
+      <div class="col-auto">
+        <a class="navbar-brand">{{ brand.name }}</a>
+      </div>
+      <div class="col-auto">
+        <span *ngIf="tabGuard(['loggedIn'])" class="balance navbar-text">{{ account?.username }}: {{ account?.balance }} PHYC</span>
+      </div>
+      <div class="d-none d-lg-flex justify-content-end col-12 col-lg-8">
+          <ul ngbNav [(activeId)]="url"#nav="ngbNav" class=" nav-pills">
+            <ng-container *ngFor="let link of links">
+              <li *ngIf="tabGuard(link.guards)" [ngbNavItem]="link.route">
+                <a ngbNavLink [routerLink]="link.route">{{ link.title }}</a>
+              </li>
+            </ng-container>
+            <li class="nav-item">
+              <a *ngIf="tabGuard(['loggedIn'])" (click)="logout()" class="nav-link">Logout</a>
+            </li>
+          </ul>
+          <button *ngIf="account" type="button" title="cart"
+            class="btn btn-icon {{isCartCollapsed ? 'btn-outline-primary' : 'btn-primary'}}"
+            (click)="isCartCollapsed = !isCartCollapsed"><ng-icon name="dripBasket"></ng-icon><span class="badge rounded-pill bg-danger" *ngIf="cartLength >0">{{cartLength}}</span></button>
+      </div>
+      <div class="d-lg-none col-auto btn-group" role="group">
+        <button *ngIf="account" type="button" title="cart"
+          class="btn btn-icon {{isCartCollapsed ? 'btn-outline-primary' : 'btn-primary'}}"
+          (click)="isCartCollapsed = !isCartCollapsed"><ng-icon name="dripBasket"></ng-icon><span class="badge rounded-pill bg-danger" *ngIf="cartLength >0">{{cartLength}}</span></button>
+        <button class="btn btn-icon {{isMenuCollapsed ? 'btn-outline-primary' : 'btn-primary'}}" type="button"
+          (click)="isMenuCollapsed = !isMenuCollapsed"><ng-icon name="dripMenu"></ng-icon></button>
+      </div>
+      <div #collapse="ngbCollapse" [(ngbCollapse)]="isMenuCollapsed" class="d-lg-none col-12">
+          <ul ngbNav [(activeId)]="url"#nav="ngbNav" class="mt-3 nav-pills nav-fill">
+            <ng-container *ngFor="let link of links">
+              <li [ngbNavItem]="link.route" *ngIf="tabGuard(link.guards)" >
+                <a ngbNavLink [routerLink]="link.route">{{ link.title }}</a>
+              </li>
+            </ng-container>
+            <li class="nav-item" *ngIf="tabGuard(['loggedIn'])">
+              <a class="nav-link" (click)="logout()" class="nav-link">Logout</a>
+            </li>
+          </ul>
       </div>
     </div>
   </nav>
 </header>
+<app-common-alerts></app-common-alerts>
+
+<div *ngIf="account" class="container">
+      <div class="card" #collapse="ngbCollapse" [(ngbCollapse)]="isCartCollapsed">
+        <div class="card-body">
+          <app-cart></app-cart>
+        </div>
+      </div>
+</div>

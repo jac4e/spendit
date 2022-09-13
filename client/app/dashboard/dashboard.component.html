@@ -1,7 +1,15 @@
-<ul ngbNav class="nav-tabs">
-  <li [ngbNavItem]="link.route" *ngFor="let link of links">
-    <a ngbNavLink routerLink="." [routerLink]="link.route">{{ link.title }}</a>
-  </li>
-</ul>
+<div class="row mt-3">
+  <div class="col-12">
+    <h1 class="title-centered">Dashboard</h1>
+  </div>
+  <div class="col-12 mb-3">
+    <ul ngbNav [(activeId)]="url" class="nav-pills nav-fill">
+      <li class="nav-item bg-ui-main" [ngClass]="{first: first, last: last}" [ngbNavItem]="link.route" *ngFor="let link of links; let first = first; let last = last">
+        <a class="nav-link" ngbNavLink routerLink="." [routerLink]="link.route">{{ link.title }}</a>
+      </li>
+    </ul>
+  </div>
+</div>
 
+<app-common-alerts id="dashboard-alert"></app-common-alerts>
 <router-outlet></router-outlet>

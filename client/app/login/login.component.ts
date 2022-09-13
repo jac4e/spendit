@@ -1,26 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService } from '../_services';
+import { AccountService, AlertService } from '../_services';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   loading = false;
   submitted = false;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private accountService: AccountService // private alertService: AlertService
+    private accountService: AccountService,
+    private alertService: AlertService
   ) {}
 
   ngOnInit() {
@@ -39,7 +40,7 @@ export class LoginComponent implements OnInit {
     this.submitted = true;
 
     // reset alerts on submit
-    // this.alertService.clear();
+    this.alertService.clear();
 
     // stop here if form is invalid
     if (this.form.invalid) {
@@ -53,13 +54,20 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: () => {
           // get return url from query parameters or default to home page
+          this.alertService.success('Login successful', {
+            autoClose: true,
+            keepAfterRouteChange: true
+          });
           const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
           this.router.navigateByUrl(returnUrl);
+        },
+        error: (resp) => {
+          this.alertService.error(resp.error.message, {
+            autoClose: true,
+            keepAfterRouteChange: true
+          });
+          this.loading = false;
         }
-        // error: error => {
-        //     // this.alertService.error(error);
-        //     this.loading = false;
-        // }
       });
   }
 }

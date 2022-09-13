@@ -1,8 +1,6 @@
-
 import mongoose from 'mongoose';
-import config from '../config.js';
+import config from '../deploy/config.js';
 mongoose.connect(`mongodb://${config.db.url}:${config.db.port}/${config.db.name}`);
-mongoose.Promise = global.Promise;
 
 import account from '../_models/account.model.js';
 import product from '../_models/product.model.js';

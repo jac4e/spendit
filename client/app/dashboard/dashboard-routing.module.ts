@@ -10,6 +10,7 @@ const routes: Routes = [
     path: '',
     component: DashboardComponent,
     children: [
+      { path: '', pathMatch: 'full', redirectTo: 'accounts'},
       { path: 'accounts', component: AccountsComponent },
       { path: 'inventory', component: InventoryComponent },
       { path: 'transactions', component: TransactionsComponent }

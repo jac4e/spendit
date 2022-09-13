@@ -1,5 +1,15 @@
-<p>Needs:</p>
-<p>view transaction history</p>
-<p>view account balance</p>
-<p>add debit</p>
-<p>request refund</p>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <h1 class="title-centered">Your Account</h1>
+    </div>
+    <div class="col-12">
+        <ul ngbNav [(activeId)]="url" class="nav-pills nav-fill">
+            <li class="nav-item bg-ui-main" [ngClass]="{first: first, last: last}" [ngbNavItem]="link.route"
+                *ngFor="let link of links; let first = first; let last = last">
+                <a class="nav-link" ngbNavLink routerLink="." [routerLink]="link.route">{{ link.title }}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<router-outlet></router-outlet>

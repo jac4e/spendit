@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "80:3000"
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - /spendit/node_modules
+    restart: unless-stopped
+  database:
+    # need to add mongodata for data storage
+    image: mongo:6
+    restart: unless-stopped
+    networks:
+      backend:
+
+networks:
+  backend:
+  frontend:
+
+volumes:
+  mongodata:

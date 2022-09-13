@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AppCommonModule } from '../app-common/app-common.module';
 import { AccountsComponent } from './accounts/accounts.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
@@ -13,7 +14,8 @@ import { TransactionsComponent } from './transactions/transactions.component';
     CommonModule,
     ReactiveFormsModule,
     DashboardRoutingModule,
-    NgbModule
+    NgbModule,
+    AppCommonModule
   ],
   declarations: [
     DashboardComponent,

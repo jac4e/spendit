@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AccountService } from '../_services';
+import { User } from '../_models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -6,7 +9,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./account.component.sass']
 })
 export class AccountComponent implements OnInit {
-  constructor() {}
+  account!: User;
+  links = [
+    { title: 'Overview', route: '/account/overview' },
+    { title: 'Settings', route: '/account/settings' },
+    { title: 'Transactions', route: '/account/transactions' }
+  ];
+  url: string;
 
-  ngOnInit(): void {}
+  // page stuff
+  constructor(private accountService: AccountService, private router: Router) {
+    this.accountService.account.subscribe((account) => {
+      this.account = account || new User();
+    });
+    this.url = this.router.url;
+  }
+
+  ngOnInit(): void {
+    this.url = this.router.url;
+  }
 }

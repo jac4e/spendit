@@ -1,28 +1,66 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import config from '../config.js';
+import config from '../deploy/config.js';
 import db from '../_helpers/db.js';
+import { randomUUID } from 'crypto';
+import transaction from '../_helpers/transaction.js';
+import { zxcvbn, zxcvbnOptions } from '@zxcvbn-ts/core'
+import zxcvbnCommonPackage from '@zxcvbn-ts/language-common'
+import zxcvbnEnPackage from '@zxcvbn-ts/language-en'
+
+const zxcvbnBaseSettings = {
+  translations: zxcvbnEnPackage.translations,
+  graphs: zxcvbnCommonPackage.adjacencyGraphs,
+  dictionary: {
+    ...zxcvbnCommonPackage.dictionary,
+    ...zxcvbnEnPackage.dictionary,
+  },
+}
+
+zxcvbnOptions.setOptions(zxcvbnBaseSettings)
 
 const Account = db.account;
 const secret = config.secret;
+const saltRounds = 10;
 
 async function auth({
-  ccid,
+  username,
   password
 }) {
   const account = await Account.findOne({
-    ccid: ccid
+    username: username
   });
+
+  // Account not found
+  if (account === null) {
+    // compare to random hash to help mitigate timing attacks
+    // this may be foolish
+    // it may also prevent people from discovering user accounts through brute force
+    await bcrypt.compare(password, "$2b$10$rQweXBgpHcRXB8nblwv7JO4URRkvC7GjMhNgDPJA35HNcG383YG8W")
+    throw `Auth error username or password is incorrect`
+  }
+
+  // Do not login nonverified users
+  if (!account.verified) {
+    throw `Auth error account not verified`
+  }
+
   const match = await bcrypt.compare(password, account.hash)
+
   if (account && match) {
     const token = jwt.sign({
       sub: account.id,
-      permissions: account.roles
+      sid: account.sessionid,
+      permissions: account.role
     }, secret, {
       expiresIn: '7d'
     })
+    const balance = await getBalance(account.id);
+    // toJSON sanitization is not working
+    const sanitizedAccount = await Account.findOne(account).lean();
     return {
-      ...account.toJSON(),
+      ...sanitizedAccount,
+      balance,
       token
     }
   } else {
@@ -30,21 +68,45 @@ async function auth({
   }
 }
 
-async function create(accountParam) {
+// Private registration of verified accounts
+async function create(accountParam, isVerified) {
   // validate
-  console.log(JSON.stringify(accountParam))
+  // console.log(JSON.stringify(accountParam))
+
+  // make sure username is not taken
   if (await Account.findOne({
-      ccid: accountParam.ccid
+      username: accountParam.username
     })) {
-    throw `CCID '${accountParam.ccid}' is already taken`
+    throw `username '${accountParam.username}' is already taken`
   }
+  // Email validation
+  // must end in '@ualberta.ca'
+  // This may be missing some cases where the email is not a ualberta email
+  if (!/@ualberta.ca$/.test(accountParam.email)) {
+    throw `email must be of the ualberta.ca domain`
+  }
+
+  // Password validation
+  const result = zxcvbn(accountParam.password, [accountParam.username, accountParam.firstName, accountParam.lastName, accountParam.email]);
+  if (result.score < 2) {
+    throw `Registration error password is too weak: ${result.feedback.warning}`
+  }
+
   const account = new Account(accountParam)
+  
   // hash password
   if (accountParam.password) {
-    account.hash = bcrypt.hashSync(accountParam.password, 10);
+    account.hash = bcrypt.hashSync(accountParam.password, saltRounds);
   }
+
+  // set verification
+  account.verified = isVerified;
+
+  // create session ID
+  account.sessionid = randomUUID();
+
   // save account
-  await account.save()
+  await account.save();
 }
 
 // async function search({
@@ -69,20 +131,72 @@ async function create(accountParam) {
 //   }
 // }
 
-async function getAll() {
-  return await Account.find({});
+
+async function getSelfTransactions(id) {
+  // need this specific function to remove account id from transaction list
+  const transactions = await transaction.getByAccountId(id);
+  return transactions.map(({accountid, ...keepAttrs}) => keepAttrs);
 }
 
-async function getSelf(jwt) {
-  return await Account.findById(id);
+// Private account functions
+
+async function getBalance(id){
+  // transaction based balance
+  // console.log(`id: ${id}`)
+  const res = await transaction.getBalanceByAccountId(id)
+  // console.log(res)
+
+  // if no transactions, balance is 0
+  if (res.length === 0){
+    return 0;
+  }
+  return res[0].balance;
 }
+
+async function resetSession(id) {
+  let account = await Account.findById(id);
+  account.sessionid = randomUUID();
+  await account.save();
+  return;
+}
+
+async function getAll() {
+  const accounts = await Account.find({}).lean();
+  // console.log(accounts)
+  for (let index = 0; index < accounts.length; index++) {
+    accounts[index].balance = await getBalance(accounts[index].id) 
+  }
+  // console.log(test);
+  return accounts;
+}
+
 
 async function getById(id) {
-  return await Account.findById(id);
+  // console.log("getbyid",id)
+  const account = await Account.findById(id).lean();
+  const balance = await getBalance(id);
+  account.balance = balance;
+  // console.log(test);
+  return account;
 }
 
-async function pay(jwt) {
-  // get account by JWT
+async function verify(id) {
+  let account = await Account.findById(id);
+  account.verified = true;
+  account.save();
+}
+
+async function pay(amount, id) {
+  // makes payment on account based on the account Id
+  // returns true on success, false on failure
+  const account = await Account.findById(id);
+  const balance = await getBalance(id);
+  // console.log('pay',amount,balance)
+  if (amount > balance){
+    return false;
+  }
+
+  return true;
 }
 
 export default {
@@ -90,6 +204,10 @@ export default {
   create,
   getAll,
   getById,
-  pay
+  getBalance,
+  resetSession,
+  getSelfTransactions,
+  pay,
+  verify
   // search
 }

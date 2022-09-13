@@ -1,7 +1,120 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap'
+// @import '~bootstrap/scss/bootstrap'
+@import 'assets/css/bootstrap-dark.css'
+
+/* Importing open-iconic */
+$icon-font-path: '~open-iconic/font/fonts/'
+@import '~open-iconic/font/css/open-iconic-bootstrap.scss'
+
+:root
+    --ng-icon__size: 1rem
+    --ui-border-radius: 0.75rem
 
 body
     height: 100vh
+
+.title-centered
+    text-align: center
+
+.round
+    border-radius: var(--ui-border-radius)
+
+.depth
+    box-shadow: 0 0.5rem 1rem rgba(#000, .10)
+
+.bg-ui-main 
+    background-color: var(--ui-main)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .12)
+.bg-ui-layer-1 
+    background-color: var(--ui-layer-1)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .10)
+.bg-ui-layer-2 
+    background-color: var(--ui-layer-2)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .08)
+
+.alert
+    border-radius: var(--ui-border-radius)
+
+.card-img-top
+    // float: left
+    // position: absolute
+    // padding-bottom: 50%
+    // top: -10rem
+    // opacity: 0.5
+
+@media  (prefers-color-scheme: light)
+    :root 
+        --ui-main: rgb(240,240,240)
+        --ui-layer-1: rgb(242,242,242)
+        --ui-layer-2: rgb(231,231,231)
+
+    // add badge colors
+    .badge-primary 
+        color: #fafafa
+        background-color: #375a7f
+        border-color: #375a7f
+
+@media  (prefers-color-scheme: dark)
+    :root
+        --ui-main: rgb(51, 51, 51)
+        --ui-layer-1: rgb(49, 49, 49)
+        --ui-layer-2: rgb(62, 62, 62)
+
+// Change btn badge style
+.btn .badge 
+    padding: 0.15em 0.5em
+    top: -50%
+
+.card
+    box-shadow: 0 0.5rem 1rem rgba(#000, .10)
+    background-color: var(--ui-layer-1)
+    border: none
+    border-radius: var(--ui-border-radius)
+
+.card .card
+    background-color: var(--ui-layer-2)
+    box-shadow: 0 0.5rem 1rem rgba(#000, .08)
+
+.card-header
+    border-radius: calc(var(--ui-border-radius) - 1px) calc(var(--ui-border-radius) - 1px) 0 0 !important
+
+.nav-pills .nav-link
+    border-radius: 0.5rem
+
+.nav-item.first
+    border-bottom-left-radius: 0.5rem
+    border-top-left-radius: 0.5rem
+.nav-item.last
+    border-bottom-right-radius: 0.5rem
+    border-top-right-radius: 0.5rem
+
+.btn
+    border-radius: 0.5rem
+    touch-action: manipulation
+.btn.btn-icon
+    line-height: var(--ng-icon__size)
+.btn.btn-primary
+    box-shadow: 0 .125rem .25rem rgba(#000, .10)
+.btn.btn-secondary
+    box-shadow: 0 .125rem .25rem rgba(#000, .10)
+.btn.btn-primary:active
+    box-shadow: none
+.btn.btn-secondary:active
+    box-shadow: none
+@media (hover: none)
+    .btn.btn-primary.tap
+        box-shadow: none
+    .btn.btn-secondary.tap
+        box-shadow: none
+    .btn-outline-primary:hover
+        background-color: rgba(0,0,0,0)
+        color: var(--bs-primary)
+    .btn-primary:hover
+        background-color: var(--bs-primary)
+        border-color: var(--bs-primary)
+
+svg
+  vertical-align: top
+//   pointer-events: none

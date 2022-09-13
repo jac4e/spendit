@@ -1,0 +1,10 @@
+<div class="container">
+    <div *ngFor="let alert of alerts" class="align-items-center row {{alertClass(alert)}}">
+        <div class="col-auto">
+            <button class="{{buttonClass(alert)}}" (click)="removeAlert(alert)"><ng-icon name="dripCross"></ng-icon></button>
+        </div>
+        <div class="col-auto">
+            <p class="m-0" [innerHTML]="alert.message"></p>
+        </div>
+    </div>
+</div>

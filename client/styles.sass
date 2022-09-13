@@ -2,6 +2,7 @@
 
 /* Importing Bootstrap SCSS file. */
 // @import '~bootstrap/scss/bootstrap'
+@import 'assets/css/bootstrap-dark.css'
 
 /* Importing open-iconic */
 $icon-font-path: '~open-iconic/font/fonts/'
@@ -9,6 +10,7 @@ $icon-font-path: '~open-iconic/font/fonts/'
 
 :root
     --ng-icon__size: 1rem
+    --ui-border-radius: 0.75rem
 
 body
     height: 100vh
@@ -17,7 +19,7 @@ body
     text-align: center
 
 .round
-    border-radius: 0.75rem
+    border-radius: var(--ui-border-radius)
 
 .depth
     box-shadow: 0 0.5rem 1rem rgba(#000, .10)
@@ -31,6 +33,9 @@ body
 .bg-ui-layer-2 
     background-color: var(--ui-layer-2)
     box-shadow: 0 0.5rem 1rem rgba(#000, .08)
+
+.alert
+    border-radius: var(--ui-border-radius)
 
 .card-img-top
     // float: left
@@ -66,14 +71,14 @@ body
     box-shadow: 0 0.5rem 1rem rgba(#000, .10)
     background-color: var(--ui-layer-1)
     border: none
-    border-radius: 0.75rem
+    border-radius: var(--ui-border-radius)
 
 .card .card
     background-color: var(--ui-layer-2)
     box-shadow: 0 0.5rem 1rem rgba(#000, .08)
 
 .card-header
-    border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0
+    border-radius: calc(var(--ui-border-radius) - 1px) calc(var(--ui-border-radius) - 1px) 0 0 !important
 
 .nav-pills .nav-link
     border-radius: 0.5rem
@@ -113,5 +118,3 @@ body
 svg
   vertical-align: top
 //   pointer-events: none
-
-@import 'assets/css/bootstrap-dark.css'

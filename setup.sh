@@ -128,4 +128,4 @@ cat ${SCRIPT_DIR}/templates/backend.ts.template | envsubst  > ${SCRIPT_DIR}/clie
 mkdir ${SCRIPT_DIR}/server/deploy
 cat ${SCRIPT_DIR}/templates/config.js.template | envsubst  > ${SCRIPT_DIR}/server/deploy/config.JWT_SECRET
 mkdir ${SCRIPT_DIR}/config
-echo -n "ADMIN_PASSWORD=$ADMIN_PASSWORD\nJWT_SECRET=$JWT_SECRET" > ${SCRIPT_DIR}/config/backend.env
+echo -e "ADMIN_PASSWORD=$ADMIN_PASSWORD\nJWT_SECRET=$JWT_SECRET" > ${SCRIPT_DIR}/config/backend.env

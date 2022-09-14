@@ -17,22 +17,11 @@ services:
     # TODO: add healthcheck
     image: mongo:6
     restart: unless-stopped
+    user: "mongodb:mongodb"
     volumes: 
       - ./data:/data:Z
     networks:
       - backend
-  proxy:
-    image: nginx:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: unless-stopped
-    volumes:
-      - ./config/nginx.conf:/etc/nginx/nginx.conf
-      - ./config/ssl:/ssl
-    networks:
-      - frontend
 
 networks:
   backend:
-  frontend:

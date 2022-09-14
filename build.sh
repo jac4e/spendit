@@ -9,6 +9,7 @@ if [[ ! -e $(which envsubst) ]]; then
     exit 1
 fi
 
+# Need to find a better way to check for dependencies
 if [[ -e $(which docker) ]]; then
     COMPOSE="docker compose"
     if [[ -e $(which docker-compose) ]]; then
@@ -21,27 +22,11 @@ else
     exit 1
 fi
 
+# Check if acme.sh is installed
+    # if not, install...
+
 # Get config variables
 source ${SCRIPT_DIR}/setup.sh production
-
-# Setup ssl
-printf "Do you want a self-signed cert? (yes/no): "
-while [[ 1 ]]; do
-    read SSL_ANSWER
-
-    if [[ $SSL_ANSWER = "yes" ]]; then
-        ## self sign certs
-        mkdir -p ${SCRIPT_DIR}/config/ssl
-        openssl req -x509 -nodes -newkey rsa:4096 -keyout ${SCRIPT_DIR}/config/ssl/cert.key -out ${SCRIPT_DIR}/config/ssl/cert.pem -sha256 -days 365
-        break
-    elif [[ $SSL_ANSWER = "no" ]]; then
-        printf "Please place your own certs in ${SCRIPT_DIR}/config/ssl/cert.key and ${SCRIPT_DIR}/config/ssl/cert.pem then press enter..."
-        read IGNORE
-        break
-    else
-        printf "must be yes or no: "
-    fi
-done
 
 # Build
 $COMPOSE up -d --build

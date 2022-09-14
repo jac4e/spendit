@@ -8,10 +8,8 @@ services:
         jwt_secret: "${JWT_SECRET}"
         admin_password: "${ADMIN_PASSWORD}"
     networks:
-      backend:
-      frontend:
-        aliases:
-          - web
+      - backend
+      - frontend
     volumes:
       - /spendit/node_modules
     restart: unless-stopped
@@ -22,9 +20,7 @@ services:
     volumes: 
       - ./data:/data:Z
     networks:
-      backend:
-        aliases:
-          - database
+      - backend
   proxy:
     image: nginx:latest
     ports:

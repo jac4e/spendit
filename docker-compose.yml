@@ -18,9 +18,11 @@ services:
     envfile:
       - config/backend.env
     volumes: 
-      - ./data:/data:Z,U
+      - mongodata:/data
     networks:
       - backend
 
 networks:
   backend:
+volumes:
+  mongodata:

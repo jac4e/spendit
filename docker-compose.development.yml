@@ -23,21 +23,18 @@ services:
   install-backend:
     <<: *backend_base
     command: npm i
-  setup-web:
+  setup:
     <<: *frontend_base
     command: ./setup.sh development
     depends_on:
       - install-web
-  setup-backend:
-    <<: *backend_base
-    command: /src/setup.sh development
   web:
     <<: *frontend_base
     command: ng serve --host 0.0.0.0
     ports:
       - "4200:4200"
     depends_on:
-      setup-web:
+      setup:
         condition: service_completed_successfully
       install-web:
         condition: service_completed_successfully
@@ -48,8 +45,10 @@ services:
       - "3001:3000"
     networks:
       backend:
+    envfile:
+      - config/backend.env
     depends_on:
-      setup-backend:
+      setup:
         condition: service_completed_successfully
       install-backend:
         condition: service_completed_successfully

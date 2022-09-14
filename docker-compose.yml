@@ -2,11 +2,7 @@ version: "3.9"
 services:
   web:
     # TODO: add healthcheck
-    build:
-      context: .
-      args:
-        jwt_secret: "${JWT_SECRET}"
-        admin_password: "${ADMIN_PASSWORD}"
+    build: .
     ports:
       - "3000:3000"
     networks:
@@ -22,7 +18,7 @@ services:
     envfile:
       - config/backend.env
     volumes: 
-      - ./data:/data:Z
+      - ./data:/data:Z,U
     networks:
       - backend
 

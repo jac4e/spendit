@@ -11,7 +11,6 @@ services:
       - "3000:3000"
     networks:
       - backend
-      - frontend
     volumes:
       - /spendit/node_modules
     restart: unless-stopped
@@ -20,6 +19,8 @@ services:
     image: mongo:6
     restart: unless-stopped
     user: "mongodb:mongodb"
+    envfile:
+      - config/backend.env
     volumes: 
       - ./data:/data:Z
     networks:

@@ -18,11 +18,6 @@ WORKDIR /spendit/server
 
 RUN npm ci
 
-ARG jwt_secret
-ARG admin_password
-
 ENV CI=1
-ENV JWT_SECRET=$jwt_secret
-ENV ADMIN_PASSWORD=$admin_password
 
 CMD ["node", "index.js"]

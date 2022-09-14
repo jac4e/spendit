@@ -20,7 +20,7 @@ services:
     image: mongo:6
     restart: unless-stopped
     volumes: 
-      - ./data:/data
+      - ./data:/data:Z
     networks:
       backend:
         aliases:

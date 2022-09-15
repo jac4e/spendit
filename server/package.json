@@ -1,6 +1,6 @@
 {
   "name": "spendit-server",
-  "version": "0.0.1",
+  "version": "0.0.3-beta",
   "type": "module",
   "description": "",
   "main": "index.js",

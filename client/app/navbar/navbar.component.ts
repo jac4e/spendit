@@ -52,7 +52,7 @@ export class NavbarComponent implements OnInit {
     if (this.url === '') {
       this.url = '/';
     }
-    console.log(this.url);
+    // console.log(this.url);
   }
 
   tabGuard(guards: string[] | undefined) {

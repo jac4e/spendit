@@ -2,24 +2,31 @@
 # Get script directory
 SCRIPT_DIR=$(dirname $(readlink -f $0))
 
-# Get config variables
-source ${SCRIPT_DIR}/setup.sh production
-
-# Setup ssl
-printf "Do you need self-signed ssl certs? (yes/no): "
-read SSL_ANSWER
-
-if [[ $SSL_ANSWER = "yes" ]]; then 
-    ## self sign certs
-    mkdir -p ${SCRIPT_DIR}/config/ssl
-    openssl req -x509 -nodes -newkey rsa:4096 -keyout ${SCRIPT_DIR}/config/ssl/cert.key -out ${SCRIPT_DIR}/config/ssl/cert.pem -sha256 -days 365
-elif [[ $SSL_ANSWER = "no" ]]; then
-    printf "Please place your own certs in ${SCRIPT_DIR}/config/ssl/cert.key and ${SCRIPT_DIR}/config/ssl/cert.pem then press enter..."
-    read ""
-else
-    echo "must be yes or no"
+# Check dependicies
+echo "Checking dependencies.."
+if [[ ! -e $(which envsubst) ]]; then
+    echo "envsubst not found, please install the 'gettext' package"
     exit 1
 fi
 
+# Need to find a better way to check for dependencies
+if [[ -e $(which docker) ]]; then
+    COMPOSE="docker compose"
+    if [[ -e $(which docker-compose) ]]; then
+        COMPOSE="docker-compose"
+    fi
+elif [[ -e $(which podman-compose) ]]; then
+    COMPOSE="podman-compose"
+else
+    echo "Container system not found, please install either podman and podman-compose or docker and (optionally) podman-compose"
+    exit 1
+fi
+
+# Check if acme.sh is installed
+    # if not, install...
+
+# Get config variables
+source ${SCRIPT_DIR}/setup.sh production
+
 # Build
-docker compose up -d --build
+$COMPOSE up -d --build

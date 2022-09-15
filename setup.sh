@@ -126,6 +126,6 @@ export DOLLAR='$'
 # Process templates
 cat ${SCRIPT_DIR}/templates/backend.ts.template | envsubst  > ${SCRIPT_DIR}/client/app/_helpers/backend.ts
 mkdir ${SCRIPT_DIR}/server/deploy
-cat ${SCRIPT_DIR}/templates/config.js.template | envsubst  > ${SCRIPT_DIR}/server/deploy/config.js
+cat ${SCRIPT_DIR}/templates/config.js.template | envsubst  > ${SCRIPT_DIR}/server/deploy/config.JWT_SECRET
 mkdir ${SCRIPT_DIR}/config
-cat ${SCRIPT_DIR}/templates/nginx.conf.template | envsubst  > ${SCRIPT_DIR}/config/nginx.conf
+echo -e "ADMIN_PASSWORD=$ADMIN_PASSWORD\nJWT_SECRET=$JWT_SECRET" > ${SCRIPT_DIR}/config/backend.env

@@ -2,41 +2,28 @@ version: "3.9"
 services:
   web:
     # TODO: add healthcheck
-    build:
-      context: .
-      args:
-        jwt_secret: "${JWT_SECRET}"
-        admin_password: "${ADMIN_PASSWORD}"
+    build: .
+    ports:
+      - "3000:3000"
     networks:
-      backend:
-      frontend:
-        aliases:
-          - web
+      - backend
     volumes:
       - /spendit/node_modules
+    env_file:
+      - config/backend.env
+    depends_on:
+      - database
     restart: unless-stopped
   database:
     # TODO: add healthcheck
     image: mongo:6
     restart: unless-stopped
     volumes: 
-      - ./data:/data
+      - mongodata:/data
     networks:
-      backend:
-        aliases:
-          - database
-  proxy:
-    image: nginx:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: unless-stopped
-    volumes:
-      - ./config/nginx.conf:/etc/nginx/nginx.conf
-      - ./config/ssl:/ssl
-    networks:
-      - frontend
+      - backend
 
 networks:
   backend:
-  frontend:
+volumes:
+  mongodata:

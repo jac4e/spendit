@@ -9,7 +9,7 @@ services:
       - backend
     volumes:
       - /spendit/node_modules
-    envfile:
+    env_file:
       - config/backend.env
     depends_on:
       - database

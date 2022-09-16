@@ -34,15 +34,29 @@
 
 ### Finalize
 
+- [ ] mongodb volume backup
+- [ ] way to verify identity of ualberta emails
+- [ ] admin accounts should not be able to use the store
 - [x] database volume not correctly set missing ./
 - [x] deploy folder does not exist in repo
 - [ ] split frontend and backend into seperate parts
 - [ ] Lint, spelling, format and code review!!!
 - [ ] ensure all version numbers are correct
+- [ ] look into caching
 - [ ] brief documentation
 - [ ] Squash entire history
 - [ ] email notifications
-  - [ ] admin notification system
+  - [ ] notification types
+    - [ ] account creation
+      - [ ] registration
+      - [ ] admin creation
+        - [ ] randomly generated password
+    - [ ] account info changed
+    - [ ] account verified
+    - [ ] transaction made
+  - [ ] admin notifications
+    - [ ] product ran out
+    - [ ] daily metrics?
 
 ## Pre club demo
 
@@ -74,3 +88,9 @@
 - [x] when in slim screen mode and no products exists you are unable to open the menu
 - [x] inventory on store screen is not updated when you have 0 products, add one, then go back
 - [ ] button css incorrect
+- [ ] admin account was not set up correctly based on what was entered into the prompt (used the default email and username)
+
+## Regular bugs
+
+- [ ] clicking on dashboard/account then going to a different submenu from default then clicking dashboard again changes router outlet but not the nav bar
+- [ ] two request for products when going to store page

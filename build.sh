@@ -10,6 +10,7 @@ if [[ ! -e $(which envsubst) ]]; then
 fi
 
 # Need to find a better way to check for dependencies
+# this does not work if docker is aliased to podman
 if [[ -e $(which docker) ]]; then
     COMPOSE="docker compose"
     if [[ -e $(which docker-compose) ]]; then
@@ -17,6 +18,9 @@ if [[ -e $(which docker) ]]; then
     fi
 elif [[ -e $(which podman-compose) ]]; then
     COMPOSE="podman-compose"
+    # Do setup for podman
+    mkdir ${SCRIPT_DIR}/mongodata
+    podman unshare chown 999:999 -R mongodata
 else
     echo "Container system not found, please install either podman and podman-compose or docker and (optionally) podman-compose"
     exit 1
@@ -29,4 +33,5 @@ fi
 source ${SCRIPT_DIR}/setup.sh production
 
 # Build
+cd ${SCRIPT_DIR}
 $COMPOSE up -d --build

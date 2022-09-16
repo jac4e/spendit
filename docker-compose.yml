@@ -18,8 +18,9 @@ services:
     # TODO: add healthcheck
     image: mongo:6
     restart: unless-stopped
+    user: "mongodb:mongodb"
     volumes: 
-      - mongodata:/data
+      - mongodata:/data:Z
     networks:
       - backend
 

@@ -19,6 +19,7 @@ if [[ -e $(which docker) ]]; then
 elif [[ -e $(which podman-compose) ]]; then
     COMPOSE="podman-compose"
     # Do setup for podman
+    # https://www.redhat.com/sysadmin/user-namespaces-selinux-rootless-containers
     mkdir ${SCRIPT_DIR}/mongodata
     podman unshare chown 999:999 -R mongodata
 else

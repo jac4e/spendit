@@ -20,11 +20,9 @@ services:
     restart: unless-stopped
     user: "mongodb:mongodb"
     volumes: 
-      - mongodata:/data:Z
+      - ./mongodata:/data:Z
     networks:
       - backend
 
 networks:
   backend:
-volumes:
-  mongodata:

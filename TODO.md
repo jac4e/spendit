@@ -94,3 +94,4 @@
 
 - [ ] clicking on dashboard/account then going to a different submenu from default then clicking dashboard again changes router outlet but not the nav bar
 - [ ] two request for products when going to store page
+- [ ] dashboard product list doesn't update after editing product

@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { first } from 'rxjs';
 import { AccountService, AlertService } from '../_services';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-register',
@@ -18,20 +19,25 @@ export class RegisterComponent implements OnInit {
   form!: FormGroup;
   showErrors: { [key: string]: boolean } = {
     username: false,
-    firstName: false,
-    lastName: false,
-    email: false,
+    // firstName: false,
+    // lastName: false,
+    // email: false,
     password: false
   };
   loading = false;
   registrationForm: { [key: string]: any } = {
     username: ['', [Validators.required]],
-    firstName: ['', [Validators.required]],
-    lastName: ['', [Validators.required]],
+    // firstName: ['', [Validators.required]],
+    name: ['', [Validators.required]],
+    gid: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, this.passwordValidator]],
     confirmPassword: ['', [Validators.required, this.passwordValidator]]
   };
+  jwtService = new JwtHelperService();
+  client: any;
+  access_token: any;
+
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -41,13 +47,76 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group(this.registrationForm);
+
+    // Initialize google client
+    // @ts-ignore
+    this.client = google.accounts.oauth2.initTokenClient({
+      client_id: '1008970565201-lfhoe9qt1ceuoc3uikoa457o7k25le4q.apps.googleusercontent.com',
+      scope: 'https://www.googleapis.com/auth/userinfo.email \
+              https://www.googleapis.com/auth/userinfo.profile \
+              openid',
+      callback: this.register
+    });
+    console.log(this.client);
+    console.log(this.access_token);
+
+    // // @ts-ignore
+    // google.accounts.id.disableAutoSelect();
+    // // @ts-ignore
+    // google.accounts.id.initialize({
+    //   client_id:
+    //     '1008970565201-lfhoe9qt1ceuoc3uikoa457o7k25le4q.apps.googleusercontent.com',
+    //   // @ts-ignore
+    //   callback: register,
+    //   auto_select: false,
+    //   context: 'signup'
+    // });
+    // // @ts-ignore
+    // google.accounts.id.renderButton(
+    //   document.getElementById('google_oauth'),
+    //   {
+    //     text: 'signup_with',
+    //     shape: 'pill',
+    //     theme: 'filled_blue',
+    //     size: 'medium',
+    //     width: '350'
+    //   } // customization attributes
+    // );
+    // const iframe = document.getElementById('google_oauth')?.getElementsByTagName('iframe')[0];
+    // let newStyle = iframe?.style;
+    // if (newStyle !== undefined) {
+    //   newStyle.colorScheme = 'dark';
+    // }
+    // console.log(newStyle?.cssText);
+    // console.log(document.getElementById('google_oauth')?.getElementsByTagName('iframe')[0].style.cssText);
   }
 
   get f() {
     return this.form.controls;
   }
 
-  onSubmit() {
+  // @HostListener('window:oauth.success', ['$event'])
+  register(tokenResponse: { hd: string; access_token: string; }) {
+    if (tokenResponse.hd !== 'ualberta.ca') {
+      this.alertService.error('Google account must be a UAlberta account', {
+        autoClose: false,
+        keepAfterRouteChange: true
+      });
+      return;
+    }
+    // this.access_token = tokenResponse.access_token;
+    // console.log(tokenResponse);
+
+    // Get decoded token for name and email
+    // const decodedToken = this.jwtService.decodeToken(this.access_token);
+    // console.log("test");
+    // console.log(decodedToken);
+
+    // Inject access token into form
+    // this.form.controls['name'].setValue(decodedToken.name);
+    // this.form.controls['gid'].setValue(decodedToken.sub);
+    // this.form.controls['email'].setValue(decodedToken.email);
+
     // reset alerts on submit
     this.alertService.clear();
 
@@ -64,8 +133,9 @@ export class RegisterComponent implements OnInit {
     }
 
     this.loading = true;
+    const { ['confirmPassword']: confirmPassword, ...account } = this.form.value;
     this.accountService
-      .register(this.form.value)
+      .register(account, tokenResponse.access_token)
       .pipe(first())
       .subscribe({
         next: () => {
@@ -74,6 +144,8 @@ export class RegisterComponent implements OnInit {
             autoClose: true,
             keepAfterRouteChange: true
           });
+          // @ts-ignore
+          google.accounts.oauth2.revoke(tokenResponse.access_token);
         },
         error: (resp) => {
           this.alertService.error(resp.error.message, {
@@ -81,6 +153,8 @@ export class RegisterComponent implements OnInit {
             keepAfterRouteChange: true
           });
           this.loading = false;
+          // @ts-ignore
+          google.accounts.oauth2.revoke(tokenResponse.access_token);
         }
       });
   }
@@ -122,3 +196,15 @@ export class RegisterComponent implements OnInit {
     }
   }
 }
+
+// global register function that google sign in button
+// function passes oauth response as an event which calls the proper register function
+// (<any>window).register = (response: any) => {
+//   window.dispatchEvent(
+//     new CustomEvent('oauth.success', {
+//       detail: response,
+//       bubbles: true,
+//       cancelable: true
+//     })
+//   );
+// };

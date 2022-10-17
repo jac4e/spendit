@@ -13,13 +13,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./account/account.module').then((m) => m.AccountModule),
     canActivate: [AuthGuard],
-    data: { roles: ['all'] }
+    data: { roles: ['user'] }
   },
   {
     path: 'cart',
     component: CartComponent,
     canActivate: [AuthGuard],
-    data: { roles: ['all'] }
+    data: { roles: ['user'] }
   },
   {
     path: 'dashboard',

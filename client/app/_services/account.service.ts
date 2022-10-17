@@ -30,11 +30,11 @@ export class AccountService {
     return `${this.backend.api.account}/${crumb}`;
   }
 
-  register(account: User) {
-    return this.http.post<User>(
-      `${this.backend.api.account}/register`,
-      account
-    );
+  register(account: User, accessToken: string) {
+    return this.http.post<User>(`${this.backend.api.account}/register`, {
+      form: account,
+      gtoken: accessToken
+    });
   }
 
   login(username: string, password: string) {

@@ -3,10 +3,11 @@
         <div class="card">
             <h4 class="card-header">Register</h4>
             <div class="card-body">
-                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <form [formGroup]="form">
                     <div class="form-group mb-3">
                         <label for="username">Username</label>
-                        <input (focusout)="onFocusOut('username')" type="username" formControlName="username" class="form-control"
+                        <input (focusout)="onFocusOut('username')" type="username" formControlName="username"
+                            class="form-control"
                             [ngClass]="{ 'is-invalid': showErrors['username'] && f['username'].errors }" />
                         <div *ngIf="showErrors['username'] && f['username'].errors" class="invalid-feedback">
                             <div *ngIf="f['username'].errors?.['required']">
@@ -14,7 +15,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group mb-3">
+                    <!-- <div class="form-group mb-3">
                         <label for="firstName">First Name</label>
                         <input (focusout)="onFocusOut('firstName')" type="firstName" formControlName="firstName" class="form-control"
                             [ngClass]="{ 'is-invalid': showErrors['firstName'] && f['firstName'].errors }" />
@@ -46,10 +47,11 @@
                                 A UAlberta email is not valid
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group mb-3">
                         <label for="password">Password</label>
-                        <input (focusout)="onFocusOut('password')" type="password" formControlName="password" class="form-control"
+                        <input (focusout)="onFocusOut('password')" type="password" formControlName="password"
+                            class="form-control"
                             [ngClass]="{ 'is-invalid': showErrors['password'] && f['password'].errors }" />
                         <div *ngIf="showErrors['password'] && f['password'].errors" class="invalid-feedback">
                             <div *ngIf="f['password'].errors?.['required']">
@@ -62,7 +64,8 @@
                     </div>
                     <div class="form-group mb-3">
                         <label for="confirmPassword">Confirm password</label>
-                        <input (focusout)="onFocusOut('password')" type="password" formControlName="confirmPassword" class="form-control"
+                        <input (focusout)="onFocusOut('password')" type="password" formControlName="confirmPassword"
+                            class="form-control"
                             [ngClass]="{ 'is-invalid': showErrors['password'] && f['confirmPassword'].errors }" />
                         <div *ngIf="showErrors['password'] && f['confirmPassword'].errors" class="invalid-feedback">
                             <div *ngIf="f['confirmPassword'].errors?.['required']">
@@ -74,9 +77,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button [disabled]="loading" class="btn btn-primary">
+                        <button (click)="this.client.requestAccessToken()" [disabled]="loading" class="btn btn-primary">
                             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                            Register
+                            Sign up with Google 
                         </button>
                         <a routerLink="../login" class="btn btn-link">Login</a>
                     </div>

@@ -79,12 +79,6 @@ async function create(accountParam, isVerified) {
     })) {
     throw `username '${accountParam.username}' is already taken`
   }
-  // Email validation
-  // must end in '@ualberta.ca'
-  // This may be missing some cases where the email is not a ualberta email
-  if (!/@ualberta.ca$/.test(accountParam.email)) {
-    throw `email must be of the ualberta.ca domain`
-  }
 
   // Password validation
   const result = zxcvbn(accountParam.password, [accountParam.username, accountParam.firstName, accountParam.lastName, accountParam.email]);

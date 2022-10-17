@@ -60,7 +60,21 @@ function getSelfTransactions(req, res, next) {
 function register(req, res, next) {
     // Public registration, assume account is unverified and assign user role
     req.body.role = 'user';
-    accountService.create(req.body, false).then(() => res.json({})).catch(err => next(err))
+
+    // if (req.body.accessToken !==  ){
+    //     // registration form initiated creation
+    //     // get email, name, and google account id from google
+    //     accountParam = form
+    //     accountParam.firstName = googleFirstName
+    //     accountParam.lastName = googleLastName
+    //     accountParam.email = googleEmail
+    //     accountParam.gid = googleId
+    //   } else {
+    //     // admin initiated creation, all needed values are their
+    //     accountParam = form
+    //   }
+
+    accountService.create(accountParam, false).then(() => res.json({})).catch(err => next(err))
 }
 
 // Private routes

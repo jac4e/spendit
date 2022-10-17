@@ -7,13 +7,16 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
-import { AccountService } from '../_services';
+import { AccountService, AlertService } from '../_services';
 import { User } from '../_models';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private account!: User | null;
-  constructor(private accountService: AccountService) {
+  constructor(
+    private accountService: AccountService,
+    private alertService: AlertService
+  ) {
     this.accountService.account.subscribe((account) => {
       this.account = account;
     });
@@ -27,7 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const isAuthUrl = request.url.includes('/auth');
 
     if (isAuthUrl) {
-      // if auth url don't include token, it is unnecessary
+      // auth request does not require token
       return next.handle(request);
     }
 
@@ -40,9 +43,20 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
-        // console.log(err);
-        if (err.error.message.includes('The token has been revoked')) {
+        // console.log(err.error.message);
+        // Log user out client side if there are issues with the token
+        if (
+          err.error.message.includes('The token has been revoked') ||
+          err.error.message.includes('invalid signature')
+        ) {
           this.accountService.clientLogout();
+          this.alertService.error(
+            "You've been logged out as your session was invalid",
+            {
+              autoClose: false,
+              keepAfterRouteChange: true
+            }
+          );
         }
         return throwError(() => err);
       })

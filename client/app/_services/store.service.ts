@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AccountService } from './account.service';
-import { ICartItem, ICartItemSerialized, IAccount, IProduct } from 'typeit';
+import { ICartItem, ICart, ICartSerialized, ICartItemSerialized, IAccount, IProduct } from 'typeit';
 import { BehaviorSubject, retry, catchError } from 'rxjs';
 import { Backend } from '../_helpers';
 import { HttpClient } from '@angular/common/http';
@@ -99,7 +99,7 @@ export class StoreService {
     return this.cart.asObservable();
   }
 
-  serializeCart(cart: ICartItem[]): ICartItemSerialized[] {
+  serializeCart(cart: ICart): ICartSerialized {
     return cart.map((cart: ICartItem) => {
       return { id: cart.id, amount: cart.amount.toString() };
     });
@@ -113,9 +113,10 @@ export class StoreService {
     // console.log(this.serializeCart(this.cart.value));
     // console.log('purchasing');
     // console.log(`${this.backend.api.store}/purchase`);
-    return this.http.post(this.api('purchase'), {
-      cart: this.serializeCart(this.cart.value)
-    });
+    return this.http.post(
+      this.api('purchase'),
+      this.serializeCart(this.cart.value)
+    );
   }
 
   getCartTotal(): bigint {

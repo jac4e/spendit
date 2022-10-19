@@ -86,6 +86,11 @@ export class InventoryComponent implements OnInit {
       return;
     }
 
+    // convert form to IProductForm
+    const productForm = this.form.value;
+    productForm.price = BigInt(productForm.price);
+    productForm.stock = BigInt(productForm.stock);
+
     this.loading = true;
     this.adminService
       .addProduct(this.form.value)

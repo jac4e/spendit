@@ -1,13 +1,7 @@
 import { ReturnStatement } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import {
-  getKeys,
-  IAccount,
-  IProduct,
-  getValues,
-  ITransaction
-} from 'typeit';
+import { getKeys, IAccount, IProduct, getValues, ITransaction } from 'typeit';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +18,6 @@ export class CommonService {
     const csvString = [
       getKeys(data[0]).map((key) => key[0].toUpperCase() + key.slice(1)),
       ...data.map((item) => {
-        console.log(item);
         return getValues(item);
       })
     ]

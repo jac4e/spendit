@@ -63,9 +63,13 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    // convert form to IAccountForm
+    const accountForm = this.form.value;
+    delete accountForm.confirmPassword;
+
     this.loading = true;
     this.accountService
-      .register(this.form.value)
+      .register(accountForm)
       .pipe(first())
       .subscribe({
         next: () => {

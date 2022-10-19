@@ -54,6 +54,10 @@ export class TransactionsComponent implements OnInit {
       return;
     }
 
+    // Convert to ITransactionForm
+    const transactionForm = this.form.value;
+    transactionForm.products = [];
+
     this.loading = true;
     this.adminService
       .addTransaction(this.form.value)

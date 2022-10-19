@@ -1,46 +1,39 @@
+import { ReturnStatement } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  getKeys,
+  IAccount,
+  IProduct,
+  getValues,
+  ITransaction
+} from 'typeit';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
-  constructor() {}
+  constructor() { }
 
-  export(data: any, name: string) {
-    // Create table header from key names
-    const array = [Object.keys(data[0])].concat(data);
-    // console.log(array);
+  export(data: ITransaction[] | IProduct[] | IAccount[], name: string) {
+    // Check if data to export is empty
+    if (data.length < 1) {
+      return;
+    }
 
-    // Parse object array
-    const csv = array
-      .map((array_item: Array<Object>) => {
-        // console.log(array_item);
-        // console.log(Object.values(row_item));
-        // Convert array item to CSV row item
-        // Basically just creating an array of the values
-        const row_item = Object.values(array_item).map(
-          (array_item_element: any) => {
-            // Concat nested arrays so they are one cell
-            if (Array.isArray(array_item_element)) {
-              return array_item_element
-                .map((nested_array_element) => {
-                  // console.log(nested_array_element);
-                  return Object.values(nested_array_element).join(', ');
-                })
-                .join('; ');
-            } else {
-              return array_item_element;
-            }
-          }
-        );
-        return row_item.join('\t');
+    const csvString = [
+      getKeys(data[0]).map((key) => key[0].toUpperCase() + key.slice(1)),
+      ...data.map((item) => {
+        console.log(item);
+        return getValues(item);
       })
+    ]
+      .map((e) => e.join(','))
       .join('\n');
     const element = document.createElement('a');
     element.setAttribute(
       'href',
-      'data:text/plain;charset=utf-8,' + encodeURIComponent(csv)
+      'data:text/plain;charset=utf-8,' + encodeURIComponent(csvString)
     );
     element.setAttribute('download', name);
 
@@ -53,18 +46,16 @@ export class CommonService {
   }
   localeISOTime() {
     const date = new Date(Date.now());
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${
-      date.toTimeString().replace(/:/g, '').replace(' GMT', '').split(' (')[0]
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.toTimeString().replace(/:/g, '').replace(' GMT', '').split(' (')[0]
     }`;
   }
-  isBoolean(variable: any): boolean{
+  isBoolean(variable: any): boolean {
     return typeof variable === 'boolean';
   }
-  isString(variable: any): boolean{
+  isString(variable: any): boolean {
     return typeof variable === 'string';
-
   }
-  isNumber(variable: any): boolean{
+  isNumber(variable: any): boolean {
     return typeof variable === 'number';
   }
   isArray(obj: any) {

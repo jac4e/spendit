@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertService, StoreService } from '../_services';
-import { Product } from '../_models';
+import { IProduct } from 'typeit';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,10 +9,10 @@ import { Observable } from 'rxjs';
   styleUrls: ['./store.component.sass']
 })
 export class StoreComponent implements OnInit {
-  public inventory: Product[];
-  public columns: { products: Product[] }[];
+  public inventory: IProduct[];
+  public columns: { products: IProduct[] }[];
   public col: number;
-  public inventoryObservable: Observable<Product[]>;
+  public inventoryObservable: Observable<IProduct[]>;
   constructor(
     private storeService: StoreService,
     protected alertService: AlertService
@@ -22,7 +22,7 @@ export class StoreComponent implements OnInit {
     this.col = 0;
     this.inventoryObservable = this.storeService.getInventory();
     this.inventoryObservable.subscribe({
-      next: (inventory: Product[]) => {
+      next: (inventory: IProduct[]) => {
         this.inventory = inventory;
         this.layout(inventory);
       },
@@ -42,7 +42,7 @@ export class StoreComponent implements OnInit {
   // col-6<576px col-4≥576px col-3≥768px col-2≥1200px
   // 2 3 4 6
 
-  layout(inv: Product[]) {
+  layout(inv: IProduct[]) {
     // console.log('begin');
     // console.log(inv);
     const inventory = [...inv];
@@ -73,7 +73,7 @@ export class StoreComponent implements OnInit {
         if (this.columns[jndex] === undefined) {
           this.columns[jndex] = { products: [] };
         }
-        this.columns[jndex].products.push(inventory.pop() || new Product());
+        this.columns[jndex].products.push(inventory.pop() || ({} as IProduct));
       }
     }
     if (spareProduct) {
@@ -83,7 +83,7 @@ export class StoreComponent implements OnInit {
         if (this.columns[index] === undefined) {
           this.columns[index] = { products: [] };
         }
-        this.columns[index].products.push(inventory.pop() || new Product());
+        this.columns[index].products.push(inventory.pop() || ({} as IProduct));
         // console.log(this.columns[index]);
       }
     }
@@ -93,7 +93,7 @@ export class StoreComponent implements OnInit {
   refreshLayout() {
     if (this.inventory.length === 0) {
       this.inventoryObservable.subscribe({
-        next: (inventory: Product[]) => {
+        next: (inventory: IProduct[]) => {
           this.inventory = inventory;
           this.layout(inventory);
         },
@@ -105,7 +105,11 @@ export class StoreComponent implements OnInit {
       this.layout(this.inventory);
     }
   }
-  addToCart(product: Product) {
+  addToCart(product: IProduct) {
     this.storeService.addToCart(product, 1);
+  }
+
+  bint(variable: string | number | bigint | boolean): bigint {
+    return BigInt(variable);
   }
 }

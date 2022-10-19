@@ -9,6 +9,7 @@ import {
 import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '../_services';
+import { ICredentials } from 'typeit';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
@@ -48,8 +49,9 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
+    const credentials: ICredentials = {username: this.f?.['username'].value, password: this.f?.['password'].value}
     this.accountService
-      .login(this.f?.['username'].value, this.f?.['password'].value)
+      .login(credentials)
       .pipe(first())
       .subscribe({
         next: () => {

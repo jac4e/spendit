@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Transaction } from 'client/app/_models';
+import { ITransaction } from 'typeit';
 import { Observable } from 'rxjs';
 import { CommonService } from 'client/app/_services';
 
@@ -9,11 +9,11 @@ import { CommonService } from 'client/app/_services';
   styleUrls: ['./transactions-list.component.sass']
 })
 export class TransactionsListComponent {
-  transactions!: Transaction[];
+  transactions!: ITransaction[];
   page = 1;
   pageSize = 10;
   collectionSize!: number;
-  @Input() getTransactions!: Observable<Transaction[]>;
+  @Input() getTransactions!: Observable<ITransaction[]>;
 
   constructor(private commonService: CommonService) {}
 
@@ -21,20 +21,20 @@ export class TransactionsListComponent {
     this.refreshTransactions();
   }
   export() {
-    this.getTransactions.subscribe((transactions: Transaction[]) => {
-      const data: any = transactions.map((el: any) => {
-        el.date = new Date(el.date).toISOString();
-        return el;
-      });
+    this.getTransactions.subscribe((transactions: ITransaction[]) => {
+      // const data: any = transactions.map((el: any) => {
+      //   el.date = new Date(el.date).toISOString();
+      //   return el;
+      // });
       this.commonService.export(
-        data,
+        transactions,
         `transactions_${this.commonService.localeISOTime()}.csv`
       );
     });
   }
 
   refreshTransactions() {
-    this.getTransactions.subscribe((transactions: Transaction[]) => {
+    this.getTransactions.subscribe((transactions: ITransaction[]) => {
       this.transactions = transactions.map((data) => {
         data.date = new Date(data.date);
         return data;

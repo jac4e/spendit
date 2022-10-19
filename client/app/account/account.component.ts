@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../_services';
-import { User } from '../_models';
+import { IAccount } from 'typeit';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./account.component.sass']
 })
 export class AccountComponent implements OnInit {
-  account!: User;
+  account = {} as IAccount;
   links = [
     { title: 'Overview', route: '/account/overview' },
     { title: 'Settings', route: '/account/settings' },
@@ -20,7 +20,9 @@ export class AccountComponent implements OnInit {
   // page stuff
   constructor(private accountService: AccountService, private router: Router) {
     this.accountService.account.subscribe((account) => {
-      this.account = account || new User();
+      if (account !== null) {
+        this.account = account;
+      }
     });
     this.url = this.router.url;
   }

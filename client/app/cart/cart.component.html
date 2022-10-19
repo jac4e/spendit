@@ -31,7 +31,7 @@
             <p class="cart-price card-text">x {{ product.amount }}</p>
           </div>
           <div class="col-auto mx-auto my-auto">
-            <p class="cart-price card-text">= {{ product.price * (product.amount || 0) }} PHYC</p>
+            <p class="cart-price card-text">= {{ calculateTotal(product) }} PHYC</p>
           </div>
         </span>
         <div class="col-auto mx-auto my-auto btn-group">

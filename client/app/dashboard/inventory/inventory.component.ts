@@ -3,7 +3,7 @@ import { AdminService } from 'client/app/_services/admin.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs';
-import { Product } from 'client/app/_models';
+import { IProduct } from 'typeit';
 import {
   AlertService,
   CommonService,
@@ -16,7 +16,7 @@ import {
   styleUrls: ['./inventory.component.sass']
 })
 export class InventoryComponent implements OnInit {
-  inventory!: Product[];
+  inventory!: IProduct[];
   form!: UntypedFormGroup;
   loading = false;
   submitted = false;
@@ -30,7 +30,7 @@ export class InventoryComponent implements OnInit {
     private commonService: CommonService,
     private alertService: AlertService
   ) {
-    this.storeService.getInventory().subscribe((inventory: Product[]) => {
+    this.storeService.getInventory().subscribe((inventory: IProduct[]) => {
       this.inventory = inventory;
     });
     this.updateProduct = this.adminService.boundedUpdateProduct;
@@ -55,7 +55,7 @@ export class InventoryComponent implements OnInit {
     return this.form.controls;
   }
   export() {
-    this.storeService.getInventory().subscribe((data: Product[]) => {
+    this.storeService.getInventory().subscribe((data: IProduct[]) => {
       this.commonService.export(
         data,
         `inventory_${this.commonService.localeISOTime()}.csv`
@@ -66,7 +66,7 @@ export class InventoryComponent implements OnInit {
     // console.log('remove', id);
     this.adminService.removeProduct(id).subscribe({
       next: () => {
-        this.storeService.getInventory().subscribe((inventory: Product[]) => {
+        this.storeService.getInventory().subscribe((inventory: IProduct[]) => {
           this.inventory = inventory;
         });
       },
@@ -97,7 +97,7 @@ export class InventoryComponent implements OnInit {
             id: 'dashboard-alert'
           });
           this.loading = false;
-          this.storeService.getInventory().subscribe((inventory: Product[]) => {
+          this.storeService.getInventory().subscribe((inventory: IProduct[]) => {
             this.inventory = inventory;
           });
         },

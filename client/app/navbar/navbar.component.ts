@@ -3,7 +3,8 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { AccountService, StoreService } from '../_services';
 import { Router } from '@angular/router';
-import { User, Link, Product } from '../_models';
+import { IAccount, IProduct } from 'typeit';
+import { Link } from '../_models';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -24,8 +25,8 @@ export class NavbarComponent implements OnInit {
 
   public isMenuCollapsed = true;
   public isCartCollapsed = true;
-  cartLength = 0;
-  account!: User | null;
+  cartLength = 0n;
+  account!: IAccount | null;
   fragment!: string;
   constructor(
     private accountService: AccountService,
@@ -38,9 +39,9 @@ export class NavbarComponent implements OnInit {
       this.account = account;
     });
     this.storeService.getCart().subscribe((cart) => {
-      let sum = 0;
+      let sum = 0n;
       for (let index = 0; index < cart.length; index++) {
-        sum += cart[index].amount || 0;
+        sum += BigInt(cart[index].amount) || 0n;
       }
       this.cartLength = sum;
     });

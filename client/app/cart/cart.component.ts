@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { first, Observable } from 'rxjs';
 import { AccountService, StoreService } from '../_services';
-import { Product } from '../_models';
+import { ICartItem } from 'typeit';
 import { AccountComponent } from '../account/account.component';
 import { AlertService } from '../_services/';
 
@@ -11,7 +11,7 @@ import { AlertService } from '../_services/';
   styleUrls: ['./cart.component.sass']
 })
 export class CartComponent implements OnInit {
-  public cart!: Observable<Product[]>;
+  public cart!: Observable<ICartItem[]>;
   public imagePlaceholder = 'https://via.placeholder.com/150';
   loading = false;
   constructor(
@@ -35,6 +35,10 @@ export class CartComponent implements OnInit {
   decrementItem(index: number) {
     // console.log(`removine ${index}`);
     this.storeService.decrementFromCart(index);
+  }
+
+  calculateTotal(product: ICartItem) {
+    return BigInt(product.price) * (BigInt(product.amount) || 0n);
   }
 
   buy() {

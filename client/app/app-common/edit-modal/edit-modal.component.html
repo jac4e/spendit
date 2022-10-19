@@ -14,13 +14,13 @@ Edit
                     <h5>{{commonService.titleCase(control.key)}}:</h5>
                     <!-- <label class="sr-only" for="username">username</label> -->
                     <input *ngIf="commonService.isString(control.value[0])" type="text" formControlName="{{ control.key }}" class="form-control" id="{{ control.key }}"
-                    [ngClass]="{ 'is-invalid': submitted && f?.['{{ control.key }}']?.errors }" placeholder="{{ control.key }}"/>
+                    [ngClass]="{ 'is-invalid': submitted && f['{{ control.key }}'].errors }" placeholder="{{ control.key }}"/>
                     <input *ngIf="commonService.isBoolean(control.value[0])" type="checkbox" formControlName="{{ control.key }}" class="form-check-input" id="{{ control.key }}"
-                        [ngClass]="{ 'is-invalid': submitted && f?.['{{ control.key }}']?.errors }" placeholder="{{ control.key }}"/>
+                        [ngClass]="{ 'is-invalid': submitted && f['{{ control.key }}'].errors }" placeholder="{{ control.key }}"/>
                     <input *ngIf="commonService.isNumber(control.value[0])" type="number" formControlName="{{ control.key }}" class="form-control" id="{{ control.key }}"
-                        [ngClass]="{ 'is-invalid': submitted && f?.['{{ control.key }}']?.errors }" placeholder="{{ control.key }}"/>
-                    <div *ngIf="submitted && f?.['{{ control.key }}']?.errors" class="invalid-feedback">
-                        <div *ngIf="f?.['{{ control.key }}']?.errors?.['required']">
+                        [ngClass]="{ 'is-invalid': submitted && f['{{ control.key }}'].errors }" placeholder="{{ control.key }}"/>
+                    <div *ngIf="submitted && f['{{ control.key }}'].errors" class="invalid-feedback">
+                        <div *ngIf="f['{{ control.key }}'].errors?.['required']">
                             {{commonService.titleCase(control.key)}} is required
                         </div>
                     </div>

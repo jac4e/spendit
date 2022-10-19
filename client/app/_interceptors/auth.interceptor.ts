@@ -8,11 +8,11 @@ import {
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AccountService } from '../_services';
-import { User } from '../_models';
+import { IAccount } from 'typeit';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private account!: User | null;
+  private account!: IAccount | null;
   constructor(private accountService: AccountService) {
     this.accountService.account.subscribe((account) => {
       this.account = account;
@@ -32,9 +32,14 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     if (this.account && isApiUrl) {
+      const token = localStorage.getItem('token');
+      if (token === null) {
+        // Some unkown state where the account exists but token doesn't
+        this.accountService.clientLogout();
+      }
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${this.account.token}`
+          Authorization: `Bearer ${token}`
         }
       });
     }

@@ -46,7 +46,13 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
         // console.log(err);
-        if (err.error.message.includes('The token has been revoked')) {
+        const tokenError = [
+          'invalid signature',
+          'The token has been revoked'
+        ].some((substring) => {
+          return err.error.message.includes(substring);
+        });
+        if (tokenError) {
           this.accountService.clientLogout();
         }
         return throwError(() => err);

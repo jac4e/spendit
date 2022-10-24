@@ -30,9 +30,7 @@ export class InventoryComponent implements OnInit {
     private commonService: CommonService,
     private alertService: AlertService
   ) {
-    this.storeService.getInventory().subscribe((inventory: IProduct[]) => {
-      this.inventory = inventory;
-    });
+    this.refreshList();
     this.updateProduct = this.adminService.boundedUpdateProduct;
   }
 
@@ -66,13 +64,16 @@ export class InventoryComponent implements OnInit {
     // console.log('remove', id);
     this.adminService.removeProduct(id).subscribe({
       next: () => {
-        this.storeService.getInventory().subscribe((inventory: IProduct[]) => {
-          this.inventory = inventory;
-        });
+        this.refreshList();
       },
       error: (resp) => {
         this.alertService.error(resp.error.message);
       }
+    });
+  }
+  refreshList() {
+    this.storeService.getInventory().subscribe((inventory: IProduct[]) => {
+      this.inventory = inventory;
     });
   }
   onSubmit() {
@@ -102,9 +103,7 @@ export class InventoryComponent implements OnInit {
             id: 'dashboard-alert'
           });
           this.loading = false;
-          this.storeService.getInventory().subscribe((inventory: IProduct[]) => {
-            this.inventory = inventory;
-          });
+          this.refreshList();
         },
         error: (resp) => {
           this.alertService.error(resp.error.message, {autoClose: true,id: 'dashboard-alert'});

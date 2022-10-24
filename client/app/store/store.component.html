@@ -1,23 +1,25 @@
 <div class="row">
   <h1 class="title-centered">Products</h1>
 </div>
-<div class="row" *ngIf="inventory.length > 0" (window:resize)="refreshLayout()" class="row" id="wall">
-  <div *ngFor="let column of columns" class="col-{{12/col}}">
-    <ng-container *ngIf="column">
-      <div class="pb-4" *ngFor="let product of column.products">
-        <div class="d-grid product">
-          <div class="card bg-product">
-          </div>
-          <img [src]="product.image === undefined ? '' : product.image" class="card-img-top mx-auto d-block" />
-          <span class="product-title title-centered">{{ product.name }}</span>
-          <span class="product-desc title-centered">{{ product.description }}</span>
-          <span class="product-price">{{ product.price }} PHYC</span>
-          <div class="product-add mx-auto mb-2">
-            <button *ngIf="bint(product.stock) > bint(0)" class="btn btn-primary no-hover" (click)="addToCart(product)">Add to cart</button>
-            <button *ngIf="bint(product.stock) === bint(0)" disabled class="btn btn-primary no-hover">Out of Stock</button>
+<div class="row" (window:resize)="refreshLayout()" class="row" id="wall">
+  <ng-container *ngIf="inventory.length > 0">
+    <div *ngFor="let column of columns" class="col-{{12/col}}">
+      <ng-container *ngIf="column">
+        <div class="pb-4" *ngFor="let product of column.products">
+          <div class="d-grid product">
+            <div class="card bg-product">
+            </div>
+            <img [src]="product.image === undefined ? '' : product.image" class="card-img-top mx-auto d-block" />
+            <span class="product-title title-centered">{{ product.name }}</span>
+            <span class="product-desc title-centered">{{ product.description }}</span>
+            <span class="product-price">{{ product.price }} PHYC</span>
+            <div class="product-add mx-auto mb-2">
+              <button *ngIf="bint(product.stock) > bint(0)" class="btn btn-primary no-hover" (click)="addToCart(product)">Add to cart</button>
+              <button *ngIf="bint(product.stock) === bint(0)" disabled class="btn btn-primary no-hover">Out of Stock</button>
+            </div>
           </div>
         </div>
-      </div>
-    </ng-container>
-  </div>
+      </ng-container>
+    </div>
+  </ng-container>
 </div>

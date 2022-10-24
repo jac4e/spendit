@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   templateUrl: './store.component.html',
   styleUrls: ['./store.component.sass']
 })
-export class StoreComponent implements OnInit {
+export class StoreComponent implements AfterViewInit {
   public inventory: IProduct[];
   public columns: { products: IProduct[] }[];
   public col: number;
@@ -21,20 +21,9 @@ export class StoreComponent implements OnInit {
     this.columns = [];
     this.col = 0;
     this.inventoryObservable = this.storeService.getInventory();
-    this.inventoryObservable.subscribe({
-      next: (inventory: IProduct[]) => {
-        this.inventory = inventory;
-        this.layout(inventory);
-      },
-      error: (resp) => {
-        this.alertService.error(
-          `Could not get store inventory: ${resp.error.message}`, {autoClose: true}
-        );
-      }
-    });
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.refreshLayout();
   }
 

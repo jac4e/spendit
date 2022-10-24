@@ -7,18 +7,30 @@ import { getKeys, IAccount, IProduct, getValues, ITransaction } from 'typesit';
   providedIn: 'root'
 })
 export class CommonService {
-  constructor() { }
+  constructor() {}
 
   export(data: ITransaction[] | IProduct[] | IAccount[], name: string) {
     // Check if data to export is empty
     if (data.length < 1) {
       return;
     }
-
     const csvString = [
       getKeys(data[0]).map((key) => key[0].toUpperCase() + key.slice(1)),
       ...data.map((item) => {
-        return getValues(item);
+        return getValues(item).map((value) => {
+          // serialize nested arrays
+          console.log(value, Array.isArray(value));
+          if (Array.isArray(value)) {
+            return JSON.stringify(value)
+              .replace(/,'/gm, ';')
+              .replace(/(\r\n|\n|\r)/gm, '');
+          }
+          // remove commas and newlines from strings
+          if (typeof value === 'string') {
+            return value.replace(/,/gm, ';').replace(/(\r\n|\n|\r)/gm, '');
+          }
+          return value;
+        });
       })
     ]
       .map((e) => e.join(','))
@@ -39,7 +51,8 @@ export class CommonService {
   }
   localeISOTime() {
     const date = new Date(Date.now());
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${date.toTimeString().replace(/:/g, '').replace(' GMT', '').split(' (')[0]
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}T${
+      date.toTimeString().replace(/:/g, '').replace(' GMT', '').split(' (')[0]
     }`;
   }
   isBoolean(variable: any): boolean {

@@ -4,7 +4,9 @@ import {
   OnInit,
   HostListener,
   ViewChild,
-  TemplateRef
+  TemplateRef,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import {
   NgbModal,
@@ -31,6 +33,7 @@ export class EditModalComponent implements OnInit {
   @Input() submit!: (id: string, content: any) => Observable<any>;
   modelProperties!: string[];
   @ViewChild('content') public content!: TemplateRef<any>;
+  @Output() modifiedItemEvent = new EventEmitter();
 
   @HostListener('click') onClick() {
     this.open(this.content);
@@ -48,30 +51,42 @@ export class EditModalComponent implements OnInit {
     public commonService: CommonService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.modelProperties = getKeys(
+      this.model as IAccount | ITransaction | IProduct
+    )
+      .map((key) => {
+        // remove restricted keys
+        if (key === 'id' || key === 'balance' || key === 'gid') {
+          return '';
+        }
+        return key;
+      })
+      .filter((key) => key !== '') as string[];
+
+    // If model is account, add password and confirm password keys
+    if (isIAccount(this.model)) {
+      // add keys
+      this.modelProperties.push('password');
+      this.modelProperties.push('confirmPassword');
+    }
+  }
 
   get f() {
     return this.form.controls;
   }
 
   generateForm() {
-    // console.log('Begin form creation');
-    Object.entries(this.model).forEach(([key, value]) => {
-      // console.log(key, value);
-      // Don't create controls for these values
-      if (key === 'id' || key === 'balance') {
-        return;
-      }
-      // setup validators
-      let validatorsArr = [Validators.required];
+    this.modelProperties.forEach((key) => {
+      console.log(key);
+      const value = this.model[key];
+      const validatorsArr = [Validators.required];
       if (key === 'email') {
         validatorsArr.push(Validators.email);
       }
       this.controls[key] = [value, validatorsArr];
     });
-    // console.log(this.controls);
     this.form = this.formBuilder.group(this.controls);
-    // console.log(this.form);
   }
 
   onSubmit() {
@@ -81,18 +96,30 @@ export class EditModalComponent implements OnInit {
       return;
     }
 
+    // convert to IAccountForm if needed
+    const form = this.form.value;
+    console.log(form);
+    if (form['confirmPassword']) {
+      delete form['confirmPassword'];
+    }
+
     this.loading = true;
-    this.submit(this.model['id'], this.form.value).subscribe({
+    this.submit(this.model['id'], form).subscribe({
       next: () => {
         this.loading = false;
         this.alertService.success(`Successfully updated ${this.model['id']}`, {
           autoClose: true,
           id: this.successAlert
         });
+        console.log('emitting event');
+        this.modifiedItemEvent.emit();
         this.modalRef.close();
       },
       error: (resp) => {
-        this.alertService.error(resp.error.message, { autoClose: true, id: 'modal-alert' });
+        this.alertService.error(resp.error.message, {
+          autoClose: true,
+          id: 'modal-alert'
+        });
         this.loading = false;
       }
     });
@@ -129,5 +156,9 @@ export class EditModalComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
+  }
+
+  isPassword(input: string) {
+    return input.includes('assword');
   }
 }

@@ -35,6 +35,7 @@ export class ViewModalComponent implements OnInit {
     this.modelProperties = getKeys(
       this.model as IAccount | ITransaction | IProduct
     );
+    console.log(this.model, isITransaction(this.model));
   }
 
   open(content: any) {

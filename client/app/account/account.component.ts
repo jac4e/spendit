@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { AccountService } from '../_services';
-import { User } from '../_models';
+import { IAccount } from 'typesit';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.sass']
 })
-export class AccountComponent implements OnInit {
-  account!: User;
+export class AccountComponent implements DoCheck {
+  account = {} as IAccount;
   links = [
     { title: 'Overview', route: '/account/overview' },
     { title: 'Settings', route: '/account/settings' },
@@ -20,12 +20,14 @@ export class AccountComponent implements OnInit {
   // page stuff
   constructor(private accountService: AccountService, private router: Router) {
     this.accountService.account.subscribe((account) => {
-      this.account = account || new User();
+      if (account !== null) {
+        this.account = account;
+      }
     });
     this.url = this.router.url;
   }
 
-  ngOnInit(): void {
+  ngDoCheck(): void {
     this.url = this.router.url;
   }
 }

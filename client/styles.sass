@@ -65,7 +65,12 @@ body
 // Change btn badge style
 .btn .badge 
     padding: 0.15em 0.5em
-    top: -50%
+    position: absolute
+    top: -5%
+    z-index: 2000
+    // right: 1%
+.btn[title~=cart]
+    position: relative
 
 .card
     box-shadow: 0 0.5rem 1rem rgba(#000, .10)

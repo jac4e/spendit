@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AccountService } from './account.service';
-import { User, Product } from '../_models';
+import { ICartItem, ICart, ICartSerialized, ICartItemSerialized, IAccount, IProduct } from 'typesit';
 import { BehaviorSubject, retry, catchError } from 'rxjs';
 import { Backend } from '../_helpers';
 import { HttpClient } from '@angular/common/http';
@@ -11,19 +11,19 @@ import { AlertService } from './alert.service';
 })
 export class StoreService {
   private backend = new Backend();
-  private cart: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
-  private account!: User | null;
+  private cart: BehaviorSubject<ICartItem[]>;
+  private account!: IAccount | null;
   isLoggedIn!: boolean;
   constructor(
     private accountService: AccountService,
     private http: HttpClient,
     private alertService: AlertService
   ) {
-    this.accountService.account.subscribe((account: User | null) => {
+    this.accountService.account.subscribe((account: IAccount | null) => {
       this.account = account;
     });
     const storage = localStorage.getItem('cart');
-    this.cart = new BehaviorSubject<Product[]>(
+    this.cart = new BehaviorSubject<ICartItem[]>(
       storage ? JSON.parse(storage) : []
     );
   }
@@ -32,7 +32,10 @@ export class StoreService {
     return `${this.backend.api.store}/${crumb}`;
   }
 
-  addToCart(product: Product, amount: number) {
+  addToCart(product: IProduct, amount: bigint | number) {
+    // censure amount is bigint
+    amount = BigInt(amount);
+
     if (!product) {
       return 1;
     }
@@ -40,62 +43,65 @@ export class StoreService {
       return 1;
     }
     if (!this.account) {
-      return;
+      return 1;
     }
 
-    const currentCart = this.cart.value;
+    const cart = this.cart.value;
 
-    const index = currentCart.findIndex((item) => item.id === product.id);
+    const index = cart.findIndex((item) => item.id === product.id);
 
     if (index !== -1) {
-      currentCart[index].amount = (currentCart[index].amount || 0) + 1;
+      cart[index].amount = BigInt(cart[index].amount) + 1n;
+    } else {
+      const cartItem = {
+        ...product,
+        amount: amount,
+        total: BigInt(product.price) * amount
+      } as ICartItem;
+      cart.push(cartItem);
     }
 
-    const updatedCart =
-      index !== -1
-        ? [...currentCart]
-        : [...currentCart, { ...product, amount: amount }];
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    this.cart.next(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    this.cart.next(cart);
 
     return 0;
   }
 
   removeFromCart(index: number) {
     // console.log(index);
-    const updatedCart = this.cart.value;
-    // console.log(updatedCart);
-    updatedCart.splice(index, 1);
-    // console.log(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    this.cart.next(updatedCart);
+    const cart = this.cart.value;
+    // console.log(cart);
+    cart.splice(index, 1);
+    // console.log(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    this.cart.next(cart);
   }
 
   decrementFromCart(index: number) {
     // console.log(index);
-    const updatedCart = this.cart.value;
-    // console.log(updatedCart);
-    if ((updatedCart[index].amount || 0) > 1) {
-      updatedCart[index].amount = (updatedCart[index].amount || 1) - 1;
+    const cart = this.cart.value;
+    // console.log(cart);
+    if (cart[index].amount > 1n) {
+      cart[index].amount = BigInt(cart[index].amount) - 1n;
     } else {
       this.removeFromCart(index);
     }
-    // console.log(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    this.cart.next(updatedCart);
+    // console.log(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    this.cart.next(cart);
   }
 
   getInventory() {
-    return this.http.get<Product[]>(this.api('products')).pipe(retry(1));
+    return this.http.get<IProduct[]>(this.api('products')).pipe(retry(1));
   }
 
   getCart() {
     return this.cart.asObservable();
   }
 
-  serializeCart(cart: Product[]) {
-    return cart.map((cart: Product) => {
-      return { id: cart.id, amount: cart.amount };
+  serializeCart(cart: ICart): ICartSerialized {
+    return cart.map((cart: ICartItem) => {
+      return { id: cart.id, amount: cart.amount.toString() };
     });
   }
 
@@ -107,18 +113,19 @@ export class StoreService {
     // console.log(this.serializeCart(this.cart.value));
     // console.log('purchasing');
     // console.log(`${this.backend.api.store}/purchase`);
-    return this.http.post<Product[]>(this.api('purchase'), {
-      cart: this.serializeCart(this.cart.value)
-    });
+    return this.http.post(
+      this.api('purchase'),
+      this.serializeCart(this.cart.value)
+    );
   }
 
-  getCartTotal() {
+  getCartTotal(): bigint {
     if (this.cart.value.length === 0) {
-      return 0;
+      return 0n;
     }
-    let sum = 0;
+    let sum = 0n;
     this.cart.value.forEach((item) => {
-      sum += (item.amount || 0) * item.price;
+      sum += BigInt(item.amount) * BigInt(item.price);
     });
 
     return sum;
@@ -129,8 +136,7 @@ export class StoreService {
   }
 
   clearCart() {
-    const updatedCart: Product[] = [];
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    this.cart.next(updatedCart);
+    localStorage.setItem('cart', JSON.stringify([]));
+    this.cart.next([]);
   }
 }

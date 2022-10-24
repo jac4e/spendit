@@ -3,9 +3,9 @@
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="accountid">Account ID</label> -->
     <input type="text" formControlName="accountid" class="form-control" id="accountid"
-      [ngClass]="{ 'is-invalid': submitted && f?.['accountid']?.errors }" placeholder="accountid">
-    <div *ngIf="submitted && f?.['accountid']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['accountid']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['accountid'].errors }" placeholder="accountid">
+    <div *ngIf="submitted && f['accountid'].errors" class="invalid-feedback">
+      <div *ngIf="f['accountid'].errors?.['required']">
         accountid is required
       </div>
     </div>
@@ -13,9 +13,9 @@
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="type">Type</label> -->
     <input type="text" formControlName="type" class="form-control" id="type"
-      [ngClass]="{ 'is-invalid': submitted && f?.['type']?.errors }" placeholder="Type">
-    <div *ngIf="submitted && f?.['type']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['type']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['type'].errors }" placeholder="Type">
+    <div *ngIf="submitted && f['type'].errors" class="invalid-feedback">
+      <div *ngIf="f['type'].errors?.['required']">
         Type is required
       </div>
     </div>
@@ -23,9 +23,9 @@
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="reason">Reason</label> -->
     <input type="text" formControlName="reason" class="form-control" id="reason"
-      [ngClass]="{ 'is-invalid': submitted && f?.['reason']?.errors }" placeholder="Reason">
-    <div *ngIf="submitted && f?.['reason']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['reason']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['reason'].errors }" placeholder="Reason">
+    <div *ngIf="submitted && f['reason'].errors" class="invalid-feedback">
+      <div *ngIf="f['reason'].errors?.['required']">
         Reason is required
       </div>
     </div>
@@ -35,10 +35,10 @@
     <div class="input-group">
       <div class="input-group-text">PHYC</div>
       <input type="text" formControlName="total" class="form-control" id="total"
-        [ngClass]="{ 'is-invalid': submitted && f?.['total']?.errors }" placeholder="0">
+        [ngClass]="{ 'is-invalid': submitted && f['total'].errors }" placeholder="0">
     </div>
-    <div *ngIf="submitted && f?.['total']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['total']?.errors?.['required']">
+    <div *ngIf="submitted && f['total'].errors" class="invalid-feedback">
+      <div *ngIf="f['total'].errors?.['required']">
         Amount is required
       </div>
     </div>

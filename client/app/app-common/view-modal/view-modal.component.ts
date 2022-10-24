@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'client/app/_services';
+import { getKeys, IAccount, ITransaction, IProduct, isITransaction } from 'typesit';
 
 @Component({
   selector: 'app-view-modal',
@@ -25,10 +26,16 @@ export class ViewModalComponent implements OnInit {
     this.open(this.content);
   }
 
-  constructor(private modalService: NgbModal, public commonService: CommonService) {}
+  constructor(
+    private modalService: NgbModal,
+    public commonService: CommonService
+  ) {}
 
   ngOnInit(): void {
-    this.modelProperties = Object.getOwnPropertyNames(this.model);
+    this.modelProperties = getKeys(
+      this.model as IAccount | ITransaction | IProduct
+    );
+    console.log(this.model, isITransaction(this.model));
   }
 
   open(content: any) {
@@ -59,7 +66,7 @@ export class ViewModalComponent implements OnInit {
     printWindow?.print();
     setTimeout(() => {
       printWindow?.close();
-    }, 200);
+    }, 500);
   }
 
   private getDismissReason(reason: any): string {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { first, Observable } from 'rxjs';
 import { AccountService, StoreService } from '../_services';
-import { ICartItem } from 'typeit';
+import { ICartItem } from 'typesit';
 import { AccountComponent } from '../account/account.component';
 import { AlertService } from '../_services/';
 

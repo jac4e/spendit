@@ -9,7 +9,7 @@ import {
 import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '../_services';
-import { ICredentials } from 'typeit';
+import { ICredentials } from 'typesit';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {

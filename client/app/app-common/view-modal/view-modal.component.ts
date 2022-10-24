@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from 'client/app/_services';
-import { getKeys, IAccount, ITransaction, IProduct } from 'typeit';
+import { getKeys, IAccount, ITransaction, IProduct, isITransaction } from 'typesit';
 
 @Component({
   selector: 'app-view-modal',

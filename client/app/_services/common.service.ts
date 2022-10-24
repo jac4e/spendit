@@ -1,7 +1,7 @@
 import { ReturnStatement } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { getKeys, IAccount, IProduct, getValues, ITransaction } from 'typeit';
+import { getKeys, IAccount, IProduct, getValues, ITransaction } from 'typesit';
 
 @Injectable({
   providedIn: 'root'

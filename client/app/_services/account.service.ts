@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, retry } from 'rxjs/operators';
 import { Backend } from '../_helpers';
-import { ITransaction } from 'typeit';
-import { IAccount, IAccountForm, ICredentials } from 'typeit';
+import { IAccount, ITransaction, IAccountForm, ICredentials } from 'typesit';
 
 @Injectable({
   providedIn: 'root'
@@ -81,6 +80,11 @@ export class AccountService {
   getBalance() {
     return this.http.get<string>(this.api('self/balance')).pipe(retry(1));
   }
+
+  updateAccount(accountForm: IAccountForm) {
+    return this.http.put(this.api('self'), accountForm);
+  }
+
   refreshBalance() {
     this.getBalance().subscribe({
       next: (balance) => {

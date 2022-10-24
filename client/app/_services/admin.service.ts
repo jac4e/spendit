@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IProduct, IProductForm, ITransaction, ITransactionForm } from 'typeit';
+import { IProduct, IProductForm, IAccount, IAccountForm, ITransaction, ITransactionForm } from 'typesit';
 import { Backend } from '../_helpers';
 import { retry } from 'rxjs';
-import { IAccount, IAccountForm } from 'typeit';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +45,6 @@ export class AdminService {
   removeProduct(id: string) {
     return this.http.delete(`${this.backend.api.store}/products/${id}`);
   }
-  public boundedUpdateProduct = this.updateProduct.bind(this);
 
   addTransaction(transaction: ITransactionForm) {
     return this.http.post(this.api('transactions'), transaction);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AccountService } from './account.service';
-import { ICartItem, ICart, ICartSerialized, ICartItemSerialized, IAccount, IProduct } from 'typeit';
+import { ICartItem, ICart, ICartSerialized, ICartItemSerialized, IAccount, IProduct } from 'typesit';
 import { BehaviorSubject, retry, catchError } from 'rxjs';
 import { Backend } from '../_helpers';
 import { HttpClient } from '@angular/common/http';

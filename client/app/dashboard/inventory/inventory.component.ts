@@ -3,7 +3,7 @@ import { AdminService } from 'client/app/_services/admin.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs';
-import { IProduct } from 'typeit';
+import { IProduct } from 'typesit';
 import {
   AlertService,
   CommonService,

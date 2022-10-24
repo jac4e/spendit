@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { AccountService, StoreService } from '../_services';
 import { Router } from '@angular/router';
-import { IAccount, IProduct } from 'typeit';
+import { IAccount, IProduct } from 'typesit';
 import { Link } from '../_models';
 @Component({
   selector: 'app-navbar',

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AlertService, StoreService } from '../_services';
-import { IProduct } from 'typeit';
+import { IProduct } from 'typesit';
 import { Observable } from 'rxjs';
 
 @Component({

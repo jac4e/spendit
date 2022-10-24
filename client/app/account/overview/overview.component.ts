@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IAccount } from 'typeit';
+import { IAccount } from 'typesit';
 import { AccountService } from 'client/app/_services';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ITransaction } from 'typeit';
+import { ITransaction } from 'typesit';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';

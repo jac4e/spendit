@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { AccountService } from '../_services';
-import { IAccount } from 'typeit';
+import { IAccount } from 'typesit';
 import { Router } from '@angular/router';
 
 @Component({

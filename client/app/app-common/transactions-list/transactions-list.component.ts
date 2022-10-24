@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ITransaction } from 'typeit';
+import { ITransaction } from 'typesit';
 import { Observable } from 'rxjs';
 import { CommonService } from 'client/app/_services';
 

@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AccountService } from '../_services';
-import { IAccount } from 'typeit';
+import { IAccount } from 'typesit';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

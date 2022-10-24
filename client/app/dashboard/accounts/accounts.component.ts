@@ -15,7 +15,7 @@ import {
   CommonService
 } from 'client/app/_services';
 import { first } from 'rxjs';
-import { IAccount, IAccountForm, Roles } from 'typeit';
+import { getObject, keysIAccount, getValues, IAccount, IAccountForm, Roles } from 'typesit';
 
 @Component({
   selector: 'app-dashboard-accounts',

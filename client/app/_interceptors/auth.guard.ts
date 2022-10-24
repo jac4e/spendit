@@ -7,7 +7,7 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { IAccount } from 'typeit';
+import { IAccount } from 'typesit';
 import { AccountService } from '../_services';
 
 @Injectable({

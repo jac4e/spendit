@@ -24,8 +24,8 @@ export class AdminService {
     return this.http.delete(`${this.backend.api.account}/${id}`);
   }
 
-  updateAccount(account: IAccount) {
-    return this.http.put(`${this.backend.api.account}/${account.id}`, account);
+  updateAccount(id: IAccount['id'], account: IAccountForm) {
+    return this.http.put(`${this.backend.api.account}/${id}`, account);
   }
   public boundedUpdateAccount = this.updateAccount.bind(this);
 
@@ -37,6 +37,7 @@ export class AdminService {
     // console.log(`${this.backend.api.store}/products/${id}`, product);
     return this.http.put(`${this.backend.api.store}/products/${id}`, product);
   }
+  public boundedUpdateProduct = this.updateProduct.bind(this);
 
   verify(id: IAccount['id']) {
     return this.http.put(`${this.backend.api.account}/${id}/verify`, {});

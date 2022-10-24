@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { AccountService, StoreService } from '../_services';
@@ -10,7 +10,7 @@ import { Link } from '../_models';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.sass']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements DoCheck {
   brand = {
     name: 'cryptoPhrydge',
     image: ''
@@ -48,7 +48,7 @@ export class NavbarComponent implements OnInit {
     this.url = this.location.path().replace(/(?!^)\/.*/g, '');
   }
 
-  ngOnInit(): void {
+  ngDoCheck(): void {
     this.url = this.location.path().replace(/(?!^)\/.*/g, '');
     if (this.url === '') {
       this.url = '/';

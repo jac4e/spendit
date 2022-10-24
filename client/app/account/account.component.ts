@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.sass']
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements DoCheck {
   account = {} as IAccount;
   links = [
     { title: 'Overview', route: '/account/overview' },
@@ -27,7 +27,7 @@ export class AccountComponent implements OnInit {
     this.url = this.router.url;
   }
 
-  ngOnInit(): void {
+  ngDoCheck(): void {
     this.url = this.router.url;
   }
 }

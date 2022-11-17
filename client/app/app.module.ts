@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -20,6 +20,7 @@ import {
   dripMenu
 } from '@ng-icons/dripicons';
 import { RegisterComponent } from './register/register.component';
+import { AppConfigService } from './_services/app-config.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,16 @@ import { RegisterComponent } from './register/register.component';
     NgbModule,
     AppCommonModule
   ],
-  providers: [httpInterceptorProviders],
+  providers: [
+    httpInterceptorProviders,
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      deps: [AppConfigService],
+      useFactory: (appConfigService: AppConfigService) => () =>
+        appConfigService.loadAppConfig()
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AccountService } from './account.service';
 import { ICartItem, ICart, ICartSerialized, ICartItemSerialized, IAccount, IProduct } from 'typesit';
 import { BehaviorSubject, retry, catchError } from 'rxjs';
-import { Backend } from '../_helpers';
+import { BackendService } from '../_services';
 import { HttpClient } from '@angular/common/http';
 import { AlertService } from './alert.service';
 
@@ -10,14 +10,14 @@ import { AlertService } from './alert.service';
   providedIn: 'root'
 })
 export class StoreService {
-  private backend = new Backend();
   private cart: BehaviorSubject<ICartItem[]>;
   private account!: IAccount | null;
   isLoggedIn!: boolean;
   constructor(
     private accountService: AccountService,
     private http: HttpClient,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private backend: BackendService
   ) {
     this.accountService.account.subscribe((account: IAccount | null) => {
       this.account = account;
@@ -26,10 +26,6 @@ export class StoreService {
     this.cart = new BehaviorSubject<ICartItem[]>(
       storage ? JSON.parse(storage) : []
     );
-  }
-
-  api(crumb: string) {
-    return `${this.backend.api.store}/${crumb}`;
   }
 
   addToCart(product: IProduct, amount: bigint | number) {
@@ -92,7 +88,11 @@ export class StoreService {
   }
 
   getInventory() {
-    return this.http.get<IProduct[]>(this.api('products')).pipe(retry(1));
+    return this.backend.apiCall<IProduct[]>(
+      'GET',
+      this.backend.api.store,
+      'products'
+    );
   }
 
   getCart() {
@@ -113,8 +113,10 @@ export class StoreService {
     // console.log(this.serializeCart(this.cart.value));
     // console.log('purchasing');
     // console.log(`${this.backend.api.store}/purchase`);
-    return this.http.post(
-      this.api('purchase'),
+    return this.backend.apiCall<ICartSerialized>(
+      'POST',
+      this.backend.api.store,
+      'purchase',
       this.serializeCart(this.cart.value)
     );
   }

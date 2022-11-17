@@ -1,20 +1,18 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, retry } from 'rxjs/operators';
-import { Backend } from '../_helpers';
+import { map } from 'rxjs/operators';
+import { BackendService } from '../_services';
 import { IAccount, ITransaction, IAccountForm, ICredentials } from 'typesit';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private accountSubject!: BehaviorSubject<IAccount | null>;
+  public accountSubject!: BehaviorSubject<IAccount | null>;
   public account!: Observable<IAccount | null>;
-  private backend = new Backend();
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private backend: BackendService) {
     // should just store token in storage and getSelf on construct
     const storageAcc = localStorage.getItem('account');
     const storageToken = localStorage.getItem('token');
@@ -27,13 +25,11 @@ export class AccountService {
     this.account = this.accountSubject.asObservable();
   }
 
-  api(crumb: string) {
-    return `${this.backend.api.account}/${crumb}`;
-  }
-
   register(accountForm: IAccountForm) {
-    return this.http.post<IAccountForm>(
-      `${this.backend.api.account}/register`,
+    return this.backend.apiCall<IAccountForm>(
+      'POST',
+      this.backend.api.account,
+      'register',
       accountForm
     );
   }
@@ -41,8 +37,13 @@ export class AccountService {
   login(credentials: ICredentials) {
     // console.log('logging in');
     // console.log(this.api('auth'));
-    return this.http
-      .post<{ account: IAccount; token: string }>(this.api('auth'), credentials)
+    return this.backend
+      .apiCall<{ account: IAccount; token: string }>(
+        'POST',
+        this.backend.api.account,
+        'auth',
+        credentials
+      )
       .pipe(
         map(({ account, token }) => {
           localStorage.setItem('account', JSON.stringify(account));
@@ -56,17 +57,16 @@ export class AccountService {
   logout() {
     // call reset session on api
     // logs out all instances of account session
-    this.http
-      .post(this.api('self/resetSession'), {})
-      .pipe(retry(1))
+    this.backend
+      .apiCall('GET', this.backend.api.account, 'self/resetSession')
       .subscribe({
         next: () => {
-          this.clientLogout();
+          this.resetClientAccount();
         }
       });
   }
-  clientLogout() {
-    localStorage.removeItem('account');
+  resetClientAccount() {
+    localStorage.removeItem(this.backend.api.account);
     localStorage.removeItem('token');
     // call reset session on api
     this.accountSubject.next(null);
@@ -74,15 +74,28 @@ export class AccountService {
   }
 
   getAccount() {
-    return this.http.get<IAccount>(this.api('self')).pipe(retry(1));
+    return this.backend.apiCall<IAccount>(
+      'GET',
+      this.backend.api.account,
+      'self'
+    );
   }
 
   getBalance() {
-    return this.http.get<string>(this.api('self/balance')).pipe(retry(1));
+    return this.backend.apiCall<string>(
+      'GET',
+      this.backend.api.account,
+      'self/balance'
+    );
   }
 
   updateAccount(accountForm: IAccountForm) {
-    return this.http.put(this.api('self'), accountForm);
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.account,
+      'self',
+      accountForm
+    );
   }
 
   refreshBalance() {
@@ -110,8 +123,10 @@ export class AccountService {
   }
 
   getTransactions() {
-    return this.http
-      .get<ITransaction[]>(this.api('self/transactions'))
-      .pipe(retry(1));
+    return this.backend.apiCall<ITransaction[]>(
+      'GET',
+      this.backend.api.account,
+      'self/transactions'
+    );
   }
 }

@@ -1,71 +1,105 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IProduct, IProductForm, IAccount, IAccountForm, ITransaction, ITransactionForm } from 'typesit';
-import { Backend } from '../_helpers';
+import {
+  IProduct,
+  IProductForm,
+  IAccount,
+  IAccountForm,
+  ITransaction,
+  ITransactionForm
+} from 'typesit';
+import { BackendService } from '../_services';
 import { retry } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  private backend = new Backend();
   // eslint-disable-next-line no-unused-vars
-  constructor(private http: HttpClient) {}
-
-  api(crumb: string) {
-    return `${this.backend.api.admin}/${crumb}`;
-  }
+  constructor(private backend: BackendService) {}
 
   addAccount(accountForm: IAccountForm) {
-    return this.http.post(`${this.backend.api.account}/create`, accountForm);
+    return this.backend.apiCall(
+      'POST',
+      this.backend.api.account,
+      'create',
+      accountForm
+    );
   }
 
   removeAccount(id: IAccount['id']) {
-    return this.http.delete(`${this.backend.api.account}/${id}`);
+    return this.backend.apiCall('DELETE', this.backend.api.account, id);
   }
 
   updateAccount(id: IAccount['id'], account: IAccountForm) {
-    return this.http.put(`${this.backend.api.account}/${id}`, account);
+    return this.backend.apiCall('PUT', this.backend.api.account, id, account);
   }
   public boundedUpdateAccount = this.updateAccount.bind(this);
 
   addProduct(product: IProductForm) {
-    return this.http.post(`${this.backend.api.store}/products`, product);
+    return this.backend.apiCall(
+      'POST',
+      this.backend.api.store,
+      'products',
+      product
+    );
   }
 
   updateProduct(id: IProduct['id'], product: IProductForm) {
     // console.log(`${this.backend.api.store}/products/${id}`, product);
-    return this.http.put(`${this.backend.api.store}/products/${id}`, product);
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.store,
+      `products/${id}`,
+      product
+    );
   }
   public boundedUpdateProduct = this.updateProduct.bind(this);
 
   verify(id: IAccount['id']) {
-    return this.http.put(`${this.backend.api.account}/${id}/verify`, {});
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.account,
+      `${id}/verify`,
+      {}
+    );
   }
 
   removeProduct(id: string) {
-    return this.http.delete(`${this.backend.api.store}/products/${id}`);
+    return this.backend.apiCall(
+      'DELETE',
+      this.backend.api.store,
+      `products/${id}`
+    );
   }
 
   addTransaction(transaction: ITransactionForm) {
-    return this.http.post(this.api('transactions'), transaction);
+    return this.backend.apiCall(
+      'POST',
+      this.backend.api.admin,
+      'transactions',
+      transaction
+    );
   }
 
   getAllAccounts() {
-    return this.http
-      .get<IAccount[]>(`${this.backend.api.account}`)
-      .pipe(retry(1));
+    return this.backend.apiCall<IAccount[]>('GET', this.backend.api.account);
   }
 
   getAllTransactions() {
     // console.log('getting transactions');
     // console.log(this.api('transactions'));
-    return this.http
-      .get<ITransaction[]>(this.api('transactions'))
-      .pipe(retry(1));
+    return this.backend.apiCall<ITransaction[]>(
+      'GET',
+      this.backend.api.admin,
+      'transactions'
+    );
   }
   getInventory() {
     // console.log(this.api('products'));
-    return this.http.get<IProduct[]>(this.api('products')).pipe(retry(1));
+    return this.backend.apiCall<IProduct[]>(
+      'GET',
+      this.backend.api.admin,
+      'products'
+    );
   }
 }

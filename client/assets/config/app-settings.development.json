@@ -1,6 +1,6 @@
 {
-    "backendUrl": "http://localhost:3000",
-    "apiBaseUrl": "http://localhost:3000/api",
+    "backendUrl": "https://localhost:3443",
+    "apiBaseUrl": "https://localhost:3443/api",
     "branding": {
         "name": "spendit",
         "email": "email",

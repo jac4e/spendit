@@ -77,7 +77,7 @@ export class AuthInterceptor implements HttpInterceptor {
           this.accountService.resetClientAccount();
           this.alertService.error(
             'Your session has expired, please login again.',
-            { autoClose: false }
+            { autoClose: false, keepAfterRouteChange: true }
           );
         }
         return throwError(() => err);

@@ -33,6 +33,11 @@
             "styles": [
               "client/styles.sass"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "./node_modules"
+              ]
+            },
             "scripts": []
           },
           "configurations": {

@@ -11,7 +11,7 @@ Edit
             <app-common-alerts id="modal-alert"></app-common-alerts>
             <div class="row mt-3 gy-2 gx-3 align-items-center">
                 <ng-container *ngFor="let key of modelProperties">
-                    <h5>{{commonService.titleCase(key)}}:</h5>
+                    <label for="{{ key }}">{{commonService.titleCase(key)}}:</label>
                     <!-- <label class="sr-only" for="username">username</label> -->
                     <input *ngIf="commonService.isString(model[key])" type="text" formControlName="{{ key }}"
                         class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"

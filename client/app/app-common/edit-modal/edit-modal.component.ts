@@ -52,6 +52,7 @@ export class EditModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.model);
     this.modelProperties = getKeys(
       this.model as IAccount | ITransaction | IProduct
     )
@@ -64,12 +65,12 @@ export class EditModalComponent implements OnInit {
       })
       .filter((key) => key !== '') as string[];
 
-    // If model is account, add password and confirm password keys
-    if (isIAccount(this.model)) {
-      // add keys
-      this.modelProperties.push('password');
-      this.modelProperties.push('confirmPassword');
-    }
+    // // If model is account, add password and confirm password keys
+    // if (isIAccount(this.model)) {
+    //   // add keys
+    //   this.modelProperties.push('password');
+    //   this.modelProperties.push('confirmPassword');
+    // }
   }
 
   get f() {
@@ -99,9 +100,9 @@ export class EditModalComponent implements OnInit {
     // convert to IAccountForm if needed
     const form = this.form.value;
     console.log(form);
-    if (form['confirmPassword']) {
-      delete form['confirmPassword'];
-    }
+    // if (form['confirmPassword']) {
+    //   delete form['confirmPassword'];
+    // }
 
     this.loading = true;
     this.submit(this.model['id'], form).subscribe({

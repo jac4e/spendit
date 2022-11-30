@@ -5,7 +5,8 @@ import {
   IAccount,
   IAccountForm,
   ITransaction,
-  ITransactionForm
+  ITransactionForm,
+  Roles
 } from 'typesit';
 import { BackendService } from '../_services';
 import { retry } from 'rxjs';
@@ -55,11 +56,11 @@ export class AdminService {
   }
   public boundedUpdateProduct = this.updateProduct.bind(this);
 
-  verify(id: IAccount['id']) {
+  verify(id: IAccount['id'], role: Roles) {
     return this.backend.apiCall(
       'PUT',
       this.backend.api.account,
-      `${id}/verify`,
+      `${id}/verify/${role}`,
       {}
     );
   }

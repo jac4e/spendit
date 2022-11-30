@@ -15,7 +15,14 @@ import {
   CommonService
 } from 'client/app/_services';
 import { first } from 'rxjs';
-import { getObject, keysIAccount, getValues, IAccount, IAccountForm, Roles } from 'typesit';
+import {
+  getObject,
+  keysIAccount,
+  getValues,
+  IAccount,
+  IAccountForm,
+  Roles
+} from 'typesit';
 
 @Component({
   selector: 'app-dashboard-accounts',
@@ -28,6 +35,8 @@ export class AccountsComponent implements OnInit {
   loading = false;
   submitted = false;
   accountKeys = keysIAccount;
+  rolesValues = Object.values(Roles);
+  rolesEnum = Roles;
   updateAccount;
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -45,8 +54,8 @@ export class AccountsComponent implements OnInit {
     this.form = this.formBuilder.group({
       username: ['', [Validators.required]],
       role: [
-        'user',
-        [Validators.required, Validators.pattern('^(user|admin)$')]
+        '',
+        [Validators.required, Validators.pattern(`^(${this.rolesValues.join('|')})`)]
       ],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
@@ -92,8 +101,8 @@ export class AccountsComponent implements OnInit {
     });
   }
 
-  verify(id: string) {
-    this.adminService.verify(id).subscribe({
+  verify(id: string, role: Roles) {
+    this.adminService.verify(id, role).subscribe({
       next: () => {
         this.loading = false;
         this.alertService.success('Successfully verified user!', {

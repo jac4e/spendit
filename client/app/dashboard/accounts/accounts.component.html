@@ -36,17 +36,21 @@
       [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" placeholder="email">
     <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
       <div *ngIf="f['email'].errors?.['required']">
-        email is required
+        Email is required
       </div>
     </div>
   </div>
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="role">role</label> -->
-    <input type="text" formControlName="role" class="form-control" id="role"
-      [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" placeholder="role">
+    <select formControlName="role" [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" class="form-select">
+        <option disabled value="">Select Role</option>
+        <option *ngFor="let role of rolesValues" value="{{role}}">{{role | titlecase}}</option>
+    </select>
+    <!-- <input type="text" formControlName="role" class="form-control" id="role"
+      [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" placeholder="role"> -->
     <div *ngIf="submitted && f['role'].errors" class="invalid-feedback">
       <div *ngIf="f['role'].errors?.['required']">
-        role is required
+        Role is required
       </div>
     </div>
   </div>
@@ -86,8 +90,16 @@
           <td>{{ parseBalance(account.balance) }} PHYC</td>
           <td>{{ account.role }}</td>
           <td>
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <button *ngIf="!isVerified(account)" (click)="verify(account.id)" class="btn btn-secondary" >Verify</button>
+            <div class="btn-group" role="group">
+              <div *ngIf="!isVerified(account)" class="btn-group" role="group" ngbDropdown>
+                <button id="verifyDropdown" type="button" class="btn btn-secondary" ngbDropdownToggle>
+                  Verify
+                </button>
+                <div ngbDropdownMenu aria-labelledby="verifyDropdown">
+                  <button ngbDropdownItem (click)="verify(account.id,rolesEnum.NonMember)">Non Member</button>
+                  <button ngbDropdownItem (click)="verify(account.id,rolesEnum.Member)">Member</button>
+                </div>
+              </div>
               <app-view-modal class="btn btn-secondary" [name]="'Account View'" [model]="account">View</app-view-modal>
               <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Account Modify'" [submit]="updateAccount" [model]="account" (modifiedItemEvent)="refreshList()">Modify</app-edit-modal>
               <button type="button" class="btn btn-secondary" (click)="remove(account.id)">Remove</button>

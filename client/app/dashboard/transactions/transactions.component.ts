@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ITransaction } from 'typesit';
+import { ITransaction, TransactionType } from 'typesit';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';
@@ -12,6 +12,7 @@ import { first, Observable } from 'rxjs';
 export class TransactionsComponent implements OnInit {
   transactions!: ITransaction[];
   form!: UntypedFormGroup;
+  types = Object.values(TransactionType);
   loading = false;
   submitted = false;
 
@@ -34,7 +35,10 @@ export class TransactionsComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       accountid: ['', Validators.required],
-      type: ['', [Validators.required, Validators.pattern('^(debit|credit)$')]],
+      type: [
+        '',
+        [Validators.required, Validators.pattern(`^(${this.types.join('|')})$`)]
+      ],
       reason: ['', Validators.required],
       total: [
         null,

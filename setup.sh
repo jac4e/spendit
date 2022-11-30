@@ -99,8 +99,8 @@ MSG_BACKEND_URL="Enter the backend url, default is '${DEFAULT_BACKEND_URL}': "
 MSG_BACKEND_PORT="Enter the backend port, default is '${DEFAULT_BACKEND_PORT}': "
 MSG_FRONTEND_URL="Enter the frontend url, default is '${DEFAULT_FRONTEND_URL}': "
 MSG_ADMIN_USER="Enter the username for the admin user, default is '${DEFAULT_ADMIN_USER}': "
-MSG_ADMIN_FIRST="Enter the username for the admin first name, default is '${DEFAULT_ADMIN_FIRST}': "
-MSG_ADMIN_LAST="Enter the username for the admin last name, default is '${DEFAULT_ADMIN_LAST}': "
+MSG_ADMIN_FIRST="Enter the first name for the admin user, default is '${DEFAULT_ADMIN_FIRST}': "
+MSG_ADMIN_LAST="Enter the last name for the admin user, default is '${DEFAULT_ADMIN_LAST}': "
 MSG_ADMIN_PASSWORD="Enter the password for the admin user, default is '${DEFAULT_ADMIN_PASSWORD}' \n\
 NOTE: It is highly recommended to use the default \n\n\
 password: "
@@ -125,7 +125,3 @@ export JWT_SECRET=$(dd if=/dev/urandom bs=96 count=1 status=none | base64 | tr -
 export DOLLAR='$'
 # Process templates
 cat ${SCRIPT_DIR}/templates/backend.ts.template | envsubst  > ${SCRIPT_DIR}/client/app/_helpers/backend.ts
-mkdir ${SCRIPT_DIR}/server/deploy
-cat ${SCRIPT_DIR}/templates/config.js.template | envsubst  > ${SCRIPT_DIR}/server/deploy/config.JWT_SECRET
-mkdir ${SCRIPT_DIR}/config
-echo -e "ADMIN_PASSWORD=$ADMIN_PASSWORD\nJWT_SECRET=$JWT_SECRET" > ${SCRIPT_DIR}/config/backend.env

@@ -8,12 +8,12 @@ View
         <div class="modal-body">
             <div class="row d-print-block">
                 <!-- put date on top  -->
-                <div *ngIf="model['date'] !== undefined" class=" d-flex d-print-block col-12">
-                    <p class="fs-5 fw-bold mx-1 my-auto">Date:</p>
-                    <p class="fs-5 my-auto mx-1">{{ this.model['date'].toLocaleString('en-us',{timeZoneName:'short'}) }}</p>
-                </div>
                 <div class="{{ commonService.isArray(model[prop]) && model[prop].length > 0 ? 'col-12 d-print-block' : 'd-flex d-print-block col-auto' }}"
                     *ngFor="let prop of modelProperties">
+                    <ng-container *ngIf="prop === 'date'">
+                        <p class="fs-5 fw-bold mx-1 my-auto">Date:</p>
+                        <p class="fs-5 my-auto mx-1">{{ this.model[prop].toLocaleString('en-us',{timeZoneName:'short'}) }}</p>
+                    </ng-container>
                     <ng-container *ngIf="prop !== 'date'">
                         <p class="fs-5 fw-bold mx-1 my-auto">{{ commonService.titleCase(prop) }}:</p>
                         <p class="fs-5 my-auto mx-1" *ngIf="!commonService.isArray(model[prop])">

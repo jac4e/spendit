@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.sass']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements DoCheck {
   links = [
     { title: 'Accounts', route: '/dashboard/accounts' },
     { title: 'Inventory', route: '/dashboard/inventory' },
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
     this.url = this.router.url;
   }
 
-  ngOnInit(): void {
+  ngDoCheck(): void {
     this.url = this.router.url;
   }
 }

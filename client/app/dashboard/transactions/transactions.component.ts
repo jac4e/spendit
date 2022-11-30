@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Transaction } from 'client/app/_models';
+import { ITransaction, TransactionType } from 'typesit';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';
@@ -10,12 +10,13 @@ import { first, Observable } from 'rxjs';
   styleUrls: ['./transactions.component.sass']
 })
 export class TransactionsComponent implements OnInit {
-  transactions!: Transaction[];
+  transactions!: ITransaction[];
   form!: UntypedFormGroup;
+  types = Object.values(TransactionType);
   loading = false;
   submitted = false;
 
-  refreshTransactions: Observable<Transaction[]>;
+  refreshTransactions: Observable<ITransaction[]>;
 
   // page stuff
   page = 1;
@@ -34,7 +35,10 @@ export class TransactionsComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       accountid: ['', Validators.required],
-      type: ['', [Validators.required, Validators.pattern('^(debit|credit)$')]],
+      type: [
+        '',
+        [Validators.required, Validators.pattern(`^(${this.types.join('|')})$`)]
+      ],
       reason: ['', Validators.required],
       total: [
         null,
@@ -53,6 +57,10 @@ export class TransactionsComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+
+    // Convert to ITransactionForm
+    const transactionForm = this.form.value;
+    transactionForm.products = [];
 
     this.loading = true;
     this.adminService

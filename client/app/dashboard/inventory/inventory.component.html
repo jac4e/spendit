@@ -1,10 +1,10 @@
 <h5>Add product</h5>
-<form class="row mt-3 gy-2 gx-3 align-items-center" [formGroup]="form" (ngSubmit)="onSubmit()">
+<form class="row mt-3 gy-2 gx-3 align-items-baseline" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group col-auto">
     <input type="text" formControlName="name" class="form-control" id="name"
-      [ngClass]="{ 'is-invalid': submitted && f?.['name']?.errors }" placeholder="Name">
-    <div *ngIf="submitted && f?.['name']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['name']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['name'].errors }" placeholder="Name">
+    <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+      <div *ngIf="f['name'].errors?.['required']">
         Name is required
       </div>
     </div>
@@ -13,28 +13,28 @@
     <div class="input-group">
       <div class="input-group-text">PHYC</div>
       <input type="number" formControlName="price" class="form-control" id="price"
-        [ngClass]="{ 'is-invalid': submitted && f?.['price']?.errors }" placeholder="0">
-    </div>
-    <div *ngIf="submitted && f?.['price']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['price']?.errors?.['required']">
-        Price is required
-      </div>
+        [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" placeholder="0">
+        <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
+          <div *ngIf="f['price'].errors?.['required']">
+            Price is required
+          </div>
+        </div>
     </div>
   </div>
   <div class="form-group col-auto">
     <input type="text" formControlName="description" class="form-control" id="description"
-      [ngClass]="{ 'is-invalid': submitted && f?.['description']?.errors }" placeholder="description">
-    <div *ngIf="submitted && f?.['description']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['description']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" placeholder="description">
+    <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
+      <div *ngIf="f['description'].errors?.['required']">
         Description is required
       </div>
     </div>
   </div>
   <div class="form-group col-auto">
     <input type="text" formControlName="image" class="form-control" id="image"
-      [ngClass]="{ 'is-invalid': submitted && f?.['image']?.errors }" placeholder="image">
-    <div *ngIf="submitted && f?.['image']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['image']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" placeholder="image">
+    <div *ngIf="submitted && f['image'].errors" class="invalid-feedback">
+      <div *ngIf="f['image'].errors?.['required']">
         Description is required
       </div>
     </div>
@@ -43,10 +43,10 @@
     <div class="input-group">
       <div class="input-group-text">#</div>
       <input type="number" formControlName="stock" class="form-control" id="stock"
-        [ngClass]="{ 'is-invalid': submitted && f?.['stock']?.errors }" placeholder="0">
+        [ngClass]="{ 'is-invalid': submitted && f['stock'].errors }" placeholder="0">
     </div>
-    <div *ngIf="submitted && f?.['stock']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['stock']?.errors?.['required']">
+    <div *ngIf="submitted && f['stock'].errors" class="invalid-feedback">
+      <div *ngIf="f['stock'].errors?.['required']">
         Stock is required
       </div>
     </div>
@@ -63,24 +63,24 @@
   <table class="table table-hover table-flush">
     <thead>
       <tr>
+        <th scope="col">ID</th>
         <th scope="col">Name</th>
         <th scope="col">Price</th>
         <th scope="col">Description</th>
         <th scope="col">Stock</th>
-        <th scope="col">ID</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let product of inventory">
-        <th scope="row">{{ product.name }}</th>
+        <th scope="row">{{ product.id }}</th>
+        <td>{{ product.name }}</td>
         <td>{{ product.price }} PHYC</td>
         <td>{{ product.description }}</td>
         <td>{{ product.stock }}</td>
-        <td>{{ product.id }}</td>
         <td>
           <div class="btn-group" role="group" aria-label="Basic example">
             <app-view-modal class="btn btn-secondary" [name]="'Product View'" [model]="product">View</app-view-modal>
-            <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Product Modify'" [submit]="updateProduct" [model]="product">Modify</app-edit-modal>
+            <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Product Modify'" [submit]="updateProduct" [model]="product" (modifiedItemEvent)="refreshList()">Modify</app-edit-modal>
             <button type="button" class="btn btn-secondary" (click)="remove(product.id)">Remove</button>
           </div>
         </td>

@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { AccountService, StoreService } from '../_services';
 import { Router } from '@angular/router';
-import { User, Link, Product } from '../_models';
+import { IAccount, IProduct } from 'typesit';
+import { Link } from '../_models';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.sass']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements DoCheck {
   brand = {
     name: 'cryptoPhrydge',
     image: ''
@@ -24,8 +25,8 @@ export class NavbarComponent implements OnInit {
 
   public isMenuCollapsed = true;
   public isCartCollapsed = true;
-  cartLength = 0;
-  account!: User | null;
+  cartLength = 0n;
+  account!: IAccount | null;
   fragment!: string;
   constructor(
     private accountService: AccountService,
@@ -38,16 +39,16 @@ export class NavbarComponent implements OnInit {
       this.account = account;
     });
     this.storeService.getCart().subscribe((cart) => {
-      let sum = 0;
+      let sum = 0n;
       for (let index = 0; index < cart.length; index++) {
-        sum += cart[index].amount || 0;
+        sum += BigInt(cart[index].amount) || 0n;
       }
       this.cartLength = sum;
     });
     this.url = this.location.path().replace(/(?!^)\/.*/g, '');
   }
 
-  ngOnInit(): void {
+  ngDoCheck(): void {
     this.url = this.location.path().replace(/(?!^)\/.*/g, '');
     if (this.url === '') {
       this.url = '/';

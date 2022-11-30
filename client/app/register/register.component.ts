@@ -28,9 +28,17 @@ export class RegisterComponent implements OnInit {
     username: ['', [Validators.required]],
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
+    email: [
+      '',
+      [
+        Validators.required,
+        Validators.email,
+        Validators.pattern(/@ualberta.ca$/)
+      ]
+    ],
     password: ['', [Validators.required, this.passwordValidator]],
-    confirmPassword: ['', [Validators.required, this.passwordValidator]]
+    confirmPassword: ['', [Validators.required, this.passwordValidator]],
+    notify: [false]
   };
 
   constructor(
@@ -63,9 +71,13 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    // convert form to IAccountForm
+    const accountForm = this.form.value;
+    delete accountForm.confirmPassword;
+
     this.loading = true;
     this.accountService
-      .register(this.form.value)
+      .register(accountForm)
       .pipe(first())
       .subscribe({
         next: () => {

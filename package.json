@@ -1,12 +1,13 @@
 {
   "name": "spendit",
-  "version": "0.0.3-beta",
+  "version": "0.0.4-beta",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "watch:backend": "ng build --output-path=../serveit/app --watch --configuration development --source-map=true",
     "lint": "npx eslint 'client/**/*.{js,jsx,ts,tsx,html,css,scss}' --quiet --fix",
     "format": "npx prettier 'client/**/*.{js,jsx,ts,tsx,html,css,scss}' --write"
   },

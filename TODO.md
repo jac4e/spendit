@@ -46,17 +46,17 @@
   - [ ] <https://restfulapi.net/caching/>
 - [ ] brief documentation
 - [ ] Squash entire history
-- [ ] email notifications
-  - [ ] notification types
-    - [ ] account creation
-      - [ ] registration
-      - [ ] admin creation
+- [x] email notifications
+  - [x] notification types
+    - [x] account creation
+      - [x] registration
+      - [x] admin creation
         - [ ] randomly generated password
-    - [ ] account info changed
-    - [ ] account verified
-    - [ ] transaction made
+    - [x] account info changed
+    - [x] account verified
+    - [x] transaction made
   - [ ] admin notifications
-    - [ ] product ran out
+    - [x] product ran out
     - [ ] daily metrics?
 
 ## Pre club demo
@@ -64,12 +64,12 @@
 - [ ] better default image
 - [ ] dashboard form
   - [ ] proper responsive design
-  - [ ] Proper erroring
+  - [] Proper erroring
     - [x] invalid input, server errors
 - [ ] Demo data generation
-- [ ] add transaction type should be dropdown
-- [ ] add user role should be dropdown
-- [ ] improve configuration
+- [x] add transaction type should be dropdown
+- [x] add user role should be dropdown
+- [x] improve configuration
   - [ ] branding
 - [ ] add hashing to transactions
   - [ ] add verification algorithm

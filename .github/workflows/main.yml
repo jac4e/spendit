@@ -32,4 +32,3 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         artifacts: "dist/*"
-        token: ${{ secrets.TOKEN }}

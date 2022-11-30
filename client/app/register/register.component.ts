@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
     ],
     password: ['', [Validators.required, this.passwordValidator]],
     confirmPassword: ['', [Validators.required, this.passwordValidator]],
-    notify: ['']
+    notify: [false]
   };
 
   constructor(

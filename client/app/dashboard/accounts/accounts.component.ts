@@ -67,7 +67,8 @@ export class AccountsComponent implements OnInit {
           Validators.pattern(/@ualberta.ca$/)
         ]
       ],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      notify: [false]
     });
   }
 

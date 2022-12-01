@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  serveless: false,
+  serveless: true,
   configFile: 'assets/config/app-settings.development.json'
 };
 

@@ -36,7 +36,7 @@
 
 - [ ] mongodb volume backup
 - [x] way to verify identity of ualberta emails
-- [ ] admin accounts should not be able to use the store
+- [x] admin accounts should not be able to use the store
 - [x] database volume not correctly set missing ./
 - [x] deploy folder does not exist in repo
 - [x] split frontend and backend into seperate parts
@@ -44,7 +44,7 @@
 - [ ] ensure all version numbers are correct
 - [ ] look into caching
   - [ ] <https://restfulapi.net/caching/>
-- [ ] brief documentation
+- [x] brief documentation
 - [ ] Squash entire history
 - [x] email notifications
   - [x] notification types
@@ -64,7 +64,7 @@
 - [ ] better default image
 - [ ] dashboard form
   - [ ] proper responsive design
-  - [] Proper erroring
+  - [ ] Proper erroring
     - [x] invalid input, server errors
 - [ ] Demo data generation
 - [x] add transaction type should be dropdown

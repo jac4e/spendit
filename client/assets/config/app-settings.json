@@ -1,7 +1,0 @@
-{
-    "apiBaseUrl": "https://localhost:${BACKEND_PORT}",
-    "brand": {
-        "name": "spendit",
-        "image": "image"
-    }
-}

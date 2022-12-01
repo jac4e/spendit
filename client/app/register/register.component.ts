@@ -28,11 +28,20 @@ export class RegisterComponent implements OnInit {
   registrationForm: { [key: string]: any } = {
     username: ['', [Validators.required]],
     // firstName: ['', [Validators.required]],
+    // lastName: ['', [Validators.required]],
     name: ['', [Validators.required]],
     gid: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
+    email: [
+      '',
+      [
+        Validators.required,
+        Validators.email,
+        Validators.pattern(/@ualberta.ca$/)
+      ]
+    ],
     password: ['', [Validators.required, this.passwordValidator]],
-    confirmPassword: ['', [Validators.required, this.passwordValidator]]
+    confirmPassword: ['', [Validators.required, this.passwordValidator]],
+    notify: [false]
   };
   jwtService = new JwtHelperService();
   client: any;
@@ -132,10 +141,14 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    // convert form to IAccountForm
+    const accountForm = this.form.value;
+    delete accountForm.confirmPassword;
+
     this.loading = true;
     const { ['confirmPassword']: confirmPassword, ...account } = this.form.value;
     this.accountService
-      .register(account, tokenResponse.access_token)
+      .register(accountForm, tokenResponse.access_token)
       .pipe(first())
       .subscribe({
         next: () => {

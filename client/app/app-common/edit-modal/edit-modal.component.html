@@ -10,21 +10,26 @@ Edit
         <div class="modal-body">
             <app-common-alerts id="modal-alert"></app-common-alerts>
             <div class="row mt-3 gy-2 gx-3 align-items-center">
-            <ng-container *ngFor="let control of controls | keyvalue">
-                    <h5>{{commonService.titleCase(control.key)}}:</h5>
+                <ng-container *ngFor="let key of modelProperties">
+                    <label for="{{ key }}">{{commonService.titleCase(key)}}:</label>
                     <!-- <label class="sr-only" for="username">username</label> -->
-                    <input *ngIf="commonService.isString(control.value[0])" type="text" formControlName="{{ control.key }}" class="form-control" id="{{ control.key }}"
-                    [ngClass]="{ 'is-invalid': submitted && f?.['{{ control.key }}']?.errors }" placeholder="{{ control.key }}"/>
-                    <input *ngIf="commonService.isBoolean(control.value[0])" type="checkbox" formControlName="{{ control.key }}" class="form-check-input" id="{{ control.key }}"
-                        [ngClass]="{ 'is-invalid': submitted && f?.['{{ control.key }}']?.errors }" placeholder="{{ control.key }}"/>
-                    <input *ngIf="commonService.isNumber(control.value[0])" type="number" formControlName="{{ control.key }}" class="form-control" id="{{ control.key }}"
-                        [ngClass]="{ 'is-invalid': submitted && f?.['{{ control.key }}']?.errors }" placeholder="{{ control.key }}"/>
-                    <div *ngIf="submitted && f?.['{{ control.key }}']?.errors" class="invalid-feedback">
-                        <div *ngIf="f?.['{{ control.key }}']?.errors?.['required']">
-                            {{commonService.titleCase(control.key)}} is required
+                    <input *ngIf="commonService.isString(model[key])" type="text" formControlName="{{ key }}"
+                        class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
+                        placeholder="{{ key }}" />
+                    <input *ngIf="commonService.isBoolean(model[key])" type="checkbox" formControlName="{{ key }}"
+                        class="form-check-input" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
+                        placeholder="{{ key }}" />
+                    <input *ngIf="commonService.isNumber(model[key])" type="number" formControlName="{{ key }}"
+                        class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
+                        placeholder="{{ key }}" />
+                    <input *ngIf="isPassword(key)" id="modal_{{ key }}" type="password" formControlName="{{ key }}" class="form-control"
+                        [ngClass]="{ 'is-invalid': submitted && f[key].errors }"/>
+                    <div *ngIf="submitted && f[key].errors" class="invalid-feedback">
+                        <div *ngIf="f[key].errors?.['required']">
+                            {{commonService.titleCase(key)}} is required
                         </div>
                     </div>
-            </ng-container>
+                </ng-container>
             </div>
         </div>
         <div class="modal-footer">

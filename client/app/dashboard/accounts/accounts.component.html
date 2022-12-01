@@ -1,11 +1,11 @@
 <h5>Add account</h5>
-<form class="row mt-3 gy-2 gx-3 align-items-center" [formGroup]="form" (ngSubmit)="onSubmit()">
+<form class="row mt-3 gy-2 gx-3 align-items-baseline" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="username">username</label> -->
     <input type="text" formControlName="username" class="form-control" id="username"
-      [ngClass]="{ 'is-invalid': submitted && f?.['username']?.errors }" placeholder="username">
-    <div *ngIf="submitted && f?.['username']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['username']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" placeholder="username">
+    <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+      <div *ngIf="f['username'].errors?.['required']">
         username is required
       </div>
     </div>
@@ -13,9 +13,9 @@
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="firstName">firstName</label> -->
     <input type="text" formControlName="firstName" class="form-control" id="firstName"
-      [ngClass]="{ 'is-invalid': submitted && f?.['firstName']?.errors }" placeholder="firstName">
-    <div *ngIf="submitted && f?.['firstName']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['firstName']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" placeholder="firstName">
+    <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+      <div *ngIf="f['firstName'].errors?.['required']">
         firstName is required
       </div>
     </div>
@@ -23,9 +23,9 @@
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="lastName">lastName</label> -->
     <input type="text" formControlName="lastName" class="form-control" id="lastName"
-      [ngClass]="{ 'is-invalid': submitted && f?.['lastName']?.errors }" placeholder="lastName">
-    <div *ngIf="submitted && f?.['lastName']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['lastName']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" placeholder="lastName">
+    <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+      <div *ngIf="f['lastName'].errors?.['required']">
         lastName is required
       </div>
     </div>
@@ -33,32 +33,40 @@
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="email">email</label> -->
     <input type="text" formControlName="email" class="form-control" id="email"
-      [ngClass]="{ 'is-invalid': submitted && f?.['email']?.errors }" placeholder="email">
-    <div *ngIf="submitted && f?.['email']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['email']?.errors?.['required']">
-        email is required
+      [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" placeholder="email">
+    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+      <div *ngIf="f['email'].errors?.['required']">
+        Email is required
       </div>
     </div>
   </div>
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="role">role</label> -->
-    <input type="text" formControlName="role" class="form-control" id="role"
-      [ngClass]="{ 'is-invalid': submitted && f?.['role']?.errors }" placeholder="role">
-    <div *ngIf="submitted && f?.['role']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['role']?.errors?.['required']">
-        role is required
+    <select formControlName="role" [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" class="form-select">
+        <option disabled value="">Select Role</option>
+        <option *ngFor="let role of rolesValues" value="{{role}}">{{role | titlecase}}</option>
+    </select>
+    <!-- <input type="text" formControlName="role" class="form-control" id="role"
+      [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" placeholder="role"> -->
+    <div *ngIf="submitted && f['role'].errors" class="invalid-feedback">
+      <div *ngIf="f['role'].errors?.['required']">
+        Role is required
       </div>
     </div>
   </div>
   <div class="form-group col-auto">
     <!-- <label class="sr-only" for="password">Password</label> -->
     <input type="text" formControlName="password" class="form-control" id="password"
-      [ngClass]="{ 'is-invalid': submitted && f?.['password']?.errors }" placeholder="Password">
-    <div *ngIf="submitted && f?.['password']?.errors" class="invalid-feedback">
-      <div *ngIf="f?.['password']?.errors?.['required']">
+      [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" placeholder="Password">
+    <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+      <div *ngIf="f['password'].errors?.['required']">
         Password is required
       </div>
     </div>
+  </div>
+  <div class="form-group col-auto">
+      <input type="checkbox" formControlName="notify" class="form-check-input"/>
+      <label class="form-check-label ms-1" for="notify">Enable email notifications</label>
   </div>
   <div class="form-group col-auto">
     <button [disabled]="loading" class="btn btn-primary">
@@ -73,27 +81,33 @@
     <table class="table table-hover table-flush">
       <thead>
         <tr>
-          <th scope="col">username</th>
+          <th scope="col">ID</th>
+          <th scope="col">Username</th>
           <th scope="col">Balance</th>
           <th scope="col">Roles</th>
-          <th scope="col">ID</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let account of accounts">
-          <th scope="row">{{ account.username }}</th>
-          <td>{{ account.balance < 0 ? '-' : '' }}{{ account.balance < 0 ? account.balance * -1 : account.balance }} PHYC
-          </td>
+          <th scope="row">{{ account.id }}</th>
+          <td>{{ account.username }}</td>
+          <td>{{ parseBalance(account.balance) }} PHYC</td>
           <td>{{ account.role }}</td>
-          <td>{{ account.id }}</td>
           <td>
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <button *ngIf="!account.verified" (click)="verify(account.id)" class="btn btn-secondary" >Verify</button>
+            <div class="btn-group" role="group">
+              <div *ngIf="!isVerified(account)" class="btn-group" role="group" ngbDropdown>
+                <button id="verifyDropdown" type="button" class="btn btn-secondary" ngbDropdownToggle>
+                  Verify
+                </button>
+                <div ngbDropdownMenu aria-labelledby="verifyDropdown">
+                  <button ngbDropdownItem (click)="verify(account.id,rolesEnum.NonMember)">Non Member</button>
+                  <button ngbDropdownItem (click)="verify(account.id,rolesEnum.Member)">Member</button>
+                </div>
+              </div>
               <app-view-modal class="btn btn-secondary" [name]="'Account View'" [model]="account">View</app-view-modal>
-              <!-- <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Account Modify'" [model]="account">Modify</app-edit-modal> -->
-              <!-- <button type="button" class="btn btn-secondary">Remove</button> -->
+              <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Account Modify'" [submit]="updateAccount" [model]="account" (modifiedItemEvent)="refreshList()">Modify</app-edit-modal>
+              <button type="button" class="btn btn-secondary" (click)="remove(account.id)">Remove</button>
             </div>
-          </td>
         </tr>
       </tbody>
     </table>

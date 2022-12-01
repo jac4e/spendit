@@ -7,14 +7,14 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { User } from '../_models';
+import { IAccount } from 'typesit';
 import { AccountService } from '../_services';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  private account!: User | null;
+  private account!: IAccount | null;
   constructor(private router: Router, private accountService: AccountService) {
     this.accountService.account.subscribe((account) => {
       this.account = account;

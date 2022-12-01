@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { User } from 'client/app/_models';
+import { IAccount } from 'typesit';
 import { AccountService } from 'client/app/_services';
 
 @Component({
@@ -8,12 +8,13 @@ import { AccountService } from 'client/app/_services';
   styleUrls: ['./overview.component.sass']
 })
 export class OverviewComponent implements OnInit {
-
-  account!: User;
+  account = {} as IAccount;
 
   constructor(private accountService: AccountService) {
     this.accountService.account.subscribe((account) => {
-      this.account = account || new User();
+      if (account !== null) {
+        this.account = account;
+      }
     });
     this.accountService.refreshAccount();
   }

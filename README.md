@@ -2,12 +2,30 @@
 
 A simple online webstore for individual initiated non-supervised food purchases.
 
-## Development
+## Installation
 
-Run `docker compose -f docker-compose.development.yml -f docker-compose.yml down -v` for a dev server. Navigate to `http://localhost:4200/`. The front and backend will automatically reload if you change any of the source files. The default username and password is 'dev' and 'forthebirds', respectively.
+```bash
+npm install
+```
+
+## Usage
+
+```bash
+npm run start # Serves the webapp on http://localhost:4200 using angulars built in web server.
+
+npm run build # Build the webapp for static file hosting into the ./dist folder
+
+npm run watch # Build the webapp for static file hosting into the ./dist folder, recompiling and reloading the webapp whenever file changes are detected
+
+npm run test # Not implemented
+
+npm run watch:backend # Build the webapp for static file hosting into the ../serveit/app folder, recompiling and reloading the webapp whenever file changes are detected. Useful when using serveit to host the webapp.
+
+npm run lint # Lints the code base
+
+npm run format # Formats the code base
+```
 
 ## Production
 
-Run `./build.sh` to initially deploy the project to a server in a docker container. It will prompt you to enter config options.
 
-Afterwards, just use standard `docker compose` commands to control the server.

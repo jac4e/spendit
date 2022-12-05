@@ -27,7 +27,8 @@ jobs:
         cache: 'npm'
     - run: npm i
     - run: npm run build
+    - run: zip -r app.zip ./dist
     - name: Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/*"
+        artifacts: "app.zip"

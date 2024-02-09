@@ -61,6 +61,10 @@ export class InventoryComponent implements OnInit {
     });
   }
   remove(id: string) {
+    // Pop up a confirmation dialog
+    if (!confirm('Are you sure you want to remove this item?')) {
+      return;
+    }
     // console.log('remove', id);
     this.adminService.removeProduct(id).subscribe({
       next: () => {
@@ -84,6 +88,11 @@ export class InventoryComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
+      return;
+    }
+
+    // Confirmation dialog
+    if (!confirm('Are you sure you want to add this inventory item?')) {
       return;
     }
 

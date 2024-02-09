@@ -55,7 +55,10 @@ export class AccountsComponent implements OnInit {
       username: ['', [Validators.required]],
       role: [
         '',
-        [Validators.required, Validators.pattern(`^(${this.rolesValues.join('|')})`)]
+        [
+          Validators.required,
+          Validators.pattern(`^(${this.rolesValues.join('|')})`)
+        ]
       ],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
@@ -78,6 +81,11 @@ export class AccountsComponent implements OnInit {
 
   remove(id: string) {
     // console.log('remove', id);
+    // Popup confirmation
+    if (!confirm('Are you sure you want to delete this account?')) {
+      return;
+    }
+
     this.adminService.removeAccount(id).subscribe({
       next: () => {
         this.refreshList();
@@ -148,6 +156,11 @@ export class AccountsComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.form.invalid) {
+      return;
+    }
+
+    // Confirmation dialog
+    if (!confirm('Are you sure you want to add this account?')) {
       return;
     }
 

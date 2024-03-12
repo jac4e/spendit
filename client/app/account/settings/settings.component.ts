@@ -22,8 +22,8 @@ class SettingsForm {
     this.controlsConfig = controlsConfig;
     this.showErrors = {};
     Object.keys(controlsConfig).map((key) => {
-      this.showErrors[key] = false; 
-    })
+      this.showErrors[key] = false;
+    });
     this.loading = false;
     this.form = this.formBuilder.group(this.controlsConfig);
   }
@@ -36,10 +36,7 @@ class SettingsForm {
 })
 export class SettingsComponent implements OnInit {
   account = {} as IAccount;
-  usernameForm!: SettingsForm;
-  nameForm!: SettingsForm;
-  emailForm!: SettingsForm;
-  notificationForm!: SettingsForm;
+  accountDetailsForm!: SettingsForm;
   passwordForm!: SettingsForm;
 
   constructor(
@@ -50,14 +47,10 @@ export class SettingsComponent implements OnInit {
     this.accountService.account.subscribe((account) => {
       if (account !== null) {
         this.account = account;
-        this.usernameForm = new SettingsForm(formBuilder, {
-          username: [this.account.username, [Validators.required]]
-        });
-        this.nameForm = new SettingsForm(formBuilder, {
+        this.accountDetailsForm = new SettingsForm(formBuilder, {
+          username: [this.account.username, [Validators.required]],
           firstName: [this.account.firstName, [Validators.required]],
-          lastName: [this.account.lastName, [Validators.required]]
-        });
-        this.emailForm = new SettingsForm(formBuilder, {
+          lastName: [this.account.lastName, [Validators.required]],
           email: [
             this.account.email,
             [
@@ -65,24 +58,52 @@ export class SettingsComponent implements OnInit {
               Validators.email,
               Validators.pattern(/@ualberta.ca$/)
             ]
-          ]
-        });
-        this.notificationForm = new SettingsForm(formBuilder, {
-          notify: [this.account.notify]
+          ],
+          notify: [this.account.notify],
+          currentPassword: ['', [Validators.required]]
         });
         this.passwordForm = new SettingsForm(formBuilder, {
           password: ['', [Validators.required, this.passwordValidator]],
           confirmPassword: ['', [Validators.required, this.passwordValidator]],
+          currentPassword: ['', [Validators.required]]
         });
       }
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   onFocusOut(form: SettingsForm, key: string) {
-    // this.showErrors[key] = true;
+    form.showErrors[key] = true;
+  }
+
+  onSubmit(form: SettingsForm) {
+    console.log(form.form);
+
+    // Enable showErrors for all fields
+    Object.keys(form.showErrors).map((key) => {
+      form.showErrors[key] = true;
+    });
+
+    if (form.form.invalid) {
+      return;
+    }
+    form.loading = true;
+
+    const data = form.form.value;
+    this.accountService
+      .updateAccount(form.form.value)
+      .pipe(first())
+      .subscribe(
+        (data) => {
+          form.loading = false;
+          this.alertService.success('Update successful', { autoClose: true });
+        },
+        (error) => {
+          form.loading = false;
+          this.alertService.error(error);
+        }
+      );
   }
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {

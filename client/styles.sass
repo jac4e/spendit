@@ -2,15 +2,14 @@
 
 /* Importing Bootstrap SCSS file. */
 // @import '~bootstrap/scss/bootstrap'
-@import 'assets/css/bootstrap-dark.css'
+@use 'assets/css/bootstrap-dark.css'
 
 /* Importing open-iconic */
 // $icon-font-path: 'open-iconic/font/fonts/'
-@import 'open-iconic/font/css/open-iconic-bootstrap.scss'
+@use 'open-iconic/font/css/open-iconic-bootstrap.scss'
 
-:root
-    --ng-icon__size: 1rem
-    --ui-border-radius: 0.75rem
+@use 'variables'
+@use 'mixins' as mixins
 
 body
     height: 100vh
@@ -18,21 +17,18 @@ body
 .title-centered
     text-align: center
 
+
+// Create legacy class names for the mixins
 .round
-    border-radius: var(--ui-border-radius)
-
+    @include mixins.round
 .depth
-    box-shadow: 0 0.5rem 1rem rgba(#000, .10)
-
+    @include mixins.depth
 .bg-ui-main 
-    background-color: var(--ui-main)
-    box-shadow: 0 0.5rem 1rem rgba(#000, .12)
+    @include mixins.bg-ui-main
 .bg-ui-layer-1 
-    background-color: var(--ui-layer-1)
-    box-shadow: 0 0.5rem 1rem rgba(#000, .10)
+    @include mixins.bg-ui-layer-1
 .bg-ui-layer-2 
-    background-color: var(--ui-layer-2)
-    box-shadow: 0 0.5rem 1rem rgba(#000, .08)
+    @include mixins.bg-ui-layer-2
 
 .alert
     border-radius: var(--ui-border-radius)
@@ -45,11 +41,6 @@ body
     // opacity: 0.5
 
 @media  (prefers-color-scheme: light)
-    :root 
-        --ui-main: rgb(240,240,240)
-        --ui-layer-1: rgb(242,242,242)
-        --ui-layer-2: rgb(231,231,231)
-
     // add badge colors
     .badge-primary 
         color: #fafafa
@@ -57,10 +48,6 @@ body
         border-color: #375a7f
 
 @media  (prefers-color-scheme: dark)
-    :root
-        --ui-main: rgb(51, 51, 51)
-        --ui-layer-1: rgb(49, 49, 49)
-        --ui-layer-2: rgb(62, 62, 62)
 
 // Change btn badge style
 .btn .badge 
@@ -88,6 +75,24 @@ body
 .nav-pills .nav-link
     border-radius: 0.5rem
 
+// .nav-item
+//     cursor: pointer
+//     transition: all 0.3s ease
+//     &:hover
+//         @include mixins.bg-ui-layer-2
+//         @include mixins.depth
+//         transform: translateY(-0.1rem)
+//     &:active
+//         transform: translateY(0.1rem)
+//         @include mixins.depth
+//         transition: all 0.1s ease
+//     &:focus
+//         outline: none
+//         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25)
+//     &:disabled
+//         cursor: not-allowed
+//         opacity: 0.5
+
 .nav-item.first
     border-bottom-left-radius: 0.5rem
     border-top-left-radius: 0.5rem
@@ -98,6 +103,23 @@ body
 .btn
     border-radius: 0.5rem
     touch-action: manipulation
+    // Look into the below
+    // cursor: pointer
+    // transition: all 0.3s ease
+    // &:hover
+    //     @include mixins.depth
+    //     transform: translateY(-0.1rem)
+    // &:active
+    //     transform: translateY(0.1rem)
+    //     @include mixins.depth
+    //     transition: all 0.1s ease
+    // &:focus
+    //     outline: none
+    //     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25)
+    // &:disabled
+    //     cursor: not-allowed
+    //     opacity: 0.5
+
 .btn.btn-icon
     line-height: var(--ng-icon__size)
 .btn.btn-primary

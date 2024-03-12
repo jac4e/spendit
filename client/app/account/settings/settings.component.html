@@ -1,42 +1,102 @@
 <div class="mt-3 row justify-content-center">
     <div class="col-12">
-        <h5 class="">Please email <a href="mailto:epclub@ualberta.ca">epclub@ualberta.ca</a> if you would like to make changes to your account that are not available below.</h5>
-        <!-- <div class="row mt-3 gy-2 gx-3 align-items-center">
-            <ng-container *ngFor="let key of modelProperties">
-                <h5 for="{{ key }}">{{commonService.titleCase(key)}}:</h5>
-                <input *ngIf="commonService.isString(model[key])" type="text" formControlName="{{ key }}"
-                    class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
-                    placeholder="{{ key }}" />
-                <input *ngIf="commonService.isBoolean(model[key])" type="checkbox" formControlName="{{ key }}"
-                    class="form-check-input" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
-                    placeholder="{{ key }}" />
-                <input *ngIf="commonService.isNumber(model[key])" type="number" formControlName="{{ key }}"
-                    class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
-                    placeholder="{{ key }}" />
-                <input *ngIf="isPassword(key)" id="modal_{{ key }}" type="password" formControlName="{{ key }}" class="form-control"
-                    [ngClass]="{ 'is-invalid': submitted && f[key].errors }"/>
-                <div *ngIf="submitted && f[key].errors" class="invalid-feedback">
-                    <div *ngIf="f[key].errors?.['required']">
-                        {{commonService.titleCase(key)}} is required
+    </div>
+    <div class="col-md-6 col-lg-4 m-2">
+        <div class="account-form-card">
+        <h5 class="my-auto">Change Account Information:</h5>
+        <form *ngIf="accountDetailsForm" [formGroup]="accountDetailsForm.form" (ngSubmit)="onSubmit(accountDetailsForm)">
+            <!-- Username -->
+            <div class="form-group mb-3">
+                <label for="username">Username</label>
+                <input (focusout)="onFocusOut(accountDetailsForm,'username')" type="text" formControlName="username" class="form-control"
+                    [ngClass]="{ 'is-invalid': accountDetailsForm.showErrors['username'] && accountDetailsForm.form.controls['username'].errors }" />
+                <div *ngIf="accountDetailsForm.showErrors['username'] && accountDetailsForm.form.controls['username'].errors" class="invalid-feedback">
+                    <div *ngIf="accountDetailsForm.form.controls['username'].errors?.['required']">
+                        Username is required
+                    </div>
+                    <div *ngIf="accountDetailsForm.form.controls['username'].errors?.['minlength']">
+                        Username must be at least 3 characters long
+                    </div>
+                    <div *ngIf="accountDetailsForm.form.controls['username'].errors?.['maxlength']">
+                        Username cannot be longer than 20 characters
                     </div>
                 </div>
-            </ng-container>
-        </div> -->
+            </div>
+            <!-- Firstname -->
+            <div class="form-group mb-3">
+                <label for="firstName">Firstname</label>
+                <input (focusout)="onFocusOut(accountDetailsForm,'firstName')" type="text" formControlName="firstName" class="form-control"
+                    [ngClass]="{ 'is-invalid': accountDetailsForm.showErrors['firstName'] && accountDetailsForm.form.controls['firstName'].errors }" />
+                <div *ngIf="accountDetailsForm.showErrors['firstName'] && accountDetailsForm.form.controls['firstName'].errors" class="invalid-feedback">
+                    <div *ngIf="accountDetailsForm.form.controls['firstName'].errors?.['required']">
+                        Firstname is required
+                    </div>
+                    <div *ngIf="accountDetailsForm.form.controls['firstName'].errors?.['minlength']">
+                        Firstname must be at least 3 characters long
+                    </div>
+                    <div *ngIf="accountDetailsForm.form.controls['firstName'].errors?.['maxlength']">
+                        Firstname cannot be longer than 20 characters
+                    </div>
+                </div>
+            </div>
+            <!-- Lastname -->
+            <div class="form-group mb-3">
+                <label for="lastName">Lastname</label>
+                <input (focusout)="onFocusOut(accountDetailsForm,'lastName')" type="text" formControlName="lastName" class="form-control"
+                    [ngClass]="{ 'is-invalid': accountDetailsForm.showErrors['lastName'] && accountDetailsForm.form.controls['lastName'].errors }" />
+                <div *ngIf="accountDetailsForm.showErrors['lastName'] && accountDetailsForm.form.controls['lastName'].errors" class="invalid-feedback">
+                    <div *ngIf="accountDetailsForm.form.controls['lastName'].errors?.['required']">
+                        Lastname is required
+                    </div>
+                    <div *ngIf="accountDetailsForm.form.controls['lastName'].errors?.['minlength']">
+                        Lastname must be at least 3 characters long
+                    </div>
+                    <div *ngIf="accountDetailsForm.form.controls['lastName'].errors?.['maxlength']">
+                        Lastname cannot be longer than 20 characters
+                    </div>
+                </div>
+            </div>
+            <!-- Email -->
+            <div class="form-group mb-3">
+                <label for="email">Email</label>
+                <input (focusout)="onFocusOut(accountDetailsForm,'email')" type="email" formControlName="email" class="form-control"
+                    [ngClass]="{ 'is-invalid': accountDetailsForm.showErrors['email'] && accountDetailsForm.form.controls['email'].errors }" />
+                <div *ngIf="accountDetailsForm.showErrors['email'] && accountDetailsForm.form.controls['email'].errors" class="invalid-feedback">
+                    <div *ngIf="accountDetailsForm.form.controls['email'].errors?.['required']">
+                        Email is required
+                    </div>
+                    <div *ngIf="accountDetailsForm.form.controls['email'].errors?.['email']">
+                        Email is invalid
+                    </div>
+                </div>
+            </div>
+            <!-- Notification Checkbox -->
+            <div class="form-group mb-3 form-check">
+                <input type="checkbox" formControlName="notify" class="form-check-input" id="notify" />
+                <label class="form-check-label" for="notify">Receive notifications</label>
+            </div>
+            <!-- current password -->
+            <div class="form-group mb-3">
+                <label for="currentPassword">Current password</label>
+                <input (focusout)="onFocusOut(accountDetailsForm,'currentPassword')" type="password" formControlName="currentPassword" class="form-control"
+                    [ngClass]="{ 'is-invalid': accountDetailsForm.showErrors['currentPassword'] && accountDetailsForm.form.controls['currentPassword'].errors }" />
+                <div *ngIf="accountDetailsForm.showErrors['currentPassword'] && accountDetailsForm.form.controls['currentPassword'].errors" class="invalid-feedback">
+                    <div *ngIf="accountDetailsForm.form.controls['currentPassword'].errors?.['required']">
+                        Current password is required
+                    </div>
+                </div>
+            </div>
+            <button [disabled]="accountDetailsForm.loading" class="btn btn-primary" type="submit">
+                <span *ngIf="accountDetailsForm.loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Submit
+            </button>
+        </form>
     </div>
-    <div class="col-md-6 col-lg-4 round bg-ui-main m-2">
-        <h5 class="my-auto">Name:</h5>
     </div>
-    <div class="col-md-6 col-lg-4 round bg-ui-main m-2">
-        <h5 class="my-auto">Username:</h5>
-    </div>
-    <div class="col-md-6 col-lg-4 round bg-ui-main m-2">
-        <h5 class="my-auto">Email:</h5>
-    </div>
-    <div class="col-md-6 col-lg-4 round bg-ui-main m-2">
-        <h5 class="my-auto">Notifications:</h5>
-    </div>
-    <div class="col-md-6 col-lg-4 round bg-ui-main m-2">
+    <div class="col-md-6 col-lg-4 m-2">
+        <div class="account-form-card">
         <h5 class="my-auto">Change Password:</h5>
+        <form *ngIf="passwordForm" [formGroup]="passwordForm.form" (ngSubmit)="onSubmit(passwordForm)">
         <div class="form-group mb-3">
             <label for="password">Password</label>
             <input (focusout)="onFocusOut(passwordForm,'password')" type="password" formControlName="password" class="form-control"
@@ -63,9 +123,21 @@
                 </div>
             </div>
         </div>
-        <button [disabled]="passwordForm.loading" class="btn btn-primary">
+        <div class="form-group mb-3">
+            <label for="currentPassword">Current password</label>
+            <input (focusout)="onFocusOut(passwordForm,'currentPassword')" type="password" formControlName="currentPassword" class="form-control"
+                [ngClass]="{ 'is-invalid': passwordForm.showErrors['currentPassword'] && passwordForm.form.controls['currentPassword'].errors }" />
+            <div *ngIf="passwordForm.showErrors['currentPassword'] && passwordForm.form.controls['currentPassword'].errors" class="invalid-feedback">
+                <div *ngIf="passwordForm.form.controls['currentPassword'].errors?.['required']">
+                    Current password is required
+                </div>
+            </div>
+        </div>
+        <button [disabled]="passwordForm.loading" class="btn btn-primary" type="submit">
             <span *ngIf="passwordForm.loading" class="spinner-border spinner-border-sm mr-1"></span>
             Submit
         </button>
+        </form>
+        </div>
     </div>
 </div>

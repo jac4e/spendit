@@ -19,7 +19,7 @@ export class CommonService {
       ...data.map((item) => {
         return getValues(item).map((value) => {
           // serialize nested arrays
-          console.log(value, Array.isArray(value));
+          // console.log(value, Array.isArray(value));
           if (Array.isArray(value)) {
             return JSON.stringify(value)
               .replace(/,'/gm, ';')

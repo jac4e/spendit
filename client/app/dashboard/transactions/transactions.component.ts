@@ -58,6 +58,11 @@ export class TransactionsComponent implements OnInit {
       return;
     }
 
+    // Confirmation dialog
+    if (!confirm('Are you sure you want to add this transaction?')) {
+      return;
+    }
+
     // Convert to ITransactionForm
     const transactionForm = this.form.value;
     transactionForm.products = [];

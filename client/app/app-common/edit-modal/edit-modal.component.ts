@@ -91,6 +91,11 @@ export class EditModalComponent implements OnInit {
   }
 
   onSubmit() {
+    // Popup confirmation
+    if (!confirm('Are you sure you want to save your changes?')) {
+      return;
+    }
+
     this.submitted = true;
 
     if (this.form.invalid) {

@@ -52,7 +52,7 @@ export class EditModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.model);
+    // console.log(this.model);
     this.modelProperties = getKeys(
       this.model as IAccount | ITransaction | IProduct
     )
@@ -79,7 +79,7 @@ export class EditModalComponent implements OnInit {
 
   generateForm() {
     this.modelProperties.forEach((key) => {
-      console.log(key);
+      // console.log(key);
       const value = this.model[key];
       const validatorsArr = [Validators.required];
       if (key === 'email') {
@@ -104,7 +104,7 @@ export class EditModalComponent implements OnInit {
 
     // convert to IAccountForm if needed
     const form = this.form.value;
-    console.log(form);
+    // console.log(form);
     // if (form['confirmPassword']) {
     //   delete form['confirmPassword'];
     // }
@@ -117,7 +117,7 @@ export class EditModalComponent implements OnInit {
           autoClose: true,
           id: this.successAlert
         });
-        console.log('emitting event');
+        // console.log('emitting event');
         this.modifiedItemEvent.emit();
         this.modalRef.close();
       },

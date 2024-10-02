@@ -89,12 +89,12 @@ export class AccountService {
     );
   }
 
-  updateAccount(accountForm: IAccountForm) {
+  updateAccount(type: "accountDetails" | "password", currentPassword: ICredentials["password"], accountForm: IAccountForm) {
     return this.backend.apiCall(
       'PUT',
       this.backend.api.account,
       'self',
-      accountForm
+      {type: type, currentPassword: currentPassword, accountForm: accountForm}
     );
   }
 

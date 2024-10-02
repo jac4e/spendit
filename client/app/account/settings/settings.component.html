@@ -31,12 +31,6 @@
                     <div *ngIf="accountDetailsForm.form.controls['firstName'].errors?.['required']">
                         Firstname is required
                     </div>
-                    <div *ngIf="accountDetailsForm.form.controls['firstName'].errors?.['minlength']">
-                        Firstname must be at least 3 characters long
-                    </div>
-                    <div *ngIf="accountDetailsForm.form.controls['firstName'].errors?.['maxlength']">
-                        Firstname cannot be longer than 20 characters
-                    </div>
                 </div>
             </div>
             <!-- Lastname -->
@@ -47,12 +41,6 @@
                 <div *ngIf="accountDetailsForm.showErrors['lastName'] && accountDetailsForm.form.controls['lastName'].errors" class="invalid-feedback">
                     <div *ngIf="accountDetailsForm.form.controls['lastName'].errors?.['required']">
                         Lastname is required
-                    </div>
-                    <div *ngIf="accountDetailsForm.form.controls['lastName'].errors?.['minlength']">
-                        Lastname must be at least 3 characters long
-                    </div>
-                    <div *ngIf="accountDetailsForm.form.controls['lastName'].errors?.['maxlength']">
-                        Lastname cannot be longer than 20 characters
                     </div>
                 </div>
             </div>

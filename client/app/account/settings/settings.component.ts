@@ -7,18 +7,21 @@ import {
   Validators
 } from '@angular/forms';
 import { first } from 'rxjs';
-import { IAccount } from 'typesit';
+import { IAccount, IAccountForm } from 'typesit';
 import { AccountService, AlertService } from '../../_services';
 
 class SettingsForm {
   form: FormGroup;
   showErrors: { [key: string]: boolean };
   loading: boolean;
+  type: "accountDetails" | "password";
   controlsConfig: { [key: string]: any };
   constructor(
     private formBuilder: UntypedFormBuilder,
+    type: "accountDetails" | "password",
     controlsConfig: { [key: string]: any }
   ) {
+    this.type = type;
     this.controlsConfig = controlsConfig;
     this.showErrors = {};
     Object.keys(controlsConfig).map((key) => {
@@ -47,7 +50,7 @@ export class SettingsComponent implements OnInit {
     this.accountService.account.subscribe((account) => {
       if (account !== null) {
         this.account = account;
-        this.accountDetailsForm = new SettingsForm(formBuilder, {
+        this.accountDetailsForm = new SettingsForm(formBuilder, "accountDetails", {
           username: [this.account.username, [Validators.required]],
           firstName: [this.account.firstName, [Validators.required]],
           lastName: [this.account.lastName, [Validators.required]],
@@ -62,7 +65,7 @@ export class SettingsComponent implements OnInit {
           notify: [this.account.notify],
           currentPassword: ['', [Validators.required]]
         });
-        this.passwordForm = new SettingsForm(formBuilder, {
+        this.passwordForm = new SettingsForm(formBuilder, "password", {
           password: ['', [Validators.required, this.passwordValidator]],
           confirmPassword: ['', [Validators.required, this.passwordValidator]],
           currentPassword: ['', [Validators.required]]
@@ -78,7 +81,6 @@ export class SettingsComponent implements OnInit {
   }
 
   onSubmit(form: SettingsForm) {
-    console.log(form.form);
 
     // Enable showErrors for all fields
     Object.keys(form.showErrors).map((key) => {
@@ -90,20 +92,41 @@ export class SettingsComponent implements OnInit {
     }
     form.loading = true;
 
-    const data = form.form.value;
+    const accountForm: IAccountForm = {
+      username: form.form.value.username || undefined,
+      firstName: form.form.value.firstName || undefined,
+      lastName: form.form.value.lastName || undefined,
+      email: form.form.value.email || undefined,
+      password: form.form.value.password || undefined,
+      notify: form.form.value.notify || undefined,
+    };
+
+    const currentPassword = form.form.value.currentPassword;
+
+    if (form.type === "password") {
+      if(!confirm('Are you sure you want to change your password? All your sessions will be logged out.')) {
+        return;
+      }
+    } else {
+      if (!confirm('Are you sure you want to submit your changes?')) {
+        return;
+      }
+    }
+
     this.accountService
-      .updateAccount(form.form.value)
+      .updateAccount(form.type, currentPassword, accountForm)
       .pipe(first())
-      .subscribe(
-        (data) => {
+      .subscribe({
+        next: () => {
           form.loading = false;
           this.alertService.success('Update successful', { autoClose: true });
+          this.accountService.refreshAccount();
         },
-        (error) => {
+        error: (resp) => {
           form.loading = false;
-          this.alertService.error(error);
+          this.alertService.error(resp.error.message);
         }
-      );
+      });
   }
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {

@@ -34,7 +34,17 @@ export class AdminService {
   updateAccount(id: IAccount['id'], account: IAccountForm) {
     return this.backend.apiCall('PUT', this.backend.api.account, id, account);
   }
+
+  resetPassword(id: IAccount['id']) {
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.account,
+      `${id}/resetPassword`
+    );
+  }
+
   public boundedUpdateAccount = this.updateAccount.bind(this);
+  public boundedResetPassword = this.resetPassword.bind(this);
 
   addProduct(product: IProductForm) {
     return this.backend.apiCall(

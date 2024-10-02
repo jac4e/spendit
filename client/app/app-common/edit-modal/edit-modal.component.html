@@ -22,8 +22,9 @@ Edit
                     <input *ngIf="commonService.isNumber(model[key])" type="number" formControlName="{{ key }}"
                         class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
                         placeholder="{{ key }}" />
-                    <input *ngIf="isPassword(key)" id="modal_{{ key }}" type="password" formControlName="{{ key }}" class="form-control"
-                        [ngClass]="{ 'is-invalid': submitted && f[key].errors }"/>
+                    <button *ngIf="isPassword(key)" type="button" class="btn btn-primary" (click)="resetPassword()">
+                        Reset Password
+                    </button>
                     <div *ngIf="submitted && f[key].errors" class="invalid-feedback">
                         <div *ngIf="f[key].errors?.['required']">
                             {{commonService.titleCase(key)}} is required

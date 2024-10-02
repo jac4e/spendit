@@ -105,7 +105,7 @@
                 </div>
               </div>
               <app-view-modal class="btn btn-secondary" [name]="'Account View'" [model]="account">View</app-view-modal>
-              <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Account Modify'" [submit]="updateAccount" [model]="account" (modifiedItemEvent)="refreshList()">Modify</app-edit-modal>
+              <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Account Modify'" [submit]="updateAccount" [secondarySubmit]="resetPassword" [model]="account" (modifiedItemEvent)="refreshList()">Modify</app-edit-modal>
               <button type="button" class="btn btn-secondary" (click)="remove(account.id)">Remove</button>
             </div>
         </tr>

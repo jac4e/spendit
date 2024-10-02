@@ -38,6 +38,7 @@ export class AccountsComponent implements OnInit {
   rolesValues = Object.values(Roles);
   rolesEnum = Roles;
   updateAccount;
+  resetPassword;
   constructor(
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
@@ -48,6 +49,7 @@ export class AccountsComponent implements OnInit {
   ) {
     this.refreshList();
     this.updateAccount = this.adminService.boundedUpdateAccount;
+    this.resetPassword = this.adminService.boundedResetPassword;
   }
 
   ngOnInit() {

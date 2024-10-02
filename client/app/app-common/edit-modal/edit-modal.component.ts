@@ -31,6 +31,7 @@ export class EditModalComponent implements OnInit {
   @Input() successAlert!: string;
   @Input() model!: { [key: string]: any };
   @Input() submit!: (id: string, content: any) => Observable<any>;
+  @Input() secondarySubmit!: (id: string) => Observable<any>;
   modelProperties!: string[];
   @ViewChild('content') public content!: TemplateRef<any>;
   @Output() modifiedItemEvent = new EventEmitter();
@@ -65,12 +66,12 @@ export class EditModalComponent implements OnInit {
       })
       .filter((key) => key !== '') as string[];
 
-    // // If model is account, add password and confirm password keys
-    // if (isIAccount(this.model)) {
-    //   // add keys
-    //   this.modelProperties.push('password');
-    //   this.modelProperties.push('confirmPassword');
-    // }
+    // If model is account, add reset password button
+    if (isIAccount(this.model)) {
+      // add keys
+      this.modelProperties.push('password');
+      // this.modelProperties.push('confirmPassword');
+    }
   }
 
   get f() {
@@ -167,4 +168,35 @@ export class EditModalComponent implements OnInit {
   isPassword(input: string) {
     return input.includes('assword');
   }
+
+  resetPassword() {
+    if (!isIAccount(this.model)) {
+      throw 'Model is not an account';  
+    }
+
+    if (this.secondarySubmit === undefined) {
+      throw 'Secondary submit function is not defined';
+    }
+
+    if (!confirm('Are you sure you want to reset the password?')) {
+      return;
+    }
+    this.secondarySubmit(this.model['id']).subscribe({
+      next: (resp) => {
+        this.alertService.success('Password reset successful', {
+          autoClose: true,
+          id: this.successAlert
+        });
+        confirm(`New password is: ${resp.password}`);
+        this.modalRef.close();
+      },
+      error: (resp) => {
+        this.alertService.error(resp.error.message, {
+          autoClose: true,
+          id: 'modal-alert'
+        });
+      }
+    });
+  }
+
 }

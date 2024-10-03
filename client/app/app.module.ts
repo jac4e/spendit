@@ -21,6 +21,7 @@ import {
 } from '@ng-icons/dripicons';
 import { RegisterComponent } from './register/register.component';
 import { AppConfigService } from './_services/app-config.service';
+import { NgxStripeModule } from 'ngx-stripe';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { AppConfigService } from './_services/app-config.service';
     HttpClientModule,
     AppRoutingModule,
     NgbModule,
-    AppCommonModule
+    AppCommonModule,
+    NgxStripeModule.forRoot()
   ],
   providers: [
     httpInterceptorProviders,

@@ -56,6 +56,10 @@ export class NavbarComponent implements DoCheck {
     // console.log(this.url);
   }
 
+  isZero(number: string | number | bigint | undefined) {
+    return number === 0 || number === '0' || number === 0n;
+  }
+
   tabGuard(guards: string[] | undefined) {
     if (!guards) {
       return true;

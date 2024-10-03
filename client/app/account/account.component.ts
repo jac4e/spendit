@@ -12,6 +12,7 @@ export class AccountComponent implements DoCheck {
   account = {} as IAccount;
   links = [
     { title: 'Overview', route: '/account/overview' },
+    { title: 'Refill', route: '/account/refill' },
     { title: 'Settings', route: '/account/settings' },
     { title: 'Transactions', route: '/account/transactions' }
   ];

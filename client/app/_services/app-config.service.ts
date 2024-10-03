@@ -27,4 +27,8 @@ export class AppConfigService {
   get branding(): any | undefined {
     return this.appConfig.branding;
   }
+
+  get stripePublicKey(): string | undefined {
+    return this.appConfig.stripePublicKey;
+  }
 }

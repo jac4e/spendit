@@ -35,7 +35,7 @@
     "open-iconic": "^1.1.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.4.0",
-    "typesit": "github:jac4e/typesit#v0.0.7",
+    "typesit": "github:jac4e/typesit#feature/refill-support",
     "webpack": "^5.95.0",
     "zone.js": "^0.11.8"
   },

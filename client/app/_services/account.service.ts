@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BackendService } from '../_services';
-import { IAccount, ITransaction, IAccountForm, ICredentials } from 'typesit';
+import { IAccount, ITransaction, IAccountForm, ICredentials, RefillMethods } from 'typesit';
 
 @Injectable({
   providedIn: 'root'
@@ -129,4 +129,14 @@ export class AccountService {
       'self/transactions'
     );
   }
+
+  requestRefill(method: RefillMethods, amount: string) {
+    return this.backend.apiCall(
+      'POST',
+      this.backend.api.account,
+      'self/refill',
+      { method, amount }
+    );
+  }
+
 }

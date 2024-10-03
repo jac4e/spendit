@@ -1,6 +1,8 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
-
+import { UntypedFormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
+import { IAccount } from 'typesit';
+import { AccountService } from 'client/app/_services';
+import { AlertService } from 'client/app/_services';
 
 import {
   injectStripe,
@@ -12,13 +14,60 @@ import {
 } from '@stripe/stripe-js';
 import { AppConfigService } from 'client/app/_services';
 
+enum RefillStep {
+  MethodSelection = "methodSelection",
+  Cash = "cash",
+  Etransfer = "etransfer",
+  Card = "card",
+  Stripe = "stripe"
+}
+
 @Component({
   selector: 'app-refill',
   templateUrl: './refill.component.html',
   styleUrls: ['./refill.component.sass'],
 })
 export class RefillComponent {
-  constructor(private appConfigService: AppConfigService) {}
+  account = {} as IAccount;
+  methodSelectionForm!: UntypedFormGroup;
+  refillStep: RefillStep = RefillStep.MethodSelection;
+  constructor(
+    private appConfigService: AppConfigService,
+    private accountService: AccountService,
+    private formBuilder: UntypedFormBuilder,
+    private alertService: AlertService) {
+
+    this.accountService.account.subscribe((account) => {
+      if (account !== null) {
+        this.account = account;
+      }
+    });
+    this.accountService.refreshAccount();
+  }
+
+  ngOnInit() {
+    this.methodSelectionForm = this.formBuilder.group({
+      method: ['', [Validators.required]],
+    });
+  }
+
+  methodSelection() {
+    // stop here if form is invalid
+    if (this.methodSelectionForm.invalid) {
+      this.alertService.warn("Please select a refill method", {
+        autoClose: true,
+        id: 'refill-alert'
+      });
+      return;
+    }
+
+    this.refillStep = this.methodSelectionForm.value["method"];
+    console.log('Refill step', this.refillStep)
+    
+  }
+
+
+  // test sstripe stuff below
 
   @ViewChild(StripePaymentElementComponent) paymentElement!: StripePaymentElementComponent;
   private readonly fb = inject(UntypedFormBuilder);

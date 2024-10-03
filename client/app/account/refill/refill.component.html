@@ -1,13 +1,49 @@
+
+<div class="row mt-3">
+    <app-common-alerts id="refill-alert"></app-common-alerts>
+</div>
+<div class="row justify-content-center">
+    <div class="mt-3 col-md-9 refill-form-card">
+        <h5 class="my-auto">Refill your account:</h5>
+        <form [formGroup]="methodSelectionForm" (ngSubmit)="methodSelection()">
+            <div>
+                <input type="text" formControlName="amount" class="form-control amount title-centered" placeholder="PHYC"/>
+            </div>
+            <fieldset>
+                <legend>Refill method:</legend>
+                <div>
+                    <input formControlName="method" type="radio" id="cash" name="method" value="cash" />
+                    <label for="cash" >In-person using cash</label>
+                </div>
+                <div>
+                    <input formControlName="method" type="radio" id="etransfer" name="method" value="etransfer" />
+                    <label for="etransfer" >Interact e-transfer to <a href="mailto:epclub@ualberta.ca">epclub@ualberta.ca</a></label>
+                </div>
+                <div>
+                    <input formControlName="method" type="radio" id="card" name="method" value="card" />
+                    <label for="card" >In-person using a debit or credit (Note: a 2.7% + 30 cent surcharge is added for credit cards)</label>
+                </div>
+                <div>
+                    <input formControlName="method" type="radio" id="stripe" name="method" value="stripe" />
+                    <label for="stripe" >Online using a stripe (Note: a 2.9% + 30 cent surcharge is added)</label>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-primary">Next</button>
+        </form>
+    </div>
+</div>
+
+<!-- 
 <form [formGroup]="paymentElementForm">
         <input matInput placeholder="name" formControlName="name" />
         <input matInput placeholder="Email" type="email" formControlName="email" />
         <input matInput placeholder="Address" formControlName="address" />
         <input matInput placeholder="ZIP Code" formControlName="zipcode" />
         <input matInput placeholder="city" formControlName="city" />
-    <!-- @if (elementsOptions.clientSecret) { -->
+    @if (elementsOptions.clientSecret) {
     <ngx-stripe-elements [stripe]="stripe" [elementsOptions]="elementsOptions">
         <ngx-stripe-payment [options]="paymentElementOptions" />
     </ngx-stripe-elements>
-    <!-- } -->
+    }
     <button (click)="pay()">PAY</button>
-</form>
+</form> -->

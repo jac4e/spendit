@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminService } from 'client/app/_services/admin.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -23,6 +23,8 @@ import {
   IAccountForm,
   Roles
 } from 'typesit';
+import { ListControl, ListControlType } from 'client/app/_models';
+import { ListComponent } from 'client/app/app-common/list/list.component';
 
 @Component({
   selector: 'app-dashboard-accounts',
@@ -30,15 +32,58 @@ import {
   styleUrls: ['./accounts.component.sass']
 })
 export class AccountsComponent implements OnInit {
-  accounts!: IAccount[];
+  @ViewChild(ListComponent)
+  private listComponent!: ListComponent;
   form!: UntypedFormGroup;
   loading = false;
   submitted = false;
-  accountKeys = keysIAccount;
   rolesValues = Object.values(Roles);
-  rolesEnum = Roles;
-  updateAccount;
-  resetPassword;
+  listControl: ListControl[] = [
+    {
+      name: 'Verify',
+      type: ListControlType.CustomDropdown,
+      shouldDisplay: (data: IAccount) => {
+        return data.role === Roles.Unverified;
+      },
+      options: [Roles.Member,Roles.NonMember].map((role) => {
+        return {
+          name: role,
+          onClick: (data: IAccount) => {
+            this.verify(data.id, role);
+          }
+        };
+      })
+    },
+    {
+      name: 'View',
+      type: ListControlType.View,
+      shouldDisplay: (data: IAccount) => {
+        return true;
+      }
+    },
+    {
+      name: 'Edit',
+      type: ListControlType.Edit,
+      shouldDisplay: (data: IAccount) => {
+        return true;
+      },
+      edit: {
+        successAlert: 'dashboard-alert',
+        submit: this.adminService.boundedUpdateAccount,
+        secondarySubmit: this.adminService.boundedResetPassword
+      }
+    },
+    {
+      name: 'Remove',
+      type: ListControlType.CustomButton,
+      shouldDisplay: (data: IAccount) => {
+        return true;
+      },
+      onClick: (data: IAccount) => {
+        this.remove(data.id);
+      }
+    }
+  ];
   constructor(
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
@@ -47,9 +92,6 @@ export class AccountsComponent implements OnInit {
     private commonService: CommonService,
     private alertService: AlertService
   ) {
-    this.refreshList();
-    this.updateAccount = this.adminService.boundedUpdateAccount;
-    this.resetPassword = this.adminService.boundedResetPassword;
   }
 
   ngOnInit() {
@@ -90,26 +132,20 @@ export class AccountsComponent implements OnInit {
 
     this.adminService.removeAccount(id).subscribe({
       next: () => {
-        this.refreshList();
+        this.alertService.success('Successfully deleted account!', {
+          autoClose: true,
+          id: 'dashboard-alert'
+        });
+        this.listComponent.refreshData();
       },
       error: (resp) => {
         this.alertService.error(resp.error.message);
       }
     });
   }
-  refreshList() {
-    this.adminService.getAllAccounts().subscribe((accounts: IAccount[]) => {
-      this.accounts = accounts;
-    });
-  }
 
-  export() {
-    this.adminService.getAllAccounts().subscribe((data: IAccount[]) => {
-      this.commonService.export(
-        data,
-        `accounts_${this.commonService.localeISOTime()}.csv`
-      );
-    });
+  refreshList() {
+    return this.adminService.getAllAccounts();
   }
 
   verify(id: string, role: Roles) {
@@ -120,7 +156,7 @@ export class AccountsComponent implements OnInit {
           autoClose: true,
           id: 'dashboard-alert'
         });
-        this.refreshList();
+        this.listComponent.refreshData();
       },
       error: (resp) => {
         this.alertService.error(resp.error.message, {
@@ -130,24 +166,6 @@ export class AccountsComponent implements OnInit {
         this.loading = false;
       }
     });
-  }
-
-  isVerified(account: IAccount) {
-    return account.role !== Roles.Unverified;
-  }
-
-  parseBalance(balance: IAccount[keyof IAccount]) {
-    if (balance === undefined) {
-      return 'Undefined';
-    }
-    balance = BigInt(balance);
-    const sign = balance < BigInt(0) ? '-' : '';
-    const amount = balance < BigInt(0) ? balance * BigInt(-1) : balance;
-    return `${sign}${amount.toString()}`;
-  }
-
-  getItemWrapper(account: IAccount) {
-    return getObject(account);
   }
 
   onSubmit() {
@@ -177,7 +195,7 @@ export class AccountsComponent implements OnInit {
             autoClose: true,
             id: 'dashboard-alert'
           });
-          this.refreshList();
+          this.listComponent.refreshData();
         },
         error: (resp) => {
           this.alertService.error(resp.error.message, {

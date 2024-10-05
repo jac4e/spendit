@@ -77,40 +77,5 @@
 </form>
 <h5 class="mt-3">Accounts</h5>
 <div class="row">
-  <div class="col-12 table-responsive">
-    <table class="table table-hover table-flush">
-      <thead>
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Username</th>
-          <th scope="col">Balance</th>
-          <th scope="col">Roles</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let account of accounts">
-          <th scope="row">{{ account.id }}</th>
-          <td>{{ account.username }}</td>
-          <td>{{ parseBalance(account.balance) }} PHYC</td>
-          <td>{{ account.role }}</td>
-          <td>
-            <div class="btn-group" role="group">
-              <div *ngIf="!isVerified(account)" class="btn-group" role="group" ngbDropdown>
-                <button id="verifyDropdown" type="button" class="btn btn-secondary" ngbDropdownToggle>
-                  Verify
-                </button>
-                <div ngbDropdownMenu aria-labelledby="verifyDropdown">
-                  <button ngbDropdownItem (click)="verify(account.id,rolesEnum.NonMember)">Non Member</button>
-                  <button ngbDropdownItem (click)="verify(account.id,rolesEnum.Member)">Member</button>
-                </div>
-              </div>
-              <app-view-modal class="btn btn-secondary" [name]="'Account View'" [model]="account">View</app-view-modal>
-              <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Account Modify'" [submit]="updateAccount" [secondarySubmit]="resetPassword" [model]="account" (modifiedItemEvent)="refreshList()">Modify</app-edit-modal>
-              <button type="button" class="btn btn-secondary" (click)="remove(account.id)">Remove</button>
-            </div>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <app-list [controls]="listControl" [exclude]="['gid', 'notify']" [getData]="refreshList()" name="accounts"></app-list>
 </div>
-<button class="btn btn-secondary" (click)="export()">Export</button>

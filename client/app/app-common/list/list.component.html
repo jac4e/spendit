@@ -1,0 +1,58 @@
+<div class="col-12 table-responsive">
+    <table class="table table-hover table-flush">
+        <thead>
+            <tr>
+                <ng-container *ngFor="let column of keys">
+                    <th *ngIf="!exclude?.includes(column)" scope="col">{{ titleCase(column) }}</th>
+                </ng-container>
+                <ng-container *ngIf="controls !== undefined">
+                    <th></th>
+                </ng-container>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of data" class="{{setRowClass(row)}}">
+                <ng-container *ngFor="let column of keys">
+                    <ng-container *ngIf="column === 'id' && !exclude?.includes(column)">
+                        <th scope="row">{{ getTableValue(row,column) }}</th>
+                    </ng-container>
+                    <ng-container *ngIf="column !== 'id' && !exclude?.includes(column)">
+                        <td>{{ getTableValue(row,column) }}</td>
+                    </ng-container>
+                </ng-container>
+                <td *ngIf="controls !== undefined">
+                    <div class="btn-group" role="group">
+                        <ng-container *ngFor="let control of controls">
+                            <app-view-modal *ngIf="control.type === 'view' && control.shouldDisplay(row)" class="btn btn-secondary" [name]="'{{name}} View'" [model]="row">View</app-view-modal>
+                            <app-edit-modal *ngIf="control.type === 'edit' && control.shouldDisplay(row)" [successAlert]="control.edit.successAlert" class="btn btn-secondary" [name]="'{{name}} Modify'" [submit]="control.edit.submit" [secondarySubmit]="control.edit.secondarySubmit" [model]="row" (modifiedItemEvent)="refreshData()">Modify</app-edit-modal>              
+                            <button *ngIf="control.type === 'customButton' && control.shouldDisplay(row)" type="button" class="btn btn-secondary" (click)="refreshClick(control.onClick(row))">{{ control.name }}</button>
+                            <div *ngIf="control.type === 'customDropdown' && control.shouldDisplay(row)" class="btn-group" role="group" ngbDropdown>
+                                <button id="{{ control.name }}Dropdown" type="button" class="btn btn-secondary" ngbDropdownToggle>
+                                    {{ control.name }}
+                                </button>
+                                <div ngbDropdownMenu>
+                                    <button ngbDropdownItem *ngFor="let option of control.options" (click)="refreshClick(option.onClick(row))">{{ option.name }}</button>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div  class="d-flex justify-content-between">
+    <div *ngIf="collectionSize > 10">
+        <ngb-pagination [collectionSize]="collectionSize" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"
+            [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshData()">
+        </ngb-pagination>
+    </div>
+    <div>
+        <button class="btn btn-secondary" (click)="export()">Export</button>
+    </div>
+    <!-- <select class="form-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refreshTransactions()">
+        <option [ngValue]="10">2 items per page</option>
+        <option [ngValue]="50">4 items per page</option>
+        <option [ngValue]="100">6 items per page</option>
+    </select> -->
+</div>

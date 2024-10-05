@@ -8,16 +8,19 @@ import { AlertComponent } from './alert/alert.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgIconsModule } from '@ng-icons/core';
 import { dripCross } from '@ng-icons/dripicons';
+import { ListComponent } from './list/list.component';
 
 @NgModule({
   exports: [
     TransactionsListComponent,
+    ListComponent,
     ViewModalComponent,
     EditModalComponent,
     AlertComponent
   ],
   declarations: [
     TransactionsListComponent,
+    ListComponent,
     ViewModalComponent,
     EditModalComponent,
     AlertComponent

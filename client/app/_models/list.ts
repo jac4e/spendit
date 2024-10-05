@@ -1,0 +1,42 @@
+import { Observable } from "rxjs";
+import { IRefill, ITransaction, IAccount, IProduct } from "typesit";
+
+export type AllowableListData = IRefill | ITransaction | IAccount | IProduct;
+
+export enum ListControlType {
+    View = 'view',
+    Edit = 'edit',
+    CustomButton = 'customButton',
+    CustomDropdown = 'customDropdown',
+}
+
+interface listControlBase {
+    name: string;
+    shouldDisplay: (data: any) => boolean;
+}
+
+interface ListControlView extends listControlBase {
+    type: ListControlType.View;
+}
+
+interface ListControlEdit extends listControlBase {
+    type: ListControlType.Edit;
+    edit: {
+        successAlert: string;
+        submit: (id: string, content: any) => Observable<any>;
+        secondarySubmit?: (id: string) => Observable<any>;
+    }
+}
+
+interface ListControlCustomButton extends listControlBase {
+    type: ListControlType.CustomButton;
+    onClick: (data: any) => void;
+}
+
+interface ListControlCustomDropdown extends listControlBase {
+    type: ListControlType.CustomDropdown;
+    options: { name: string, onClick: (data: any) => void }[];
+}
+
+export type ListControl = ListControlView | ListControlEdit | ListControlCustomButton | ListControlCustomDropdown;
+

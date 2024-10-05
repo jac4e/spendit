@@ -58,5 +58,5 @@
 </form>
 <h5 class="mt-3">Transactions</h5>
 <div class="row">
-  <app-transactions-list *ngIf="showTransactions" [getTransactions]="refreshTransactions"></app-transactions-list>
+  <app-list [exclude]="['products']" [controls]="listControl" [getData]="refreshTransactions" name="transactions"></app-list>
 </div>

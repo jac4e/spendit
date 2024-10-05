@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ITransaction, TransactionType } from 'typesit';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';
+import { ListControl, ListControlType } from 'client/app/_models';
+import { ListComponent } from 'client/app/app-common/list/list.component';
 
 @Component({
   selector: 'app-dashboard-transactions',
@@ -10,6 +12,8 @@ import { first, Observable } from 'rxjs';
   styleUrls: ['./transactions.component.sass']
 })
 export class TransactionsComponent implements OnInit {
+  @ViewChild(ListComponent)
+  private listComponent!: ListComponent;
   transactions!: ITransaction[];
   form!: UntypedFormGroup;
   types = Object.values(TransactionType);
@@ -22,7 +26,16 @@ export class TransactionsComponent implements OnInit {
   page = 1;
   pageSize = 10;
   collectionSize = 0;
-  showTransactions = true;
+  
+  listControl: ListControl[] = [
+    {
+      name: 'View',
+      type: ListControlType.View,
+      shouldDisplay: (data: ITransaction) => {
+        return true;
+      }
+    }
+  ];
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -79,10 +92,7 @@ export class TransactionsComponent implements OnInit {
           });
           this.loading = false;
           // refresh transaction list
-          this.showTransactions = false;
-          setTimeout(() => {
-            this.showTransactions = true;
-          }, 100);
+          this.listComponent.refreshData();
         },
         error: (resp) => {
           this.alertService.error(resp.error.message, {autoClose: true,id: 'dashboard-alert'});

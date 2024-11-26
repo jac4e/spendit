@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { AlertService } from 'client/app/_services';
 import { CommonService } from 'client/app/_services';
 import { getKeys, IAccount, IProduct, isIAccount, ITransaction } from 'typesit';
+import { ListControl, ListControlEdit } from 'client/app/_models';
 
 @Component({
   selector: 'app-edit-modal',
@@ -30,8 +31,8 @@ export class EditModalComponent implements OnInit {
   @Input() name!: string;
   @Input() successAlert!: string;
   @Input() model!: { [key: string]: any };
-  @Input() submit!: (id: string, content: any) => Observable<any>;
-  @Input() secondarySubmit!: (id: string) => Observable<any>;
+  @Input() submit!: ListControlEdit['edit']['submit'];
+  @Input() secondarySubmit: ListControlEdit['edit']['secondarySubmit'];
   modelProperties!: string[];
   @ViewChild('content') public content!: TemplateRef<any>;
   @Output() modifiedItemEvent = new EventEmitter();
@@ -44,6 +45,7 @@ export class EditModalComponent implements OnInit {
   controls: { [key: string]: any } = {};
   loading = false;
   submitted = false;
+  hasPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -69,7 +71,7 @@ export class EditModalComponent implements OnInit {
     // If model is account, add reset password button
     if (isIAccount(this.model)) {
       // add keys
-      this.modelProperties.push('password');
+      this.hasPassword = true;
       // this.modelProperties.push('confirmPassword');
     }
   }
@@ -113,6 +115,7 @@ export class EditModalComponent implements OnInit {
     this.loading = true;
     this.submit(this.model['id'], form).subscribe({
       next: () => {
+        console.log(this.successAlert)
         this.loading = false;
         this.alertService.success(`Successfully updated ${this.model['id']}`, {
           autoClose: true,
@@ -163,10 +166,6 @@ export class EditModalComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
-  }
-
-  isPassword(input: string) {
-    return input.includes('assword');
   }
 
   resetPassword() {

@@ -1,7 +1,15 @@
 import { Observable } from "rxjs";
-import { IRefill, ITransaction, IAccount, IProduct } from "typesit";
+import { IRefill, ITransaction, IAccount, IProduct, ICartItem, UnionKeys } from "typesit";
 
-export type AllowableListData = IRefill | ITransaction | IAccount | IProduct;
+export type AllowableListData = IRefill | ITransaction | IAccount | IProduct | ICartItem;
+
+export type SortColumn = UnionKeys<AllowableListData> | '';
+export type SortDirection = 'asc' | 'desc' | '';
+
+export interface SortEvent {
+	column: SortColumn;
+	direction: SortDirection;
+}
 
 export enum ListControlType {
     View = 'view',
@@ -10,16 +18,16 @@ export enum ListControlType {
     CustomDropdown = 'customDropdown',
 }
 
-interface listControlBase {
+export interface listControlBase {
     name: string;
     shouldDisplay: (data: any) => boolean;
 }
 
-interface ListControlView extends listControlBase {
+export interface ListControlView extends listControlBase {
     type: ListControlType.View;
 }
 
-interface ListControlEdit extends listControlBase {
+export interface ListControlEdit extends listControlBase {
     type: ListControlType.Edit;
     edit: {
         successAlert: string;
@@ -28,12 +36,12 @@ interface ListControlEdit extends listControlBase {
     }
 }
 
-interface ListControlCustomButton extends listControlBase {
+export interface ListControlCustomButton extends listControlBase {
     type: ListControlType.CustomButton;
     onClick: (data: any) => void;
 }
 
-interface ListControlCustomDropdown extends listControlBase {
+export interface ListControlCustomDropdown extends listControlBase {
     type: ListControlType.CustomDropdown;
     options: { name: string, onClick: (data: any) => void }[];
 }

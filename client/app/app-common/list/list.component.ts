@@ -1,8 +1,31 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Directive, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { IRefill, ITransaction, IAccount, IProduct, getKeys, isIRefill, UnionKeys, UnionValues, RefillStatus, isITransaction } from 'typesit';
 import { Observable } from 'rxjs';
 import { CommonService } from 'client/app/_services';
-import { AllowableListData, ListControl } from 'client/app/_models';
+import { AllowableListData, ListControl, SortColumn, SortDirection, SortEvent } from 'client/app/_models';
+
+const rotate: { [key: string]: SortDirection } = { asc: 'desc', desc: '', '': 'asc' };
+const compare = (v1: string | number, v2: string | number) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
+
+@Directive({
+	selector: 'th[sortable]',
+	standalone: true,
+	host: {
+		'[class.asc]': 'direction === "asc"',
+		'[class.desc]': 'direction === "desc"',
+		'(click)': 'rotate()',
+	},
+})
+export class NgbdSortableHeader {
+	@Input() sortable: SortColumn = '';
+	@Input() direction: SortDirection = '';
+	@Output() sort = new EventEmitter<SortEvent>();
+
+	rotate() {
+		this.direction = rotate[this.direction];
+		this.sort.emit({ column: this.sortable, direction: this.direction });
+	}
+}
 
 @Component({
   selector: 'app-list',
@@ -11,11 +34,13 @@ import { AllowableListData, ListControl } from 'client/app/_models';
 })
 
 export class ListComponent {
+  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
   data!: AllowableListData[];
   page = 1;
-  pageSize = 10;
+  pageSize = 5;
   collectionSize!: number;
-  keys!: string[];
+  sortState: SortEvent = { column: '', direction: '' };
+  keys!: UnionKeys<AllowableListData>[];
   @Input() getData!: Observable<AllowableListData[]>;
   @Input() name!: string;
   @Input() exclude!: string[] | undefined;
@@ -27,6 +52,7 @@ export class ListComponent {
     private commonService: CommonService,
     private changeDetectorRef: ChangeDetectorRef
     ) {
+      this.headers = new QueryList<NgbdSortableHeader>();
   }
 
   ngOnInit(): void {
@@ -79,23 +105,54 @@ export class ListComponent {
     return '';
   }
 
+  onSort(event: SortEvent) {
+		// resetting other headers
+		this.sortState = event;
+		this.headers.forEach((header) => {
+			if (header.sortable !== event.column) {
+				header.direction = '';
+			}
+		});
+
+		this.refreshData();
+	}
+
+  sort(data: AllowableListData[]) {
+    return data = [...data].sort((a, b) => {
+      const aVal = Number(a[this.sortState.column as keyof AllowableListData]) || a[this.sortState.column as keyof AllowableListData];
+      const bVal = Number(b[this.sortState.column as keyof AllowableListData]) || b[this.sortState.column as keyof AllowableListData];
+      console.log(aVal, bVal);
+
+      const res = compare(aVal, bVal);
+      return this.sortState.direction === 'asc' ? res : -res;
+    });
+  }
+  
+  paginate(data: AllowableListData[]) {
+    return data.map((data) => {
+      // Format date
+      if (getKeys(data).includes('date')) {
+        // We know date is a key in the object
+        // @ts-ignore
+        data.date  = new Date(data.date);
+      }
+      return data;
+    }).slice(
+      (this.page - 1) * this.pageSize,
+      (this.page - 1) * this.pageSize + this.pageSize
+    );
+  }
+
   refreshData() {
     this.getData.subscribe((data: AllowableListData[]) => {
-      this.data = data.map((data) => {
-        // Format date
-        if (getKeys(data).includes('date')) {
-          // We know date is a key in the object
-          // @ts-ignore
-          data.date  = new Date(data.date);
-        }
-        return data;
-      });
+      this.data = this.paginate(this.sort(data));
       this.collectionSize = data.length;
-      this.data = data.slice(
-        (this.page - 1) * this.pageSize,
-        (this.page - 1) * this.pageSize + this.pageSize
-      );
       this.keys = getKeys(data[0]);
     });
+  }
+
+  changePageSize() {
+    this.page = 1;
+    this.refreshData();
   }
 }

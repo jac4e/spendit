@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BackendService } from '../_services';
-import { IAccount, ITransaction, IAccountForm, ICredentials, RefillMethods } from 'typesit';
+import { IAccount, ITransaction, IAccountForm, ICredentials, RefillMethods, IRefill } from 'typesit';
 
 @Injectable({
   providedIn: 'root'
@@ -130,12 +130,28 @@ export class AccountService {
     );
   }
 
-  requestRefill(method: RefillMethods, amount: string) {
+  requestRefill(method: RefillMethods, amount: string): Observable<IRefill> {
     return this.backend.apiCall(
       'POST',
       this.backend.api.account,
       'self/refill',
       { method, amount }
+    );
+  }
+
+  cancelRefill(refillId: string) {
+    return this.backend.apiCall(
+      'DELETE',
+      this.backend.api.account,
+      `self/refill/${refillId}`
+    );
+  }
+
+  getRefillHistory() {
+    return this.backend.apiCall<IRefill[]>(
+      'GET',
+      this.backend.api.account,
+      'self/refill'
     );
   }
 

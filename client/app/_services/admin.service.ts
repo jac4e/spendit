@@ -6,7 +6,8 @@ import {
   IAccountForm,
   ITransaction,
   ITransactionForm,
-  Roles
+  Roles,
+  IRefill
 } from 'typesit';
 import { BackendService } from '../_services';
 import { retry } from 'rxjs';
@@ -94,6 +95,10 @@ export class AdminService {
 
   getAllAccounts() {
     return this.backend.apiCall<IAccount[]>('GET', this.backend.api.account);
+  }
+
+  getAllRefills() {
+    return this.backend.apiCall<IRefill[]>('GET', this.backend.api.refill, '');
   }
 
   getAllTransactions() {

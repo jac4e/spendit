@@ -14,6 +14,7 @@ export class BackendService {
     admin: string;
     account: string;
     log: string;
+    refill: string;
   };
   constructor(
     private appConfigService: AppConfigService,
@@ -26,7 +27,8 @@ export class BackendService {
       store: this.url + '/store',
       admin: this.url + '/admin',
       account: this.url + '/accounts',
-      log: this.url + '/log'
+      log: this.url + '/log',
+      refill: this.url + '/refills'
     };
   }
 

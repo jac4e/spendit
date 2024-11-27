@@ -133,15 +133,7 @@ export class ListComponent {
   }
   
   paginate(data: AllowableListData[]) {
-    return data.map((data) => {
-      // Format date
-      if (getKeys(data).includes('date')) {
-        // We know date is a key in the object
-        // @ts-ignore
-        data.date  = new Date(data.date);
-      }
-      return data;
-    }).slice(
+    return data.slice(
       (this.page - 1) * this.pageSize,
       (this.page - 1) * this.pageSize + this.pageSize
     );
@@ -149,7 +141,17 @@ export class ListComponent {
 
   refreshData() {
     this.getData.subscribe((data: AllowableListData[]) => {
-      this.data = this.paginate(this.sort(data));
+      this.data = this.paginate(this.sort(data.map((data) => {
+        // Format date
+        getKeys(data).forEach((key) => {
+          if (key.includes('date')) {
+            // @ts-ignore
+            data[key] = new Date(data[key]);
+          }
+        });
+
+        return data;
+      })));
       this.collectionSize = data.length;
       this.keys = getKeys(data[0]);
     });

@@ -1,8 +1,9 @@
 import { Component, inject, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
-import { IAccount } from 'typesit';
+import { IAccount, RefillMethods } from 'typesit';
 import { AccountService } from 'client/app/_services';
 import { AlertService } from 'client/app/_services';
+import { IRefill } from 'typesit';
 
 import {
   injectStripe,
@@ -13,14 +14,16 @@ import {
   StripePaymentElementOptions
 } from '@stripe/stripe-js';
 import { AppConfigService } from 'client/app/_services';
+import { ListControl, ListControlType } from 'client/app/_models';
+import { Observable } from 'rxjs';
 
-enum RefillStep {
-  MethodSelection = "methodSelection",
-  Cash = "cash",
-  Etransfer = "etransfer",
-  Card = "card",
-  Stripe = "stripe"
-}
+const RefillStep = {
+  ...RefillMethods,
+  MethodSelection: "methodSelection"
+};
+
+type RefillStep = typeof RefillStep[keyof typeof RefillStep];
+
 
 @Component({
   selector: 'app-refill',
@@ -29,8 +32,28 @@ enum RefillStep {
 })
 export class RefillComponent {
   account = {} as IAccount;
-  methodSelectionForm!: UntypedFormGroup;
+  requestedRefill: IRefill | null = null;
+  refillForm!: UntypedFormGroup;
   refillStep: RefillStep = RefillStep.MethodSelection;
+  refillSubmitted = false;
+  listControl: ListControl[] = [
+    {
+      name: 'View',
+      type: ListControlType.View,
+      shouldDisplay: (data: IRefill) => {
+        return true;
+      }
+    },
+    {
+      name: 'Cancel',
+      type: ListControlType.CustomButton,
+      shouldDisplay: (data: IRefill) => {
+        return data.status === 'pending' && data.method !== 'stripe';
+      },
+      onClick: () => {return},
+    }
+  ];
+
   constructor(
     private appConfigService: AppConfigService,
     private accountService: AccountService,
@@ -46,29 +69,57 @@ export class RefillComponent {
   }
 
   ngOnInit() {
-    this.methodSelectionForm = this.formBuilder.group({
+    this.refillForm = this.formBuilder.group({
+      amount: ['', [Validators.required, Validators.pattern(/\d+/)]],
       method: ['', [Validators.required]],
     });
   }
 
-  methodSelection() {
+  onSubmit() {
     // stop here if form is invalid
-    if (this.methodSelectionForm.invalid) {
-      this.alertService.warn("Please select a refill method", {
-        autoClose: true,
-        id: 'refill-alert'
-      });
+    if (this.refillForm.invalid) {
+      // Find out what the issue is
+      if (this.refillForm.controls["amount"].invalid) {
+        this.alertService.warn("Please enter a valid amount", {
+          autoClose: true,
+          id: 'amount-alert'
+        });
+      }
+      if (this.refillForm.controls["method"].invalid) {
+        this.alertService.warn("Please select a refill method", {
+          autoClose: true,
+          id: 'method-alert'
+        });
+      }
       return;
     }
 
-    this.refillStep = this.methodSelectionForm.value["method"];
-    console.log('Refill step', this.refillStep)
+    // Submit the refill
+    this.accountService.requestRefill(
+      this.refillForm.value["method"],
+      this.refillForm.value["amount"]
+    ).subscribe({
+      next: (refill) => {
+        this.refillStep = this.refillForm.value["method"];
+        this.refillSubmitted = true;
+        console.log('Refill step', this.refillStep)
+        this.requestedRefill = refill;
+      },
+      error: (error) => {
+        this.alertService.error(error, {
+          autoClose: true,
+          id: 'refill-alert'
+        });
+      }
+    });
     
   }
 
+  refreshRefillHistory() {
+    return this.accountService.getRefillHistory()
+  }
 
-  // test sstripe stuff below
-
+  // test stripe stuff below
   @ViewChild(StripePaymentElementComponent) paymentElement!: StripePaymentElementComponent;
   private readonly fb = inject(UntypedFormBuilder);
   paymentElementForm = this.fb.group({

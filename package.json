@@ -5,9 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --output-hashing all --configuration development",
     "test": "ng test",
-    "watch:backend": "ng build --output-path=../serveit/app --watch --configuration development --source-map=true",
+    "watch:backend": "ng build --output-path=../serveit/app --output-hashing all --watch --configuration development --source-map=true",
     "lint": "npx eslint 'client/**/*.{js,jsx,ts,tsx,html,css,scss}' --quiet --fix",
     "format": "npx prettier 'client/**/*.{js,jsx,ts,tsx,html,css,scss}' --write"
   },

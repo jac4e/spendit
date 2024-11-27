@@ -8,6 +8,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { RefillsComponent } from './refills/refills.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { TransactionsComponent } from './transactions/transactions.component';
     DashboardComponent,
     AccountsComponent,
     InventoryComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    RefillsComponent
   ]
 })
 export class DashboardModule {}

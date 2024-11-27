@@ -11,7 +11,8 @@ export class DashboardComponent implements DoCheck {
   links = [
     { title: 'Accounts', route: '/dashboard/accounts' },
     { title: 'Inventory', route: '/dashboard/inventory' },
-    { title: 'Transactions', route: '/dashboard/transactions' }
+    { title: 'Refills', route: '/dashboard/refills' },
+    { title: 'Transactions', route: '/dashboard/transactions' },
   ];
   url: string;
 

@@ -17,6 +17,7 @@ import {
   dripMinus,
   dripBasket,
   dripCross,
+  dripPlus,
   dripMenu
 } from '@ng-icons/dripicons';
 import { RegisterComponent } from './register/register.component';
@@ -35,7 +36,7 @@ import { NgxStripeModule } from 'ngx-stripe';
   ],
   imports: [
     BrowserModule,
-    NgIconsModule.withIcons({ dripMinus, dripBasket, dripCross, dripMenu }),
+    NgIconsModule.withIcons({ dripMinus, dripBasket, dripCross, dripMenu, dripPlus }),
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,

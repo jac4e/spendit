@@ -77,11 +77,21 @@ export class StoreService {
     // console.log(index);
     const cart = this.cart.value;
     // console.log(cart);
-    if (cart[index].amount > 1n) {
+    if (BigInt(cart[index].amount) > 1n) {
       cart[index].amount = BigInt(cart[index].amount) - 1n;
     } else {
       this.removeFromCart(index);
     }
+    // console.log(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    this.cart.next(cart);
+  }
+
+  incrementToCart(index: number) {
+    // console.log(index);
+    const cart = this.cart.value;
+    // console.log(cart);
+    cart[index].amount = BigInt(cart[index].amount) + 1n;
     // console.log(cart);
     localStorage.setItem('cart', JSON.stringify(cart));
     this.cart.next(cart);

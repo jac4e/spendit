@@ -118,6 +118,10 @@ export class ListComponent {
 	}
 
   sort(data: AllowableListData[]) {
+    if (this.sortState.column === '' || this.sortState.direction === '') {
+      return data;
+    }
+
     return data = [...data].sort((a, b) => {
       const aVal = Number(a[this.sortState.column as keyof AllowableListData]) || a[this.sortState.column as keyof AllowableListData];
       const bVal = Number(b[this.sortState.column as keyof AllowableListData]) || b[this.sortState.column as keyof AllowableListData];

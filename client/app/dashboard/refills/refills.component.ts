@@ -3,7 +3,7 @@ import { IRefill } from 'typesit';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';
-import { ListControl, ListControlType } from 'client/app/_models';
+import { ListControl, ListControlType, SortEvent } from 'client/app/_models';
 import { ListComponent } from 'client/app/app-common/list/list.component';
 
 @Component({
@@ -15,7 +15,7 @@ import { ListComponent } from 'client/app/app-common/list/list.component';
 export class RefillsComponent implements OnInit {
   @ViewChild(ListComponent)
   private listComponent!: ListComponent;
-  
+  listDefaultSort: SortEvent = { column: 'dateCreated', direction: 'desc' };
   listControl: ListControl[] = [
     {
       name: 'View',

@@ -39,8 +39,9 @@ export class ListComponent {
   page = 1;
   pageSize = 5;
   collectionSize!: number;
-  sortState: SortEvent = { column: '', direction: '' };
+  sortState: SortEvent;
   keys!: UnionKeys<AllowableListData>[];
+  @Input() defaultSort: SortEvent | undefined;
   @Input() getData!: Observable<AllowableListData[]>;
   @Input() name!: string;
   @Input() exclude!: string[] | undefined;
@@ -53,6 +54,8 @@ export class ListComponent {
     private changeDetectorRef: ChangeDetectorRef
     ) {
       this.headers = new QueryList<NgbdSortableHeader>();
+      // Set default sort
+      this.sortState = this.defaultSort || { column: '', direction: '' };
   }
 
   ngOnInit(): void {

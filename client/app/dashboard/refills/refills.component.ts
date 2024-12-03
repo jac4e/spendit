@@ -30,11 +30,21 @@ export class RefillsComponent implements OnInit {
       shouldDisplay: (data: IRefill) => {
         return data.status === 'pending';
       },
-      onClick: () => {
+      onClick: (data: IRefill) => {
         // popup confirmation dialog
         if (!confirm('Are you sure you want to approve this refill?')) {
           return;
         }
+
+        // call approve refill
+        this.adminService.approveRefill(data.id).pipe(first()).subscribe({
+          next: () => {
+            this.alertService.success('Refill approved successfully');
+          },
+          error: (resp) => {
+            this.alertService.error(resp.error.message, {autoClose: true,id: 'dashboard-alert'});
+          }
+        });
       }
     },
     {
@@ -43,11 +53,21 @@ export class RefillsComponent implements OnInit {
       shouldDisplay: (data: IRefill) => {
         return data.status === 'pending' && data.method !== 'stripe';
       },
-      onClick: () => {
+      onClick: (data: IRefill) => {
         // popup confirmation dialog
         if (!confirm('Are you sure you want to cancel this refill?')) {
           return;
         }
+
+        // call cancel refill
+        this.adminService.cancelRefill(data.id).pipe(first()).subscribe({
+          next: () => {
+            this.alertService.success('Refill cancelled successfully');
+          },
+          error: (resp) => {
+            this.alertService.error(resp.error.message, {autoClose: true,id: 'dashboard-alert'});
+          }
+        });
       }
     }
   ];

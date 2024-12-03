@@ -1,21 +1,25 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, Input, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, Validators, UntypedFormGroup } from '@angular/forms';
-import { IAccount, RefillMethods } from 'typesit';
+import { IAccount, RefillMethods, IRefill, keysIRefill } from 'typesit';
 import { AccountService } from 'client/app/_services';
+import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from 'client/app/_services';
-import { IRefill } from 'typesit';
 
 import {
   injectStripe,
-  StripePaymentElementComponent
+  StripePaymentElementComponent,
+  StripeElementsDirective,
+  StripeServiceInterface
 } from 'ngx-stripe';
 import {
   StripeElementsOptions, 
   StripePaymentElementOptions
 } from '@stripe/stripe-js';
 import { AppConfigService } from 'client/app/_services';
-import { ListControl, ListControlType } from 'client/app/_models';
-import { Observable } from 'rxjs';
+import { ListControl, ListControlType, SortEvent } from 'client/app/_models';
+import { first, Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 const RefillStep = {
   ...RefillMethods,
@@ -24,6 +28,32 @@ const RefillStep = {
 
 type RefillStep = typeof RefillStep[keyof typeof RefillStep];
 
+// Simple modal that displays the next steps for the user
+@Component({
+  selector: 'next-steps-modal-content',
+  standalone: true,
+  imports: [NgIf],
+  template: `
+    <div class="modal-header">
+      <h4 class="modal-title" id="next-steps-modal">Next Steps</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <p [innerHTML]="nextStepString"></p>
+    </div>
+    <div class="modal-footer">
+      <ng-container *ngIf="method==='${RefillMethods.Stripe}'">
+        <button class="btn btn-primary" (click)="activeModal.close('Pay')">Go to Stripe</button>
+      </ng-container>
+      <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss('Close click')">Close</button>
+    </div>
+  `
+})
+class NextStepsModalContent {
+  @Input() method: string = '';
+  @Input() nextStepString: string = '';
+  constructor(public activeModal: NgbActiveModal) {}
+}
 
 @Component({
   selector: 'app-refill',
@@ -31,11 +61,18 @@ type RefillStep = typeof RefillStep[keyof typeof RefillStep];
   styleUrls: ['./refill.component.sass'],
 })
 export class RefillComponent {
+  stripe: StripeServiceInterface;
   account = {} as IAccount;
   requestedRefill: IRefill | null = null;
   refillForm!: UntypedFormGroup;
   refillStep: RefillStep = RefillStep.MethodSelection;
   refillSubmitted = false;
+  // redirect = false;
+  // redirectParameters = {
+  //   success: false,
+  //   refill: ''
+  // };
+  listDefaultSort: SortEvent = { column: 'dateCreated', direction: 'desc' };
   listControl: ListControl[] = [
     {
       name: 'View',
@@ -45,19 +82,62 @@ export class RefillComponent {
       }
     },
     {
+      name: 'Steps',
+      type: ListControlType.CustomButton,
+      shouldDisplay: (data: IRefill) => {
+        return data.status === 'pending';
+      },
+      onClick: (data: IRefill) => {
+        // Show modal with instructions
+        const modal = this.modalService.open(NextStepsModalContent);
+        modal.componentInstance.nextStepString = this.refillMessages[data.method](data);
+        modal.componentInstance.method = data.method;
+
+        // Listen for modal close
+        modal.result.then((result) => {
+          if (result === 'Pay') {
+            this.pay(data.reference);
+          }
+        });
+      },
+    },
+    {
       name: 'Cancel',
       type: ListControlType.CustomButton,
       shouldDisplay: (data: IRefill) => {
         return data.status === 'pending' && data.method !== 'stripe';
       },
-      onClick: () => {return},
+      onClick: (data: IRefill) => {
+        // popup confirmation dialog
+        if (!confirm('Are you sure you want to cancel this refill?')) {
+          return;
+        }
+
+        // call cancel refill
+        this.accountService.cancelRefill(data.id).pipe(first()).subscribe({
+          next: () => {
+            this.alertService.success('Refill cancelled successfully');
+          },
+          error: (resp) => {
+            this.alertService.error(resp.error.message, {autoClose: true,id: 'dashboard-alert'});
+          }
+        });
+      },
     }
   ];
+  refillMessages = {
+    [RefillMethods.Cash]: (obj: IRefill) => `Please meet up with an exec to give them $${obj.amount} in cash. The exec will confirm the payment and update your account.`,
+    [RefillMethods.Etransfer]: (obj: IRefill) => `Please send an interact e-transfer to <a href='mailto:epclub@ualberta.ca'>epclub@ualberta.ca</a> with the following message: '${obj.id}'. The etransfer should be processed within 5 minutes; contact an exec if it takes longer.`,
+    [RefillMethods.Stripe]: (obj: IRefill) => `Click the button below to go to the checkout page. You will be redirected to the stripe website to complete the transaction and refill your account. Your checkout session will expire within 24 hours`,
+    [RefillMethods.Card]: (obj: IRefill) => `An email has been sent to the club with your request. One of the execs will let you know when you can meet up to make the payment.`,
+  };
 
   constructor(
+    private modalService: NgbModal,
     private appConfigService: AppConfigService,
     private accountService: AccountService,
     private formBuilder: UntypedFormBuilder,
+    private route: ActivatedRoute,
     private alertService: AlertService) {
 
     this.accountService.account.subscribe((account) => {
@@ -66,6 +146,7 @@ export class RefillComponent {
       }
     });
     this.accountService.refreshAccount();
+    this.stripe = injectStripe(this.appConfigService.stripePublicKey);
   }
 
   ngOnInit() {
@@ -74,6 +155,26 @@ export class RefillComponent {
       method: ['', [Validators.required]],
     });
   }
+
+  ngAfterViewInit() {
+    // check query parameters
+    const params = this.route.snapshot.queryParams;
+    if (params['success'] !== undefined) {
+      // Alert the user of the status of the refill
+      if (params['success'] === 'true') {
+        this.alertService.success(`Stripe payment for ${params['refill']} successful`, {
+          // autoClose: true,
+          id: 'refill-alert'
+        });
+      } else {
+        this.alertService.error(`Stripe payment for ${params['refill']} failed`, {
+          // autoClose: true,
+          id: 'refill-alert'
+        });
+      }
+    }
+  }
+
 
   onSubmit() {
     // stop here if form is invalid
@@ -104,9 +205,11 @@ export class RefillComponent {
         this.refillSubmitted = true;
         console.log('Refill step', this.refillStep)
         this.requestedRefill = refill;
+        this.refreshRefillHistory();
       },
       error: (error) => {
-        this.alertService.error(error, {
+        console.log(error.error.message || error.message)
+        this.alertService.error(error.error.message || error.message, {
           autoClose: true,
           id: 'refill-alert'
         });
@@ -132,11 +235,10 @@ export class RefillComponent {
   });
 
   elementsOptions: StripeElementsOptions = {
-    locale: 'en',
-    // client: '{{YOUR_CLIENT_SECRET}}',
-    appearance: {
-      theme: 'flat'
-    }
+    mode: 'payment',
+    amount: 1099,
+    currency: 'usd',
+    locale: 'es'
   };
 
   paymentElementOptions: StripePaymentElementOptions = {
@@ -149,51 +251,52 @@ export class RefillComponent {
   };
 
   // Replace with your own public key
-  stripe = injectStripe(this.appConfigService.stripePublicKey);
   paying = false;
 
-  pay() {
-    if (this.paying || this.paymentElementForm.invalid) return;
+  pay(reference: string) {
+    if (this.paying) return;
     this.paying = true;
 
-    const {
-      name,
-      email,
-      address,
-      zipcode,
-      city
-    } = this.paymentElementForm.getRawValue();
+    this.stripe.redirectToCheckout({ sessionId: reference }).subscribe({
+      next: (result) => {
+        console.log(result);
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
 
-    this.stripe
-      .confirmPayment({
-        elements: this.paymentElement.elements,
-        confirmParams: {
-          payment_method_data: {
-            billing_details: {
-              name: name as string,
-              email: email as string,
-              address: {
-                line1: address as string,
-                postal_code: zipcode as string,
-                city: city as string
-              }
-            }
-          }
-        },
-        redirect: 'if_required'
-      })
-      .subscribe(result => {
-        this.paying = false;
-        if (result.error) {
-          // Show error to your customer (e.g., insufficient funds)
-          alert({ success: false, error: result.error.message });
-        } else {
-          // The payment has been processed!
-          if (result.paymentIntent.status === 'succeeded') {
-            // Show a success message to your customer
-            alert({ success: true });
-          }
-        }
-      });
+    // this.stripe.redirectToCheckout
+    // this.stripe
+    //   .confirmPayment({
+    //     elements: this.paymentElement.elements,
+    //     confirmParams: {
+    //       payment_method_data: {
+    //         // billing_details: {
+    //         //   name: name as string,
+    //         //   email: email as string,
+    //         //   address: {
+    //         //     line1: address as string,
+    //         //     postal_code: zipcode as string,
+    //         //     city: city as string
+    //         //   }
+    //         // }
+    //       }
+    //     },
+    //     redirect: 'if_required'
+    //   })
+    //   .subscribe(result => {
+    //     this.paying = false;
+    //     if (result.error) {
+    //       // Show error to your customer (e.g., insufficient funds)
+    //       alert({ success: false, error: result.error.message });
+    //     } else {
+    //       // The payment has been processed!
+    //       if (result.paymentIntent.status === 'succeeded') {
+    //         // Show a success message to your customer
+    //         alert({ success: true });
+    //       }
+    //     }
+    //   });
   }
 }

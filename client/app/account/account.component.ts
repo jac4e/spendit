@@ -1,6 +1,6 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { AccountService } from '../_services';
-import { IAccount } from 'typesit';
+import { IAccount, Roles } from 'typesit';
 import { Router } from '@angular/router';
 import { Link } from '../_models';
 
@@ -13,9 +13,9 @@ export class AccountComponent implements DoCheck {
   account = {} as IAccount;
   links: Link[]  = [
     { title: 'Overview', route: '/account/overview' },
-    { title: 'Refill', route: '/account/refill', guards: ['user'] },
+    { title: 'Refill', route: '/account/refill', guards: ['notAdmin'] },
     { title: 'Settings', route: '/account/settings' },
-    { title: 'Transactions', route: '/account/transactions', guards: ['user'] }
+    { title: 'Transactions', route: '/account/transactions', guards: ['notAdmin'] }
   ];
   url: string;
 
@@ -43,19 +43,15 @@ export class AccountComponent implements DoCheck {
       switch (guard) {
         case 'loggedIn':
           truthy = truthy && this.account !== null;
-          // console.log('loggedin', this.account !== null);
           break;
         case 'loggedOut':
           truthy = truthy && this.account === null;
-          // console.log('loggedout', this.account === null);
           break;
         case 'admin':
-          truthy = truthy && this.account?.role === 'admin';
-          // console.log('admin', this.account?.role === 'admin');
+          truthy = truthy && this.account?.role === Roles.Admin;
           break;
         case 'notAdmin':
-          truthy = truthy && this.account?.role !== undefined;
-          // console.log('notadmin', this.account?.role !== undefined);
+          truthy = truthy && this.account?.role !== Roles.Admin;
           break;
         case 'none':
           truthy = truthy && true;

@@ -14,9 +14,9 @@ const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'overview'},
       { path: 'overview', component: OverviewComponent },
-      { path: 'refill', component: RefillComponent, canActivate: [AuthGuard], data: { roles: ['user'] } },
+      { path: 'refill', component: RefillComponent, canActivate: [AuthGuard], data: { roles: ['member','nonmember'] } },
       { path: 'settings', component: SettingsComponent },
-      { path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard], data: { roles: ['user'] } }
+      { path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard], data: { roles: ['member','nonmember'] } }
     ]
   }
 ];

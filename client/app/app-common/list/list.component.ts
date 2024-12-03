@@ -70,7 +70,6 @@ export class ListComponent {
 
   ngOnInit(): void {
     this.sortState = this.defaultSort || { column: '', direction: '' };
-    console.log(this.sortState);
     this.refreshData();
   }
 
@@ -133,7 +132,6 @@ export class ListComponent {
 	}
 
   sort(data: AllowableListData[]) {
-    console.log(this.sortState);
     if (this.sortState.column === '' || this.sortState.direction === '') {
       return data;
     }
@@ -155,7 +153,6 @@ export class ListComponent {
   }
 
   refreshData() {
-    console.log(this.searchKey, this.searchText);
     this.getData.subscribe((data: AllowableListData[]) => {
       // filter data
       data = data.filter((data) => {

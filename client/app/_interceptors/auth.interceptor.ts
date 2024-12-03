@@ -32,7 +32,6 @@ export class AuthInterceptor implements HttpInterceptor {
     const retryConfig = {
       count: 3,
       delay: (error: HttpErrorResponse, retryCount: number) => {
-        console.log(request.method);
         // only retry on get attempts
         if (request.method !== 'GET') {
           throw error;

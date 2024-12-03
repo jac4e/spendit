@@ -206,12 +206,10 @@ export class RefillComponent {
       next: (refill) => {
         this.refillStep = this.refillForm.value["method"];
         this.refillSubmitted = true;
-        console.log('Refill step', this.refillStep)
         this.requestedRefill = refill;
         this.refreshRefillHistory();
       },
       error: (error) => {
-        console.log(error.error.message || error.message)
         this.alertService.error(error.error.message || error.message, {
           autoClose: true,
           id: 'refill-alert'
@@ -261,11 +259,11 @@ export class RefillComponent {
     this.paying = true;
 
     this.stripe.redirectToCheckout({ sessionId: reference }).subscribe({
-      next: (result) => {
-        console.log(result);
-      },
       error: (error) => {
-        console.error(error);
+        this.alertService.error(error.error.message || error.message, {
+          autoClose: true,
+          id: 'refill-alert'
+        });
       }
     });
 

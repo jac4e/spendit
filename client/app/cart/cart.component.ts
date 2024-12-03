@@ -66,16 +66,13 @@ export class CartComponent implements OnInit {
   }
 
   removeItem(index: number) {
-    console.log(`removine ${index}`);
     this.storeService.removeFromCart(index);
   }
   decrementItem(index: number) {
-    console.log(`decrementing ${index}`);
     this.storeService.decrementFromCart(index);
   }
 
   incrementItem(index: number) {
-    console.log(`incrementing ${index}`);
     this.storeService.incrementToCart(index);
   }
 

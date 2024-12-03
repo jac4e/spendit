@@ -115,7 +115,6 @@ export class EditModalComponent implements OnInit {
     this.loading = true;
     this.submit(this.model['id'], form).subscribe({
       next: () => {
-        console.log(this.successAlert)
         this.loading = false;
         this.alertService.success(`Successfully updated ${this.model['id']}`, {
           autoClose: true,

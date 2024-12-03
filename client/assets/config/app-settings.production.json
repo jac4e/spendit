@@ -1,6 +1,7 @@
 {
     "backendUrl": "https://localhost:3443",
     "apiBaseUrl": "https://localhost:3443/api",
+    "stripePublicKey": "PUT_KEY_HERE",
     "branding": {
         "name": "spendit",
         "email": "email",

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Directive, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, Directive, EventEmitter, Input, OnInit, Output, PipeTransform, QueryList, ViewChildren } from '@angular/core';
 import { IRefill, ITransaction, IAccount, IProduct, getKeys, isIRefill, UnionKeys, UnionValues, RefillStatus, isITransaction } from 'typesit';
 import { Observable } from 'rxjs';
 import { CommonService } from 'client/app/_services';
@@ -6,6 +6,16 @@ import { AllowableListData, ListControl, SortColumn, SortDirection, SortEvent } 
 
 const rotate: { [key: string]: SortDirection } = { asc: 'desc', desc: '', '': 'asc' };
 const compare = (v1: string | number, v2: string | number) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
+
+function searchFilter(key: string, text: string, data: AllowableListData): boolean {
+  if (getKeys(data).includes(key as UnionKeys<AllowableListData>) === false) {
+    return true;
+  }
+  if (typeof data[key as keyof AllowableListData] === 'string') {
+    return data[key as keyof AllowableListData].toLowerCase().includes(text.toLowerCase());
+  }
+  return false;
+}
 
 @Directive({
 	selector: 'th[sortable]',
@@ -36,10 +46,12 @@ export class NgbdSortableHeader {
 export class ListComponent {
   @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
   data!: AllowableListData[];
+  searchText = '';
+  searchKey = '';
   page = 1;
   pageSize = 5;
   collectionSize!: number;
-  sortState: SortEvent;
+  sortState: SortEvent = { column: '', direction: '' };
   keys!: UnionKeys<AllowableListData>[];
   @Input() defaultSort: SortEvent | undefined;
   @Input() getData!: Observable<AllowableListData[]>;
@@ -54,11 +66,11 @@ export class ListComponent {
     private changeDetectorRef: ChangeDetectorRef
     ) {
       this.headers = new QueryList<NgbdSortableHeader>();
-      // Set default sort
-      this.sortState = this.defaultSort || { column: '', direction: '' };
   }
 
   ngOnInit(): void {
+    this.sortState = this.defaultSort || { column: '', direction: '' };
+    console.log(this.sortState);
     this.refreshData();
   }
 
@@ -121,6 +133,7 @@ export class ListComponent {
 	}
 
   sort(data: AllowableListData[]) {
+    console.log(this.sortState);
     if (this.sortState.column === '' || this.sortState.direction === '') {
       return data;
     }
@@ -128,7 +141,6 @@ export class ListComponent {
     return data = [...data].sort((a, b) => {
       const aVal = Number(a[this.sortState.column as keyof AllowableListData]) || a[this.sortState.column as keyof AllowableListData];
       const bVal = Number(b[this.sortState.column as keyof AllowableListData]) || b[this.sortState.column as keyof AllowableListData];
-      console.log(aVal, bVal);
 
       const res = compare(aVal, bVal);
       return this.sortState.direction === 'asc' ? res : -res;
@@ -143,7 +155,16 @@ export class ListComponent {
   }
 
   refreshData() {
+    console.log(this.searchKey, this.searchText);
     this.getData.subscribe((data: AllowableListData[]) => {
+      // filter data
+      data = data.filter((data) => {
+        if (this.searchText === '' || this.searchKey === '') {
+          return true;
+        }
+        return searchFilter(this.searchKey, this.searchText, data);
+      });
+      
       this.data = this.paginate(this.sort(data.map((data) => {
         // Format date
         getKeys(data).forEach((key) => {
@@ -155,6 +176,7 @@ export class ListComponent {
 
         return data;
       })));
+
       this.collectionSize = data.length;
       this.keys = getKeys(data[0]);
     });

@@ -23,6 +23,13 @@ export class AccountService {
 
     // console.log(this.accountSubject.value);
     this.account = this.accountSubject.asObservable();
+
+    // upodate account every 30 seconds
+    setInterval(() => {
+      if (this.accountSubject.value !== null) {
+        this.refreshAccount();
+      }
+    }, 30000);
   }
 
   register(accountForm: IAccountForm) {

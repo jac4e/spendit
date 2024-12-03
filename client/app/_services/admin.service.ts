@@ -101,6 +101,30 @@ export class AdminService {
     return this.backend.apiCall<IRefill[]>('GET', this.backend.api.refill, '');
   }
 
+  approveRefill(refillid: string) {
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.refill,
+      `${refillid}/approve`
+    );
+  }
+  
+  cancelRefill(refillid: string) {
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.refill,
+      `${refillid}/cancel`
+    );
+  }
+
+  failRefill(refillid: string) {
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.refill,
+      `${refillid}/fail`
+    );
+  }
+
   getAllTransactions() {
     // console.log('getting transactions');
     // console.log(this.api('transactions'));

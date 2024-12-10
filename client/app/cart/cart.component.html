@@ -4,7 +4,7 @@
 <app-common-alerts id="cart-alert"></app-common-alerts>
 <div class="row-fe justify-content-center cart">
   <div class="col-12">
-    <h3 class="title-centered" *ngIf="(cart | async)?.length === 0">Your Cart is empty</h3>
+    <h3 class="title-centered text-muted" *ngIf="(cart | async)?.length === 0">Your Cart is empty</h3>
     <div class="row g-0 m-1 justify-content-around" *ngIf="(cart | async)?.length !== 0">
       <div class="col align-self-center">
           <h5 class="ms-1 card-text">Name</h5>

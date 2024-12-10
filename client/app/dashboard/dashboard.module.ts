@@ -9,6 +9,7 @@ import { DashboardComponent } from './dashboard.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { RefillsComponent } from './refills/refills.component';
+import { OverviewComponent } from './overview/overview.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { RefillsComponent } from './refills/refills.component';
     AccountsComponent,
     InventoryComponent,
     TransactionsComponent,
-    RefillsComponent
+    RefillsComponent,
+    OverviewComponent
   ]
 })
 export class DashboardModule {}

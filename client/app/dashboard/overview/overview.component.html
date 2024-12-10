@@ -1,0 +1,112 @@
+<h5>Overview</h5>
+<div class="row">
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card bg-ui-main round">
+            <div class="card-header">
+                <h5 class="card-title">Finances</h5>
+            </div>
+            <div *ngIf="financeStats !== null" class="card-body">
+                <h6 class="card-subtitle">Total Credit</h6>
+                <!-- Total amount of credit -->
+                <p>${{ financeStats.totalCredit}}</p>
+                <h6 class="card-subtitle">Revenue</h6>
+                <!-- Total amount of debits -->
+                <p>${{ financeStats.revenue}}</p>
+                <h6 class="card-subtitle">Credit Balance</h6>
+                <!-- Total amount of unspent credit -->
+                <p>${{ financeStats.creditBalance}}</p>
+                <h6 class="card-subtitle">Cost of Goods Sold</h6>
+                <!-- Amount we spent buying the things we sold -->
+                <p>${{ financeStats.costOfGoodsSold}}</p>
+                <h6 class="card-subtitle">Profit</h6>
+                <!-- Revenue - Cost of Goods Sold -->
+                <p>${{ financeStats.profit}}</p>
+                <!-- <div class="justify-content-center d-flex">
+                    <div class="date-selector btn-group">
+                        <button type="button" class="btn btn-secondary">&infin;</button>
+                        <button type="button" class="btn btn-secondary">1y</button>
+                        <button type="button" class="btn btn-secondary">3m</button>
+                        <button type="button" class="btn btn-secondary">1m</button>
+                        <button type="button" class="btn btn-secondary">1w</button>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card bg-ui-main round">
+            <div class="card-header">
+                <h5 class="card-title">Accounts</h5>
+            </div>
+            <div class="card-body" *ngIf="accountStats !== null">
+                <h6 class="card-subtitle">Total</h6>
+                <p>{{ accountStats.total }}</p>
+                <h6 class="card-subtitle">Unverified</h6>
+                <p>{{ accountStats.unverified }}</p>
+                <h6 class="card-subtitle">Non-Member</h6>
+                <p>{{ accountStats.nonMembers }}</p>
+                <h6 class="card-subtitle">Member</h6>
+                <p>{{ accountStats.members }}</p>
+                <h6 class="card-subtitle">Admin</h6>
+                <p>{{ accountStats.admins }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card bg-ui-main round">
+            <div class="card-header">
+                <h5 class="card-title">Store</h5>
+            </div>
+            <div class="card-body" *ngIf="storeStats !== null">
+                <h6 class="card-subtitle">Most Popular</h6>
+                <ul>
+                    <li *ngFor="let product of storeStats.mostPopular">{{ product.name }}: {{ product.amount }}</li>
+                </ul>
+                <h6 class="card-subtitle">Least Popular</h6>
+                <ul>
+                    <li *ngFor="let product of storeStats.leastPopular">{{ product.name }}: {{ product.amount }}</li>
+                </ul>
+                <h6 class="card-subtitle">Biggest Spender</h6>
+                <ul>
+                    <li *ngFor="let account of storeStats.biggestSpenders">{{ account.name }}: {{ account.amount }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card bg-ui-main round">
+            <div class="card-header">
+                <h5 class="card-title">Inventory</h5>
+            </div>
+            <div class="card-body" *ngIf="inventoryStats !== null">
+                <h6 class="card-subtitle">Total</h6>
+                <p>{{ inventoryStats.total }}</p>
+                <h6 class="card-subtitle">In Stock</h6>
+                <p>{{ inventoryStats.inStock }}</p>
+                <h6 class="card-subtitle">Out of Stock</h6>
+                <p>{{ inventoryStats.outOfStock }}</p>
+                <h6 class="card-subtitle">Book Value</h6>
+                <p>${{ inventoryStats.bookValue }}</p>
+                <h6 class="card-subtitle">Retail Value</h6>
+                <p>${{ inventoryStats.retailValue }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="card bg-ui-main round">
+            <div class="card-header">
+                <h5 class="card-title">Refills</h5>
+            </div>
+            <div class="card-body" *ngIf="refillStats !== null">
+                <h6 class="card-subtitle">Completed</h6>
+                <p>{{ refillStats.complete }}</p>
+                <h6 class="card-subtitle">Pending</h6>
+                <p>{{ refillStats.pending }}</p>
+                <h6 class="card-subtitle">Cancelled</h6>
+                <p>{{ refillStats.cancelled }}</p>
+                <h6 class="card-subtitle">Failed</h6>
+                <p>{{ refillStats.failed }}</p>
+            </div>
+        </div>
+    </div>
+</div>

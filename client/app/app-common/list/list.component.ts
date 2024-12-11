@@ -8,11 +8,17 @@ const rotate: { [key: string]: SortDirection } = { asc: 'desc', desc: '', '': 'a
 const compare = (v1: string | number, v2: string | number) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
 
 function searchFilter(key: string, text: string, data: AllowableListData): boolean {
-  if (getKeys(data).includes(key as UnionKeys<AllowableListData>) === false) {
+  const keys = getKeys(data);
+  // make search key lower case and remove all white spaces
+  const searchKey = key.toLowerCase().replace(/\s/g, '');
+  const originalKey = keys.find((key) => key.toLowerCase() === searchKey);
+
+  if (originalKey === undefined) {
     return true;
   }
-  if (typeof data[key as keyof AllowableListData] === 'string') {
-    return data[key as keyof AllowableListData].toLowerCase().includes(text.toLowerCase());
+
+  if (typeof data[originalKey as keyof AllowableListData] === 'string') {
+    return data[originalKey as keyof AllowableListData].toLowerCase().includes(text.toLowerCase());
   }
   return false;
 }

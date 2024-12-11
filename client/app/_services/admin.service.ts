@@ -7,7 +7,14 @@ import {
   ITransaction,
   ITransactionForm,
   Roles,
-  IRefill
+  IRefill,
+  IFinanceStats,
+  IInventoryStats,
+  ITransactionStats,
+  IAccountStats,
+  IRefillStats,
+  IStoreStats,
+  ITaskLean
 } from 'typesit';
 import { BackendService } from '../_services';
 import { retry } from 'rxjs';
@@ -140,6 +147,66 @@ export class AdminService {
       'GET',
       this.backend.api.admin,
       'products'
+    );
+  }
+
+  // Statistics functions
+  getFinanceStats() {
+    return this.backend.apiCall<IFinanceStats>('GET', this.backend.api.admin, 'stats/finance');
+  }
+
+  getInventoryStats() {
+    return this.backend.apiCall<IInventoryStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/inventory'
+    );
+  }
+
+  getTransactionStats() {
+    return this.backend.apiCall<ITransactionStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/transactions'
+    );
+  }
+
+  getAccountStats() {
+    return this.backend.apiCall<IAccountStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/accounts'
+    );
+  }
+
+  getRefillStats() {
+    return this.backend.apiCall<IRefillStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/refills'
+    );
+  }
+
+  getStoreStats() {
+    return this.backend.apiCall<IStoreStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/store'
+    );
+  }
+
+  // Task functions
+
+  getTasks() {
+    return this.backend.apiCall<ITaskLean[]>('GET', this.backend.api.admin, 'tasks');
+  }
+
+  manageTask(taskId: string, command: string, data: any) {
+    return this.backend.apiCall(
+      'GET',
+      this.backend.api.admin,
+      `tasks/${taskId}/${command}`,
+      data
     );
   }
 }

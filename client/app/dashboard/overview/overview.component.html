@@ -15,12 +15,12 @@
                 <h6 class="card-subtitle">Credit Balance</h6>
                 <!-- Total amount of unspent credit -->
                 <p>${{ financeStats.creditBalance}}</p>
-                <h6 class="card-subtitle">Cost of Goods Sold</h6>
+                <!-- <h6 class="card-subtitle">Cost of Goods Sold</h6> -->
                 <!-- Amount we spent buying the things we sold -->
-                <p>${{ financeStats.costOfGoodsSold}}</p>
-                <h6 class="card-subtitle">Profit</h6>
+                <!-- <p>${{ financeStats.costOfGoodsSold}}</p> -->
+                <!-- <h6 class="card-subtitle">Profit</h6> -->
                 <!-- Revenue - Cost of Goods Sold -->
-                <p>${{ financeStats.profit}}</p>
+                <!-- <p>${{ financeStats.profit}}</p> -->
                 <!-- <div class="justify-content-center d-flex">
                     <div class="date-selector btn-group">
                         <button type="button" class="btn btn-secondary">&infin;</button>
@@ -30,6 +30,23 @@
                         <button type="button" class="btn btn-secondary">1w</button>
                     </div>
                 </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card bg-ui-main round">
+            <div class="card-header">
+                <h5 class="card-title">Refills</h5>
+            </div>
+            <div class="card-body" *ngIf="refillStats !== null">
+                <h6 class="card-subtitle">Completed</h6>
+                <p>{{ refillStats.complete }}</p>
+                <h6 class="card-subtitle">Pending</h6>
+                <p>{{ refillStats.pending }}</p>
+                <h6 class="card-subtitle">Cancelled</h6>
+                <p>{{ refillStats.cancelled }}</p>
+                <h6 class="card-subtitle">Failed</h6>
+                <p>{{ refillStats.failed }}</p>
             </div>
         </div>
     </div>
@@ -74,17 +91,15 @@
     <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
         <div class="card bg-ui-main round">
             <div class="card-header">
-                <h5 class="card-title">Refills</h5>
+                <h5 class="card-title">Transactions</h5>
             </div>
-            <div class="card-body" *ngIf="refillStats !== null">
-                <h6 class="card-subtitle">Completed</h6>
-                <p>{{ refillStats.complete }}</p>
-                <h6 class="card-subtitle">Pending</h6>
-                <p>{{ refillStats.pending }}</p>
-                <h6 class="card-subtitle">Cancelled</h6>
-                <p>{{ refillStats.cancelled }}</p>
-                <h6 class="card-subtitle">Failed</h6>
-                <p>{{ refillStats.failed }}</p>
+            <div class="card-body" *ngIf="transactionStats !== null">
+                <h6 class="card-subtitle">Total</h6>
+                <p>{{ transactionStats.total }}</p>
+                <h6 class="card-subtitle">Credit</h6>
+                <p>{{ transactionStats.credit }}</p>
+                <h6 class="card-subtitle">Debit</h6>
+                <p>{{ transactionStats.debit }}</p>
             </div>
         </div>
     </div>

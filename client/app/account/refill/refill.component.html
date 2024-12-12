@@ -4,7 +4,10 @@
             <h5 class="my-auto">Refill your account:</h5>
             <form [formGroup]="refillForm" (ngSubmit)="onSubmit()" autocomplete="off" class="d-flex flex-column align-items-center">
                 <div class="mb-2">
-                    <input type="number" formControlName="amount" name="amount" class="form-control amount title-centered" placeholder="PHYC"/>
+                    <input type="number" min="50" step="1" formControlName="amount" name="amount" class="form-control amount title-centered" placeholder="PHYC" [ngClass]="{ 'is-invalid': refillForm.controls['amount'].invalid && refillForm.controls['amount'].touched }" />
+                    <div *ngIf="refillForm.controls['amount'].errors?.['min']" class="invalid-feedback text-center">Minimum refill amount for non-cash transactions is 50 PHYC</div>
+                    <div *ngIf="refillForm.controls['amount'].errors?.['required']" class="invalid-feedback text-center">Amount is required</div>
+                    <div *ngIf="refillForm.controls['amount'].errors?.['pattern']" class="invalid-feedback text-center">Amount must be a whole number</div>
                 </div>
                 <fieldset class="mb-2 d-flex flex-column align-items-start">
                     <div class="refill-radio btn-group mb-2">

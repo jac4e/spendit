@@ -155,8 +155,17 @@ export class RefillComponent {
 
   ngOnInit() {
     this.refillForm = this.formBuilder.group({
-      amount: ['', [Validators.required, Validators.pattern(/\d+/)]],
+      amount: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       method: ['', [Validators.required]],
+    });
+
+    this.refillForm.controls['method'].valueChanges.subscribe((value) => {
+      if (value === RefillMethods.Cash) {
+        this.refillForm.controls['amount'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
+      } else {
+        this.refillForm.controls['amount'].setValidators([Validators.required, Validators.pattern(/^\d+$/), Validators.min(50)]);
+      }
+      this.refillForm.controls['amount'].updateValueAndValidity();
     });
   }
 

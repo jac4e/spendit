@@ -132,7 +132,8 @@ export class RefillComponent {
     Some banks do not allow messages on transfers under $5. If this is the case, complete the transfer and send a message to <a href='mailto:epclub@ualberta.ca'>epclub@ualberta.ca</a>.<br><br>
     The etransfer should be processed within 5 minutes; contact an exec if it takes longer.`,
     [RefillMethods.Stripe]: (obj: IRefill) => `Click the button below to go to the checkout page. You will be redirected to the stripe website to complete the transaction and refill your account. Your checkout session will expire within 24 hours`,
-    [RefillMethods.Card]: (obj: IRefill) => `An email has been sent to the club with your request. One of the execs will let you know when you can meet up to make the payment.`,
+    [RefillMethods.CreditCard]: (obj: IRefill) => `An email has been sent to the club with your request. One of the execs will let you know when you can meet up to make the payment.`,
+    [RefillMethods.DebitCard]: (obj: IRefill) => `An email has been sent to the club with your request. One of the execs will let you know when you can meet up to make the payment.`,
   };
 
   constructor(
@@ -252,8 +253,10 @@ export class RefillComponent {
     switch (method) {
       case RefillMethods.Stripe:
         return (Math.round((amount + 30) / (1 - 0.029)) - amount)/100;
-      case RefillMethods.Card:
-        return (Math.round((amount + 30) / (1 - 0.027)) - amount)/100;
+      case RefillMethods.CreditCard:
+        return (Math.round((amount + 5) / (1 - 0.027)) - amount)/100;
+      case RefillMethods.DebitCard:
+        return (Math.round(amount + 15) - amount)/100;
       default:
         return 0;
     }

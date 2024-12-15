@@ -270,5 +270,4 @@ export class RefillComponent {
         return 0;
     }
   }
-
 }

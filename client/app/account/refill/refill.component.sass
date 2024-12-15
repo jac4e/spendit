@@ -1,7 +1,7 @@
+//@use '../../../assets/css/bootstrap-dark.css'
 @use '../../../variables'
 @use '../../../mixins' as mixins
 // How can i do this? When I try, it overrides col-X classes with the default row child styles
-// @use '../../../assets/css/bootstrap.css'
 
 
 .refill-form-card
@@ -35,8 +35,16 @@
 .refill-radio > label
     width: 7rem
 
-.refill-radio > span
+.refill-radio > .refill-radio-cost
     width: 15rem
+    color: var(--bs-body-color)
+
+.refill-radio:hover > .btn-outline-primary
+    background-color: var(--bs-primary)
+    color: var(--bs-body-color)
+
+.btn-check:checked ~ .btn-outline-primary
+    background-color: var(--bs-primary)
 
 .refill-submit
     width: 22rem

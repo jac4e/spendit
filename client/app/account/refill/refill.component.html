@@ -10,30 +10,32 @@
                     <div *ngIf="refillForm.controls['amount'].errors?.['pattern']" class="invalid-feedback text-center">Amount must be a whole number</div>
                 </div>
                 <fieldset class="mb-2 d-flex flex-column align-items-start">
-                    <div class="refill-radio btn-group mb-2">
+                    <h5 class="my-2 text-center">In-Person:</h5>
+                    <div class="refill-radio btn-group mb-2" >
                         <input class="btn-check" formControlName="method" type="radio" id="cash" name="method" value="cash" />
-                        <label class="btn btn-outline-primary" for="cash" >Cash</label>
-                        <span class="btn btn-outline-primary text-body disabled" for="cash">${{ getFormAmount('cash') }}</span>
+                        <label class="btn btn-outline-primary refill-radio-method" for="cash" >Cash</label>
+                        <label for="cash" class="btn btn-outline-primary refill-radio-cost " for="cash">${{ getFormAmount('cash') }}</label>
                     </div>
-                    <div class="refill-radio btn-group mb-2">
-                        <input class="btn-check" formControlName="method" type="radio" id="etransfer" name="method" value="etransfer" />
-                        <label class="btn btn-outline-primary" for="etransfer" >e-Transfer</label>
-                        <span class="btn btn-outline-primary text-body disabled">${{ getFormAmount('etransfer') }}</span>
-                    </div>
-                    <div class="refill-radio btn-group mb-2">
+                    <div class="refill-radio btn-group mb-2" >
                         <input class="btn-check" formControlName="method" type="radio" id="debitcard" name="method" value="debitcard" />
-                        <label class="btn btn-outline-primary" for="debitcard" >Debit Card</label>
-                        <span class="btn btn-outline-primary text-body disabled">${{ getFormAmount('debitcard') }} + ${{ getSurcharge('debitcard') }} Surcharge</span>
+                        <label class="btn btn-outline-primary refill-radio-method" for="debitcard" >Debit Card</label>
+                        <label for="debitcard" class="btn btn-outline-primary refill-radio-cost ">${{ getFormAmount('debitcard') }} + ${{ getSurcharge('debitcard') }} Surcharge</label>
                     </div>
-                    <div class="refill-radio btn-group mb-2">
+                    <div class="refill-radio btn-group mb-2" >
                         <input class="btn-check" formControlName="method" type="radio" id="creditcard" name="method" value="creditcard" />
-                        <label class="btn btn-outline-primary" for="creditcard" >Credit Card</label>
-                        <span class="btn btn-outline-primary text-body disabled">${{ getFormAmount('creditcard') }} + ${{ getSurcharge('creditcard') }} Surcharge</span>
+                        <label class="btn btn-outline-primary refill-radio-method" for="creditcard" >Credit Card</label>
+                        <label for="creditcard" class="btn btn-outline-primary refill-radio-cost ">${{ getFormAmount('creditcard') }} + ${{ getSurcharge('creditcard') }} Surcharge</label>
                     </div>
-                    <div class="refill-radio btn-group mb-2">
+                    <h5 class="my-2">Online:</h5>
+                    <div class="refill-radio btn-group mb-2" >
+                        <input class="btn-check" formControlName="method" type="radio" id="etransfer" name="method" value="etransfer" />
+                        <label class="btn btn-outline-primary refill-radio-method" for="etransfer" >e-Transfer</label>
+                        <label for="etransfer" class="btn btn-outline-primary refill-radio-cost ">${{ getFormAmount('etransfer') }}</label>
+                    </div>
+                    <div class="refill-radio btn-group mb-2" >
                         <input class="btn-check" formControlName="method" type="radio" id="stripe" name="method" value="stripe" />
-                        <label class="btn btn-outline-primary" for="stripe" >Stripe</label>
-                        <span class="btn btn-outline-primary text-body disabled">${{ getFormAmount('stripe') }} + ${{ getSurcharge('stripe') }} Surcharge</span>
+                        <label class="btn btn-outline-primary refill-radio-method" for="stripe" >Stripe</label>
+                        <label for="stripe" class="btn btn-outline-primary refill-radio-cost ">${{ getFormAmount('stripe') }} + ${{ getSurcharge('stripe') }} Surcharge</label>
                     </div>
                 </fieldset>
                 <button type="submit" class="refill-submit btn btn-primary {{ refillForm.invalid ? 'disabled' : '' }}">Submit</button>

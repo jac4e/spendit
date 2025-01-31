@@ -1,6 +1,6 @@
 {
   "name": "spendit",
-  "version": "0.1.1-beta",
+  "version": "0.2.0-beta",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

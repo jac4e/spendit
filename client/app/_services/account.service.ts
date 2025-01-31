@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BackendService } from '../_services';
-import { IAccount, ITransaction, IAccountForm, ICredentials } from 'typesit';
+import { IAccount, ITransaction, IAccountForm, ICredentials, RefillMethods, IRefill } from 'typesit';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,13 @@ export class AccountService {
 
     // console.log(this.accountSubject.value);
     this.account = this.accountSubject.asObservable();
+
+    // upodate account every 30 seconds
+    setInterval(() => {
+      if (this.accountSubject.value !== null) {
+        this.refreshAccount();
+      }
+    }, 30000);
   }
 
   register(accountForm: IAccountForm) {
@@ -129,4 +136,30 @@ export class AccountService {
       'self/transactions'
     );
   }
+
+  requestRefill(method: RefillMethods, amount: string): Observable<IRefill> {
+    return this.backend.apiCall(
+      'POST',
+      this.backend.api.account,
+      'self/refill',
+      { method, amount }
+    );
+  }
+
+  cancelRefill(refillId: string) {
+    return this.backend.apiCall(
+      'DELETE',
+      this.backend.api.account,
+      `self/refill/${refillId}`
+    );
+  }
+
+  getRefillHistory() {
+    return this.backend.apiCall<IRefill[]>(
+      'GET',
+      this.backend.api.account,
+      'self/refill'
+    );
+  }
+
 }

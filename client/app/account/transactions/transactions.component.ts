@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ListControl, ListControlType } from 'client/app/_models';
 import { AccountService } from 'client/app/_services';
+import { ITransaction } from 'typesit';
 
 @Component({
   selector: 'app-transactions',
@@ -7,6 +9,15 @@ import { AccountService } from 'client/app/_services';
   styleUrls: ['./transactions.component.sass']
 })
 export class TransactionsComponent implements OnInit {
+  listControl: ListControl[] = [
+    {
+      name: 'View',
+      type: ListControlType.View,
+      shouldDisplay: (data: ITransaction) => {
+        return true;
+      }
+    }
+  ];
   constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {

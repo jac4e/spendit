@@ -17,10 +17,12 @@ import {
   dripMinus,
   dripBasket,
   dripCross,
+  dripPlus,
   dripMenu
 } from '@ng-icons/dripicons';
 import { RegisterComponent } from './register/register.component';
 import { AppConfigService } from './_services/app-config.service';
+import { NgxStripeModule } from 'ngx-stripe';
 
 @NgModule({
   declarations: [
@@ -34,12 +36,13 @@ import { AppConfigService } from './_services/app-config.service';
   ],
   imports: [
     BrowserModule,
-    NgIconsModule.withIcons({ dripMinus, dripBasket, dripCross, dripMenu }),
+    NgIconsModule.withIcons({ dripMinus, dripBasket, dripCross, dripMenu, dripPlus }),
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
     NgbModule,
-    AppCommonModule
+    AppCommonModule,
+    NgxStripeModule.forRoot()
   ],
   providers: [
     httpInterceptorProviders,

@@ -6,7 +6,12 @@
         <a class="navbar-brand">{{ brand.name }}</a>
       </div>
       <div class="col-auto">
-        <span *ngIf="tabGuard(['loggedIn'])" class="balance navbar-text">{{ account?.username }}: {{ account?.balance }} PHYC</span>
+        <span *ngIf="tabGuard(['loggedIn', 'notAdmin'])" class="balance navbar-text">
+          <a class="btn btn-icon btn-{{isZero(account?.balance) ? 'danger' : 'primary' }}" href="/account/refill" >{{ account?.username }}: {{ account?.balance }} PHYC</a>
+        </span>
+        <span *ngIf="tabGuard(['admin'])" class="balance navbar-text">
+          <a class="btn btn-icon btn-{{isZero(account?.balance) ? 'danger' : 'primary' }}">Admin Mode</a>  
+        </span>
       </div>
       <div class="d-none d-lg-flex justify-content-end col-12 col-lg-8">
           <ul ngbNav [(activeId)]="url"#nav="ngbNav" class=" nav-pills">

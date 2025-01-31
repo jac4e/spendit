@@ -6,7 +6,16 @@ import {
   IAccountForm,
   ITransaction,
   ITransactionForm,
-  Roles
+  Roles,
+  IRefill,
+  IFinanceStats,
+  IInventoryStats,
+  ITransactionStats,
+  IAccountStats,
+  IRefillStats,
+  IStoreStats,
+  ITaskLean,
+  StatsDateRange
 } from 'typesit';
 import { BackendService } from '../_services';
 import { retry } from 'rxjs';
@@ -96,6 +105,34 @@ export class AdminService {
     return this.backend.apiCall<IAccount[]>('GET', this.backend.api.account);
   }
 
+  getAllRefills() {
+    return this.backend.apiCall<IRefill[]>('GET', this.backend.api.refill, '');
+  }
+
+  approveRefill(refillid: string) {
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.refill,
+      `${refillid}/approve`
+    );
+  }
+  
+  cancelRefill(refillid: string) {
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.refill,
+      `${refillid}/cancel`
+    );
+  }
+
+  failRefill(refillid: string) {
+    return this.backend.apiCall(
+      'PUT',
+      this.backend.api.refill,
+      `${refillid}/fail`
+    );
+  }
+
   getAllTransactions() {
     // console.log('getting transactions');
     // console.log(this.api('transactions'));
@@ -111,6 +148,66 @@ export class AdminService {
       'GET',
       this.backend.api.admin,
       'products'
+    );
+  }
+
+  // Statistics functions
+  getFinanceStats(dateOption: StatsDateRange) {
+    return this.backend.apiCall<IFinanceStats>('GET', this.backend.api.admin, `stats/finance/${dateOption}`);
+  }
+
+  getInventoryStats() {
+    return this.backend.apiCall<IInventoryStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/inventory'
+    );
+  }
+
+  getTransactionStats() {
+    return this.backend.apiCall<ITransactionStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/transactions'
+    );
+  }
+
+  getAccountStats() {
+    return this.backend.apiCall<IAccountStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/accounts'
+    );
+  }
+
+  getRefillStats() {
+    return this.backend.apiCall<IRefillStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/refills'
+    );
+  }
+
+  getStoreStats() {
+    return this.backend.apiCall<IStoreStats>(
+      'GET',
+      this.backend.api.admin,
+      'stats/store'
+    );
+  }
+
+  // Task functions
+
+  getTasks() {
+    return this.backend.apiCall<ITaskLean[]>('GET', this.backend.api.admin, 'tasks');
+  }
+
+  manageTask(taskId: string, command: string, data: any) {
+    return this.backend.apiCall(
+      'GET',
+      this.backend.api.admin,
+      `tasks/${taskId}/${command}`,
+      data
     );
   }
 }

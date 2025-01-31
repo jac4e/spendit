@@ -1,7 +1,8 @@
 import { ReturnStatement } from '@angular/compiler';
 import { Injectable } from '@angular/core';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { getKeys, IAccount, IProduct, getValues, ITransaction } from 'typesit';
+import { getKeys, IRefill, IAccount, IProduct, getValues, ITransaction } from 'typesit';
+import { AllowableListData } from '../_models';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { getKeys, IAccount, IProduct, getValues, ITransaction } from 'typesit';
 export class CommonService {
   constructor() {}
 
-  export(data: ITransaction[] | IProduct[] | IAccount[], name: string) {
+  export(data: AllowableListData[], name: string) {
     // Check if data to export is empty
     if (data.length < 1) {
       return;
@@ -22,7 +23,7 @@ export class CommonService {
           // console.log(value, Array.isArray(value));
           if (Array.isArray(value)) {
             return JSON.stringify(value)
-              .replace(/,'/gm, ';')
+              .replace(/,/gm, ';')
               .replace(/(\r\n|\n|\r)/gm, '');
           }
           // remove commas and newlines from strings
@@ -74,6 +75,8 @@ export class CommonService {
     return Object.getOwnPropertyNames(obj);
   }
   titleCase(string: string) {
-    return string[0].toUpperCase() + string.slice(1).toLowerCase();
+    const result = string.replace(/([A-Z])/g, ' $1');
+    return result.charAt(0).toUpperCase() + result.slice(1);
+    // return string[0].toUpperCase() + string.slice(1).toLowerCase();
   }
 }

@@ -8,13 +8,16 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RefillComponent } from './refill/refill.component';
+import { NgxStripeModule } from 'ngx-stripe';
 
 @NgModule({
-  declarations: [OverviewComponent, SettingsComponent, TransactionsComponent],
+  declarations: [OverviewComponent, SettingsComponent, TransactionsComponent, RefillComponent],
   imports: [
     CommonModule,
     AccountRoutingModule,
     NgbModule,
+    NgxStripeModule.forRoot(),
     AppCommonModule,
     ReactiveFormsModule
   ]

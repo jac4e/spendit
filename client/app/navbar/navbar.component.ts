@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { AccountService, StoreService } from '../_services';
 import { Router } from '@angular/router';
-import { IAccount, IProduct } from 'typesit';
+import { IAccount, IProduct, Roles } from 'typesit';
 import { Link } from '../_models';
 @Component({
   selector: 'app-navbar',
@@ -56,6 +56,10 @@ export class NavbarComponent implements DoCheck {
     // console.log(this.url);
   }
 
+  isZero(number: string | number | bigint | undefined) {
+    return number === 0 || number === '0' || number === 0n;
+  }
+
   tabGuard(guards: string[] | undefined) {
     if (!guards) {
       return true;
@@ -66,19 +70,15 @@ export class NavbarComponent implements DoCheck {
       switch (guard) {
         case 'loggedIn':
           truthy = truthy && this.account !== null;
-          // console.log('loggedin', this.account !== null);
           break;
         case 'loggedOut':
           truthy = truthy && this.account === null;
-          // console.log('loggedout', this.account === null);
           break;
         case 'admin':
-          truthy = truthy && this.account?.role === 'admin';
-          // console.log('admin', this.account?.role === 'admin');
+          truthy = truthy && this.account?.role === Roles.Admin;
           break;
         case 'notAdmin':
-          truthy = truthy && this.account?.role !== undefined;
-          // console.log('notadmin', this.account?.role !== undefined);
+          truthy = truthy && this.account?.role !== Roles.Admin;
           break;
         case 'none':
           truthy = truthy && true;

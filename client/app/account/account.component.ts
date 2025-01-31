@@ -1,7 +1,8 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { AccountService } from '../_services';
-import { IAccount } from 'typesit';
+import { IAccount, Roles } from 'typesit';
 import { Router } from '@angular/router';
+import { Link } from '../_models';
 
 @Component({
   selector: 'app-account',
@@ -10,10 +11,11 @@ import { Router } from '@angular/router';
 })
 export class AccountComponent implements DoCheck {
   account = {} as IAccount;
-  links = [
+  links: Link[]  = [
     { title: 'Overview', route: '/account/overview' },
+    { title: 'Refill', route: '/account/refill', guards: ['notAdmin'] },
     { title: 'Settings', route: '/account/settings' },
-    { title: 'Transactions', route: '/account/transactions' }
+    { title: 'Transactions', route: '/account/transactions', guards: ['notAdmin'] }
   ];
   url: string;
 
@@ -29,5 +31,38 @@ export class AccountComponent implements DoCheck {
 
   ngDoCheck(): void {
     this.url = this.router.url;
+  }
+
+  tabGuard(guards: string[] | undefined) {
+    if (!guards) {
+      return true;
+    }
+    // console.log('guards', guards);
+    let truthy = true;
+    for (const guard of guards) {
+      switch (guard) {
+        case 'loggedIn':
+          truthy = truthy && this.account !== null;
+          break;
+        case 'loggedOut':
+          truthy = truthy && this.account === null;
+          break;
+        case 'admin':
+          truthy = truthy && this.account?.role === Roles.Admin;
+          break;
+        case 'notAdmin':
+          truthy = truthy && this.account?.role !== Roles.Admin;
+          break;
+        case 'none':
+          truthy = truthy && true;
+          break;
+        default:
+          truthy = truthy && false;
+          break;
+      }
+      if (!truthy) break;
+    }
+    // console.log('truthy:', truthy);
+    return truthy;
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AdminService, StoreService } from 'client/app/_services';
-import { IAccountStats, IFinanceStats, IInventoryStats, IRefillStats, IStoreStats, ITaskLean, ITransactionStats, RefillMethods, RefillStatus, Roles, TransactionType } from 'typesit';
+import { IAccountStats, IFinanceStats, IInventoryStats, IRefillStats, IStoreStats, ITaskLean, ITransactionStats, StatsDateRange } from 'typesit';
 
 interface Rank {
   place: number;
@@ -21,6 +21,8 @@ export class OverviewComponent {
   inventoryStats: IInventoryStats | null = null;
   refillStats: IRefillStats | null = null;
   tasks: ITaskLean[] = [];
+  dateOption: StatsDateRange = 'all' as StatsDateRange;
+  // dateOption: string = 'all';
 
   constructor(
     private adminService: AdminService,
@@ -32,7 +34,7 @@ export class OverviewComponent {
     this.adminService.getAccountStats().subscribe((stats) => {
       this.accountStats = stats;
     });
-    this.adminService.getFinanceStats().subscribe((stats) => {
+    this.adminService.getFinanceStats(this.dateOption).subscribe((stats) => {
       this.financeStats = stats;
     });
     this.adminService.getInventoryStats().subscribe((stats) => {
@@ -48,5 +50,12 @@ export class OverviewComponent {
       this.tasks = tasks;
     });
 
+  }
+
+  onDateOptionChange(dateOption: string) {
+    this.dateOption = dateOption as StatsDateRange;
+    this.adminService.getFinanceStats(this.dateOption).subscribe((stats) => {
+      this.financeStats = stats;
+    });
   }
 }

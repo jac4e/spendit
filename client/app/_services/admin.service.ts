@@ -14,7 +14,8 @@ import {
   IAccountStats,
   IRefillStats,
   IStoreStats,
-  ITaskLean
+  ITaskLean,
+  StatsDateRange
 } from 'typesit';
 import { BackendService } from '../_services';
 import { retry } from 'rxjs';
@@ -151,8 +152,8 @@ export class AdminService {
   }
 
   // Statistics functions
-  getFinanceStats() {
-    return this.backend.apiCall<IFinanceStats>('GET', this.backend.api.admin, 'stats/finance');
+  getFinanceStats(dateOption: StatsDateRange) {
+    return this.backend.apiCall<IFinanceStats>('GET', this.backend.api.admin, `stats/finance/${dateOption}`);
   }
 
   getInventoryStats() {

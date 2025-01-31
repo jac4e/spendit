@@ -14,22 +14,24 @@
                 <p>${{ financeStats.revenue}}</p>
                 <h6 class="card-subtitle">Credit Balance</h6>
                 <!-- Total amount of unspent credit -->
-                <p>${{ financeStats.creditBalance}}</p>
+                <p *ngIf="dateOption === 'all'">${{ financeStats.creditBalance}}</p>
+                <p *ngIf="dateOption !== 'all'">N/A</p>
                 <!-- <h6 class="card-subtitle">Cost of Goods Sold</h6> -->
                 <!-- Amount we spent buying the things we sold -->
                 <!-- <p>${{ financeStats.costOfGoodsSold}}</p> -->
                 <!-- <h6 class="card-subtitle">Profit</h6> -->
                 <!-- Revenue - Cost of Goods Sold -->
                 <!-- <p>${{ financeStats.profit}}</p> -->
-                <!-- <div class="justify-content-center d-flex">
+                <div class="justify-content-center d-flex">
                     <div class="date-selector btn-group">
-                        <button type="button" class="btn btn-secondary">&infin;</button>
-                        <button type="button" class="btn btn-secondary">1y</button>
-                        <button type="button" class="btn btn-secondary">3m</button>
-                        <button type="button" class="btn btn-secondary">1m</button>
-                        <button type="button" class="btn btn-secondary">1w</button>
+                        <button type="button" class="btn btn-secondary {{ dateOption === 'all' ? 'active' : '' }}" (click)="onDateOptionChange('all')">&infin;</button>
+                        <button type="button" class="btn btn-secondary {{ dateOption === '1y' ? 'active' : '' }}" (click)="onDateOptionChange('1y')">1y</button>
+                        <button type="button" class="btn btn-secondary {{ dateOption === '3m' ? 'active' : '' }}" (click)="onDateOptionChange('3m')">3m</button>
+                        <button type="button" class="btn btn-secondary {{ dateOption === '1m' ? 'active' : '' }}" (click)="onDateOptionChange('1m')">1m</button>
+                        <button type="button" class="btn btn-secondary {{ dateOption === '1w' ? 'active' : '' }}" (click)="onDateOptionChange('1w')">1w</button>
+                        <button type="button" class="btn btn-secondary {{ dateOption === '1d' ? 'active' : '' }}" (click)="onDateOptionChange('1d')">1d</button>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -39,6 +41,8 @@
                 <h5 class="card-title">Refills</h5>
             </div>
             <div class="card-body" *ngIf="refillStats !== null">
+                <h6 class="card-subtitle">Total</h6>
+                <p>{{ refillStats.total }}</p>
                 <h6 class="card-subtitle">Completed</h6>
                 <p>{{ refillStats.complete }}</p>
                 <h6 class="card-subtitle">Pending</h6>

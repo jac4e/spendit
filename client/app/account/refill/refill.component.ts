@@ -263,9 +263,9 @@ export class RefillComponent {
       case RefillMethods.Stripe:
         return (Math.round((amount + 30) / (1 - 0.029)) - amount)/100;
       case RefillMethods.CreditCard:
-        return (Math.round((amount + 5) / (1 - 0.027)) - amount)/100;
+        return (Math.round((amount + 5 + 16) / (1 - 0.027)) - amount)/100;
       case RefillMethods.DebitCard:
-        return (Math.round(amount + 15) - amount)/100;
+        return (Math.round(amount + 15 + 16) - amount)/100;
       default:
         return 0;
     }

@@ -2,10 +2,10 @@
     <div class="col-12">
         <h1 class="title-centered">Your Account</h1>
     </div>
-    <div class="col-12">
+    <div class="col-12 tab-shelf">
         <ul ngbNav [(activeId)]="url" class="nav-pills nav-fill">
             <ng-container *ngFor="let link of links; let first = first; let last = last">
-                <li class="nav-item bg-ui-main" [ngClass]="{first: first, last: last}" [ngbNavItem]="link.route"  *ngIf="tabGuard(link.guards)">
+                <li class="nav-item-tab bg-ui-main" [ngClass]="{first: first, last: last}" [ngbNavItem]="link.route"  *ngIf="tabGuard(link.guards)">
                     <a class="nav-link" ngbNavLink routerLink="." [routerLink]="link.route">{{ link.title }}</a>
                 </li>
             </ng-container>

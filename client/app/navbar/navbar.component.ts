@@ -1,7 +1,7 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
-import { AccountService, StoreService } from '../_services';
+import { AccountService, AppConfigService, StoreService } from '../_services';
 import { Router } from '@angular/router';
 import { IAccount, IProduct, Roles } from 'typesit';
 import { Link } from '../_models';
@@ -12,9 +12,13 @@ import { Link } from '../_models';
 })
 export class NavbarComponent implements DoCheck {
   brand = {
-    name: 'cryptoPhrydge',
-    image: ''
-  };
+        name: "spendit",
+        shortName: "spdt",
+        email: "email",
+        primaryColor: "000000",
+        secondaryColor: "000000",
+        logo: "logo"
+    };
   links: Link[] = [
     { title: 'Store', route: '/', guards: ['none'] },
     { title: 'Dashboard', route: '/dashboard', guards: ['admin'] },
@@ -29,11 +33,15 @@ export class NavbarComponent implements DoCheck {
   account!: IAccount | null;
   fragment!: string;
   constructor(
+    private appConfigService: AppConfigService,
     private accountService: AccountService,
     private storeService: StoreService,
     private router: Router,
     private location: Location
   ) {
+    if (appConfigService.branding) {
+      this.brand = appConfigService.branding;
+    }
     // get observable account
     this.accountService.account.subscribe((account) => {
       this.account = account;

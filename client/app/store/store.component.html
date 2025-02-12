@@ -6,7 +6,7 @@
     <div *ngFor="let column of columns" class="col-{{12/col}}">
       <ng-container *ngIf="column">
         <div class="pb-4" *ngFor="let product of column.products">
-          <div class="d-grid product">
+          <div *ngIf="bint(product.stock) > bint(0)" class="d-grid product">
             <div class="card bg-product">
             </div>
             <img [src]="product.image === undefined ? '' : product.image" class="card-img-top mx-auto d-block" />

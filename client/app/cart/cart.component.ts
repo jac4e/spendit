@@ -69,10 +69,12 @@ export class CartComponent implements OnInit {
     this.storeService.removeFromCart(index);
   }
   decrementItem(index: number) {
+    console.log("dec")
     this.storeService.decrementFromCart(index);
   }
 
   incrementItem(index: number) {
+    console.log("inc")
     this.storeService.incrementToCart(index);
   }
 

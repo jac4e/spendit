@@ -1,4 +1,6 @@
-<h5>Refill Requests</h5>
-<div class="row">
-  <app-list [exclude]="['reference']" [controls]="listControl" [getData]="refreshRefills()" name="refills" [defaultSort]="listDefaultSort"></app-list>
+<div class="table-card mt-3 p-3 round bg-ui-main">
+  <h5>Refill Requests</h5>
+  <div class="row">
+    <app-list [exclude]="['reference','amount']" [controls]="listControl" [getData]="refreshRefills()" name="refills" [defaultSort]="listDefaultSort"></app-list>
+  </div>
 </div>

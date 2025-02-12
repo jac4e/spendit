@@ -1,5 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AppConfigService } from './_services';
 
 @Component({
   selector: 'app-root',
@@ -7,7 +8,21 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
+  brand = {
+        name: "spendit",
+        shortName: "spdt",
+        email: "email",
+        primaryColor: "000000",
+        secondaryColor: "000000",
+        logo: "logo"
+    };
   title = 'spendit';
+
+  constructor(private appConfigService: AppConfigService){
+    if (appConfigService.branding) {
+      this.brand = appConfigService.branding;
+    }
+  }
 
   // Click listener to make tap on mobile device work a bit better
   @HostListener('click', ['$event.target'])

@@ -8,3 +8,17 @@
     padding: 0.2rem
     padding-right: 0.5rem
     padding-left: 0.5rem
+
+.overview-card
+    @include mixins.round
+    @include mixins.bg-ui-main
+    padding: 0.5rem
+
+.overview-card > div > ul
+    @include mixins.round
+    border: 1px solid rgba(255, 255, 255, 0.1)
+
+.overview-card > h5
+    // Bottom border
+    padding-bottom: 0.5rem
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)

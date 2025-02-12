@@ -4,9 +4,10 @@
     "stripePublicKey": "PUT_KEY_HERE",
     "branding": {
         "name": "spendit",
+        "shortName": "spdt",
         "email": "email",
         "primaryColor": "000000",
         "secondaryColor": "000000",
-        "logo": "logo"
+        "logo": "https://www.vhv.rs/dpng/d/486-4864616_generic-company-logo-png-example-logo-png-transparent.png"
     }
 }

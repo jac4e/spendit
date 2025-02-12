@@ -1,0 +1,18 @@
+@use '../../../variables'
+@use '../../../mixins' as mixins
+// How can i do this? When I try, it overrides col-X classes with the default row child styles
+// @use '../../../assets/css/bootstrap.css'
+
+.account-card
+    @include mixins.round
+    @include mixins.bg-ui-main
+    padding: 0.5rem
+
+.account-card > div > ul
+    @include mixins.round
+    border: 1px solid rgba(255, 255, 255, 0.1)
+
+.account-card > h5
+    // Bottom border
+    padding-bottom: 0.5rem
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1)

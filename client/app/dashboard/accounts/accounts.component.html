@@ -1,81 +1,85 @@
-<h5>Add account</h5>
-<form class="row mt-3 gy-2 gx-3 align-items-baseline" [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-group col-auto">
-    <!-- <label class="sr-only" for="username">username</label> -->
-    <input type="text" formControlName="username" class="form-control" id="username"
-      [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" placeholder="username">
-    <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
-      <div *ngIf="f['username'].errors?.['required']">
-        username is required
+<div class="form-card p-3 mt-3 round bg-ui-main">
+  <h5 class="card-title">Add account</h5>
+  <form class="row align-items-baseline" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <!-- <label class="sr-only" for="username">username</label> -->
+      <input type="text" formControlName="username" class="form-control" id="username"
+        [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" placeholder="username">
+      <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+        <div *ngIf="f['username'].errors?.['required']">
+          username is required
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group col-auto">
-    <!-- <label class="sr-only" for="firstName">firstName</label> -->
-    <input type="text" formControlName="firstName" class="form-control" id="firstName"
-      [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" placeholder="firstName">
-    <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
-      <div *ngIf="f['firstName'].errors?.['required']">
-        firstName is required
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <!-- <label class="sr-only" for="email">email</label> -->
+      <input type="text" formControlName="email" class="form-control" id="email"
+        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" placeholder="email">
+      <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+        <div *ngIf="f['email'].errors?.['required']">
+          Email is required
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group col-auto">
-    <!-- <label class="sr-only" for="lastName">lastName</label> -->
-    <input type="text" formControlName="lastName" class="form-control" id="lastName"
-      [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" placeholder="lastName">
-    <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
-      <div *ngIf="f['lastName'].errors?.['required']">
-        lastName is required
+    <div class="mt-2 form-group  col-sm-6 col-lg-auto">
+      <!-- <label class="sr-only" for="firstName">firstName</label> -->
+      <input type="text" formControlName="firstName" class="form-control" id="firstName"
+        [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" placeholder="firstName">
+      <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+        <div *ngIf="f['firstName'].errors?.['required']">
+          firstName is required
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group col-auto">
-    <!-- <label class="sr-only" for="email">email</label> -->
-    <input type="text" formControlName="email" class="form-control" id="email"
-      [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" placeholder="email">
-    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-      <div *ngIf="f['email'].errors?.['required']">
-        Email is required
+    <div class="mt-2 form-group  col-sm-6 col-lg-auto">
+      <!-- <label class="sr-only" for="lastName">lastName</label> -->
+      <input type="text" formControlName="lastName" class="form-control" id="lastName"
+        [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" placeholder="lastName">
+      <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+        <div *ngIf="f['lastName'].errors?.['required']">
+          lastName is required
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group col-auto">
-    <!-- <label class="sr-only" for="role">role</label> -->
-    <select formControlName="role" [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" class="form-select">
-        <option disabled value="">Select Role</option>
-        <option *ngFor="let role of rolesValues" value="{{role}}">{{role | titlecase}}</option>
-    </select>
-    <!-- <input type="text" formControlName="role" class="form-control" id="role"
-      [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" placeholder="role"> -->
-    <div *ngIf="submitted && f['role'].errors" class="invalid-feedback">
-      <div *ngIf="f['role'].errors?.['required']">
-        Role is required
+    <div class="mt-2 form-group col-lg-auto">
+      <!-- <label class="sr-only" for="password">Password</label> -->
+      <input type="text" formControlName="password" class="form-control" id="password"
+        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" placeholder="Password">
+      <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+        <div *ngIf="f['password'].errors?.['required']">
+          Password is required
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group col-auto">
-    <!-- <label class="sr-only" for="password">Password</label> -->
-    <input type="text" formControlName="password" class="form-control" id="password"
-      [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" placeholder="Password">
-    <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
-      <div *ngIf="f['password'].errors?.['required']">
-        Password is required
+    <div class="mt-2 form-group col-auto">
+      <!-- <label class="sr-only" for="role">role</label> -->
+      <select formControlName="role" [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" class="form-select">
+          <option disabled value="">Select Role</option>
+          <option *ngFor="let role of rolesValues" value="{{role}}">{{role | titlecase}}</option>
+      </select>
+      <!-- <input type="text" formControlName="role" class="form-control" id="role"
+        [ngClass]="{ 'is-invalid': submitted && f['role'].errors }" placeholder="role"> -->
+      <div *ngIf="submitted && f['role'].errors" class="invalid-feedback">
+        <div *ngIf="f['role'].errors?.['required']">
+          Role is required
+        </div>
       </div>
     </div>
+    <div class="mt-2 form-group col-auto">
+        <input type="checkbox" formControlName="notify" class="form-check-input"/>
+        <label class="form-check-label ms-1" for="notify">Enable email notifications</label>
+    </div>
+    <div class="mt-2 form-group col-auto">
+      <button [disabled]="loading" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Add Account
+      </button>
+    </div>
+  </form>
+</div>
+<div class="table-card mt-3 p-3 round bg-ui-main">
+  <h5 class="">Accounts</h5>
+  <div class="row">
+    <app-list [controls]="listControl" [exclude]="['gid', 'notify']" [getData]="refreshList()" name="accounts"></app-list>
   </div>
-  <div class="form-group col-auto">
-      <input type="checkbox" formControlName="notify" class="form-check-input"/>
-      <label class="form-check-label ms-1" for="notify">Enable email notifications</label>
-  </div>
-  <div class="form-group col-auto">
-    <button [disabled]="loading" class="btn btn-primary">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-      Add Account
-    </button>
-  </div>
-</form>
-<h5 class="mt-3">Accounts</h5>
-<div class="row">
-  <app-list [controls]="listControl" [exclude]="['gid', 'notify']" [getData]="refreshList()" name="accounts"></app-list>
 </div>

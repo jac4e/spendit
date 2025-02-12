@@ -61,6 +61,14 @@ class NextStepsModalContent {
   styleUrls: ['./refill.component.sass'],
 })
 export class RefillComponent {
+  brand = {
+        name: "spendit",
+        shortName: "spdt",
+        email: "email",
+        primaryColor: "000000",
+        secondaryColor: "000000",
+        logo: "logo"
+    };
   stripe: StripeServiceInterface;
   account = {} as IAccount;
   requestedRefill: IRefill | null = null;
@@ -127,9 +135,9 @@ export class RefillComponent {
   ];
   refillMessages = {
     [RefillMethods.Cash]: (obj: IRefill) => `Please meet up with an exec to give them $${Number(obj.amount)/100} in cash. The exec will confirm the payment and update your account.`,
-    [RefillMethods.Etransfer]: (obj: IRefill) => `Please send an interact e-transfer to <a href='mailto:epclub@ualberta.ca'>epclub@ualberta.ca</a> with the following message: "REFILL:${obj.id}".<br><br>
+    [RefillMethods.Etransfer]: (obj: IRefill) => `Please send an interact e-transfer to <a href='mailto:${this.brand.email}'>${this.brand.email}</a> with the following message: "REFILL:${obj.id}".<br><br>
     If your bank does not allow the characters ':', use the message "REFILL&${obj.id}".<br><br>
-    Some banks do not allow messages on transfers under $5. If this is the case, complete the transfer and send a message to <a href='mailto:epclub@ualberta.ca'>epclub@ualberta.ca</a>.<br><br>
+    Some banks do not allow messages on transfers under $5. If this is the case, complete the transfer and send a message to <a href='mailto:${this.brand.email}'>${this.brand.email}</a>.<br><br>
     The etransfer should be processed within 5 minutes; contact an exec if it takes longer.`,
     [RefillMethods.Stripe]: (obj: IRefill) => `Click the button below to go to the checkout page. You will be redirected to the stripe website to complete the transaction and refill your account. Your checkout session will expire within 24 hours`,
     [RefillMethods.CreditCard]: (obj: IRefill) => `An email has been sent to the club with your request. One of the execs will let you know when you can meet up to make the payment.`,
@@ -143,7 +151,9 @@ export class RefillComponent {
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private alertService: AlertService) {
-
+    if (appConfigService.branding) {
+      this.brand = appConfigService.branding;
+    }
     this.accountService.account.subscribe((account) => {
       if (account !== null) {
         this.account = account;

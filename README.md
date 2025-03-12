@@ -2,6 +2,10 @@
 
 A simple online webstore for individual initiated non-supervised food purchases.
 
+See:
+- [serveit](https://github.com/jac4e/serveit): the node.js typescript backend.
+- [typeit](https://github.com/jac4e/typesit): shared types between backend and front end with type validators.
+
 ## Setup
 
 In the built client app, the config files in app-settings.development.json and app-settings.production.json must be set to the correct values.

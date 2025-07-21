@@ -1,0 +1,12 @@
+{
+    "backendUrl": "${BACKEND_URL}",
+    "apiBaseUrl": "${API_BASE_URL}",
+    "stripePublicKey": "${STRIPE_PUBLIC_KEY}",
+    "branding": {
+        "name": "${BRAND_NAME}",
+        "email": "${BRAND_EMAIL}",
+        "primaryColor": "${BRAND_PRIMARY_COLOR}",
+        "secondaryColor": "${BRAND_SECONDARY_COLOR}",
+        "logo": "${BRAND_LOGO}"
+    }
+}

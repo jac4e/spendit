@@ -1,22 +1,37 @@
-version: "3.9"
 services:
-  web:
-    # TODO: add healthcheck
-    build: .
+  frontend:
+    image: ghcr.io/jac4e/spendit:latest
     ports:
-      - "3000:3000"
-    networks:
-      - backend
-    volumes:
-      - /spendit/node_modules
-    env_file:
-      - config/backend.env
+      - "8080:8080"
     depends_on:
-      - database
-    restart: unless-stopped
+      - backend
+    environment:
+      BACKEND_URL: http://backend:3443
+      API_BASE_URL: http://backend:3443/api
+      STRIPE_PUBLIC_KEY: pk_test_123
+      BRAND_NAME: spendit
+      BRAND_EMAIL: hello@spendit.dev
+      PRIMARY_COLOR: 000000
+      SECONDARY_COLOR: 000000
+      LOGO_URL: logo
+  backend:
+    image: ghcr.io/jac4e/serveit:latest
+    ports:
+      - "3443:3443"
+    environment:
+      NODE_ENV: "development"       # set to "production" or "development"
+      DB_URL: "database"
+      DB_PORT: "27017"
+      INCLUDE_APP: "false"
+      INCLUDE_GOOGLE: "true"         # whether the backend server should use google services (true/false)
+      BACKEND_PORT: "3443"           # port to run backend server on
+      #BACKEND_DOMAIN: "<your backend>"  # domain to run backend server on
+      #CF_TOKEN: "<cloudflare token>" # cloudflare api token
+      #STRIPE_SECRET: "<stripe secret key>"
+      #STRIPE_WEBHOOK_SECRET: "<stripe webhook secret key>"
   database:
     # TODO: add healthcheck
-    image: mongo:6
+    image: mongo:8
     restart: unless-stopped
     user: "mongodb:mongodb"
     volumes: 

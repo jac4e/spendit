@@ -1,23 +1,21 @@
-FROM node:16-bullseye-slim
-
-RUN mkdir /spendit
-WORKDIR /spendit
-
-RUN npm install -g @angular/cli@14.2.1
-
-COPY package.json package-lock.json ./
+# 1) Build stage
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
 RUN npm ci
-
 COPY . .
+RUN npm run build -- --configuration=production
 
-RUN ng build --progress
+# 2) Serve stage
+FROM nginx:alpine AS web
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-ENV NODE_ENV=production
+# Copy entrypoint and template
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY templates/config.json.template /usr/share/nginx/html/assets/config.json.template
+RUN chmod +x /docker-entrypoint.sh
 
-WORKDIR /spendit/server
+LABEL org.opencontainers.image.source="https://github.com/jac4e/spendit"
 
-RUN npm ci
-
-ENV CI=1
-
-CMD ["node", "index.js"]
+EXPOSE 80
+ENTRYPOINT ["/docker-entrypoint.sh"]

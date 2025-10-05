@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BackendService } from '../_services';
-import { IAccount, ITransaction, IAccountBaseForm, IAccountSettingsForm, IAccountPasswordForm, ICredentials, RefillMethods, IRefill } from 'typesit';
+import { IAccount, ITransaction, IAccountBaseForm, IAccountSettingsForm, IAccountPasswordForm, ICredentials, RefillMethods, IRefill, AccountFormTypes } from 'typesit';
 import { HTTP, ICoin } from 'typesit/lib/common';
 
 @Injectable({
@@ -117,7 +117,7 @@ export class AccountService {
     );
   }
 
-  updateAccount(type: "settings" | "password", currentPassword: ICredentials["password"], accountForm: IAccountSettingsForm | IAccountPasswordForm) {
+  updateAccount(type: AccountFormTypes, currentPassword: ICredentials["password"], accountForm: IAccountSettingsForm | IAccountPasswordForm) {
     return this.backend.apiCall(
       'PUT',
       this.backend.api.account,

@@ -7,18 +7,18 @@ import {
   Validators
 } from '@angular/forms';
 import { first } from 'rxjs';
-import { IAccount, IAccountPasswordForm, IAccountSettingsForm } from 'typesit';
+import { AccountFormTypes, IAccount, IAccountPasswordForm, IAccountSettingsForm } from 'typesit';
 import { AccountService, AlertService } from '../../_services';
 
 class SettingsForm {
   form: FormGroup;
   showErrors: { [key: string]: boolean };
   loading: boolean;
-  type: "settings" | "password";
+  type: AccountFormTypes;
   controlsConfig: { [key: string]: any };
   constructor(
     private formBuilder: UntypedFormBuilder,
-    type: "settings" | "password",
+    type: AccountFormTypes,
     controlsConfig: { [key: string]: any }
   ) {
     this.type = type;
@@ -50,7 +50,7 @@ export class SettingsComponent implements OnInit {
     this.accountService.account.subscribe((account) => {
       if (account !== null) {
         this.account = account;
-        this.accountDetailsForm = new SettingsForm(formBuilder, "settings", {
+        this.accountDetailsForm = new SettingsForm(formBuilder, AccountFormTypes.Settings, {
           username: [this.account.username, [Validators.required]],
           firstName: [this.account.firstName, [Validators.required]],
           lastName: [this.account.lastName, [Validators.required]],
@@ -65,7 +65,7 @@ export class SettingsComponent implements OnInit {
           notify: [this.account.notify],
           currentPassword: ['', [Validators.required]]
         });
-        this.passwordForm = new SettingsForm(formBuilder, "password", {
+        this.passwordForm = new SettingsForm(formBuilder, AccountFormTypes.Password, {
           password: ['', [Validators.required, this.passwordValidator]],
           confirmPassword: ['', [Validators.required, this.passwordValidator]],
           currentPassword: ['', [Validators.required]]

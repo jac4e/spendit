@@ -17,14 +17,14 @@
                         <label for="cash" class="btn btn-outline-primary refill-radio-cost " for="cash">${{ getFormAmount('cash') }}</label>
                     </div>
                     <div class="refill-radio btn-group mb-2" >
-                        <input class="btn-check" formControlName="method" type="radio" id="debitcard" name="method" value="debitcard" />
-                        <label class="btn btn-outline-primary refill-radio-method" for="debitcard" >Debit Card</label>
-                        <label for="debitcard" class="btn btn-outline-primary refill-radio-cost ">${{ getFormAmount('debitcard') }} + ${{ getSurcharge('debitcard') }} Surcharge</label>
+                        <input class="btn-check" formControlName="method" type="radio" id="debitCard" name="method" value="debitCard" />
+                        <label class="btn btn-outline-primary refill-radio-method" for="debitCard" >Debit Card</label>
+                        <label for="debitCard" class="btn btn-outline-primary refill-radio-cost ">${{ getFormAmount('debitCard') }} + ${{ getSurcharge('debitCard') }} Surcharge</label>
                     </div>
                     <div class="refill-radio btn-group mb-2" >
-                        <input class="btn-check" formControlName="method" type="radio" id="creditcard" name="method" value="creditcard" />
-                        <label class="btn btn-outline-primary refill-radio-method" for="creditcard" >Credit Card</label>
-                        <label for="creditcard" class="btn btn-outline-primary refill-radio-cost ">${{ getFormAmount('creditcard') }} + ${{ getSurcharge('creditcard') }} Surcharge</label>
+                        <input class="btn-check" formControlName="method" type="radio" id="creditCard" name="method" value="creditCard" />
+                        <label class="btn btn-outline-primary refill-radio-method" for="creditCard" >Credit Card</label>
+                        <label for="creditCard" class="btn btn-outline-primary refill-radio-cost ">${{ getFormAmount('creditCard') }} + ${{ getSurcharge('creditCard') }} Surcharge</label>
                     </div>
                     <h5 class="my-2">Online:</h5>
                     <div class="refill-radio btn-group mb-2" >
@@ -56,13 +56,13 @@
                 <p innerHtml="{{refillMessages.stripe(requestedRefill)}}"></p>
                 <button class="btn btn-primary" (click)="pay(requestedRefill.reference)">Pay with Stripe</button>
             </ng-container>
-            <ng-container *ngIf="refillStep === 'creditcard'">
+            <ng-container *ngIf="refillStep === 'creditCard'">
                 <h5 class="my-auto">Credit Card Step</h5>
-                <p innerHtml="{{refillMessages.creditcard(requestedRefill)}}"></p>
+                <p innerHtml="{{refillMessages.creditCard(requestedRefill)}}"></p>
             </ng-container>
-            <ng-container *ngIf="refillStep === 'debitcard'">
+            <ng-container *ngIf="refillStep === 'debitCard'">
                 <h5 class="my-auto">Debit Card Step</h5>
-                <p innerHtml="{{refillMessages.debitcard(requestedRefill)}}"></p>
+                <p innerHtml="{{refillMessages.debitCard(requestedRefill)}}"></p>
             </ng-container>
         </ng-container>
     </div>

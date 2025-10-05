@@ -11,12 +11,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let transaction of transactions" class="{{ transaction.type === 'debit' ? 'table-danger' : 'table-success' }}">
+            <tr *ngFor="let transaction of transactions" class="{{ transaction.transactionType === 'debit' ? 'table-danger' : 'table-success' }}">
                 <th scope="row">{{ transaction.id }}</th>
-                <td>{{ transaction.date.toLocaleString('en-us',{timeZoneName:'short'}) }}</td>
-                <td> {{ transaction.accountid }}</td>
+                <td>{{ transaction.createdAt.toLocaleString('en-us',{timeZoneName:'short'}) }}</td>
+                <td> {{ transaction.accountId }}</td>
                 <td>{{ transaction.type }}</td>
-                <td>{{ transaction.reason }}</td>
+                <td>{{ transaction.description }}</td>
                 <td>{{ transaction.total }} PHYC</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">

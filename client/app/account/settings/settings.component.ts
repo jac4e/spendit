@@ -7,18 +7,18 @@ import {
   Validators
 } from '@angular/forms';
 import { first } from 'rxjs';
-import { IAccount, IAccountForm } from 'typesit';
+import { IAccount, IAccountPasswordForm, IAccountSettingsForm } from 'typesit';
 import { AccountService, AlertService } from '../../_services';
 
 class SettingsForm {
   form: FormGroup;
   showErrors: { [key: string]: boolean };
   loading: boolean;
-  type: "accountDetails" | "password";
+  type: "settings" | "password";
   controlsConfig: { [key: string]: any };
   constructor(
     private formBuilder: UntypedFormBuilder,
-    type: "accountDetails" | "password",
+    type: "settings" | "password",
     controlsConfig: { [key: string]: any }
   ) {
     this.type = type;
@@ -50,7 +50,7 @@ export class SettingsComponent implements OnInit {
     this.accountService.account.subscribe((account) => {
       if (account !== null) {
         this.account = account;
-        this.accountDetailsForm = new SettingsForm(formBuilder, "accountDetails", {
+        this.accountDetailsForm = new SettingsForm(formBuilder, "settings", {
           username: [this.account.username, [Validators.required]],
           firstName: [this.account.firstName, [Validators.required]],
           lastName: [this.account.lastName, [Validators.required]],
@@ -92,14 +92,17 @@ export class SettingsComponent implements OnInit {
     }
     form.loading = true;
 
-    const accountForm: IAccountForm = {
+    const accountSettingsForm: IAccountSettingsForm = {
       username: form.form.value.username || undefined,
       firstName: form.form.value.firstName || undefined,
       lastName: form.form.value.lastName || undefined,
       email: form.form.value.email || undefined,
-      password: form.form.value.password || undefined,
       notify: form.form.value.notify || undefined,
     };
+
+    const accountPasswordForm: IAccountPasswordForm = {
+      password: form.form.value.password || undefined,
+    }
 
     const currentPassword = form.form.value.currentPassword;
 
@@ -114,7 +117,7 @@ export class SettingsComponent implements OnInit {
     }
 
     this.accountService
-      .updateAccount(form.type, currentPassword, accountForm)
+      .updateAccount(form.type, currentPassword, form.type === "password" ? accountPasswordForm : accountSettingsForm)
       .pipe(first())
       .subscribe({
         next: () => {

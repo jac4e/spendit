@@ -80,7 +80,7 @@ export class RefillComponent {
   //   success: false,
   //   refill: ''
   // };
-  listDefaultSort: SortEvent = { column: 'dateCreated', direction: 'desc' };
+  listDefaultSort: SortEvent = { column: 'createdAt', direction: 'desc' };
   listControl: ListControl[] = [
     {
       name: 'View',

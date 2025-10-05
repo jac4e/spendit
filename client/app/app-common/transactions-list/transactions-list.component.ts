@@ -36,7 +36,7 @@ export class TransactionsListComponent {
   refreshTransactions() {
     this.getTransactions.subscribe((transactions: ITransaction[]) => {
       this.transactions = transactions.map((data) => {
-        data.date = new Date(data.date);
+        data.createdAt = new Date(data.createdAt);
         return data;
       });
       // console.log(this.transactions[0].date.toLocaleString());

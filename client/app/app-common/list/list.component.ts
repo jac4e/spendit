@@ -120,7 +120,7 @@ export class ListComponent {
           return '';
       }
     } else if(isITransaction(data)) {
-      return data.type === 'debit' ? 'table-danger' : 'table-success'
+      return data.transactionType === 'debit' ? 'table-danger' : 'table-success'
     }
     return '';
   }

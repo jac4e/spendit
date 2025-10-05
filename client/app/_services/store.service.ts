@@ -5,6 +5,7 @@ import { BehaviorSubject, retry, catchError } from 'rxjs';
 import { BackendService } from '../_services';
 import { HttpClient } from '@angular/common/http';
 import { AlertService } from './alert.service';
+import { HTTP } from 'typesit/lib/common';
 
 @Injectable({
   providedIn: 'root'
@@ -109,7 +110,7 @@ export class StoreService {
     return this.cart.asObservable();
   }
 
-  serializeCart(cart: ICart): ICartSerialized {
+  serializeCart(cart: ICart): HTTP<ICartSerialized> {
     return cart.map((cart: ICartItem) => {
       return { id: cart.id, amount: cart.amount.toString() };
     });
@@ -123,7 +124,7 @@ export class StoreService {
     // console.log(this.serializeCart(this.cart.value));
     // console.log('purchasing');
     // console.log(`${this.backend.api.store}/purchase`);
-    return this.backend.apiCall<ICartSerialized>(
+    return this.backend.apiCall<{}, HTTP<ICartSerialized>>(
       'POST',
       this.backend.api.store,
       'purchase',

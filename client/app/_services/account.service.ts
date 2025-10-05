@@ -160,6 +160,8 @@ export class AccountService {
         return transactions.map((transaction) => {
           return {
             ...transaction,
+            createdAt: new Date(transaction.createdAt),
+            updatedAt: new Date(transaction.updatedAt),
             total: BigInt(transaction.total)
           };
         });
@@ -179,8 +181,8 @@ export class AccountService {
           ...refill,
           amount: BigInt(refill.amount),
           cost: BigInt(refill.cost),
-          dateCreated: new Date(refill.dateCreated),
-          dateUpdated: new Date(refill.dateUpdated)
+          createdAt: new Date(refill.createdAt),
+          updatedAt: new Date(refill.updatedAt)
         };
       })
     );
@@ -206,8 +208,8 @@ export class AccountService {
             ...refill,
             amount: BigInt(refill.amount),
             cost: BigInt(refill.cost),
-            dateCreated: new Date(refill.dateCreated),
-            dateUpdated: new Date(refill.dateUpdated)
+            createdAt: new Date(refill.createdAt),
+            updatedAt: new Date(refill.updatedAt)
           };
         });
       })

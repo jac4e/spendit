@@ -15,7 +15,7 @@ import { ListComponent } from 'client/app/app-common/list/list.component';
 export class RefillsComponent implements OnInit {
   @ViewChild(ListComponent)
   private listComponent!: ListComponent;
-  listDefaultSort: SortEvent = { column: 'dateCreated', direction: 'desc' };
+  listDefaultSort: SortEvent = { column: 'createdAt', direction: 'desc' };
   listControl: ListControl[] = [
     {
       name: 'View',

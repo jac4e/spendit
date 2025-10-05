@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BackendService } from '../_services';
-import { IAccount, ITransaction, IAccountForm, ICredentials, RefillMethods, IRefill } from 'typesit';
+import { IAccount, ITransaction, IAccountBaseForm, IAccountSettingsForm, IAccountPasswordForm, ICredentials, RefillMethods, IRefill } from 'typesit';
+import { HTTP, ICoin } from 'typesit/lib/common';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,8 @@ export class AccountService {
     }, 30000);
   }
 
-  register(accountForm: IAccountForm) {
-    return this.backend.apiCall<IAccountForm>(
+  register(accountForm: IAccountBaseForm) {
+    return this.backend.apiCall<{}, IAccountBaseForm>(
       'POST',
       this.backend.api.account,
       'register',
@@ -41,17 +42,26 @@ export class AccountService {
     );
   }
 
-  login(credentials: ICredentials) {
+  login(credentials: ICredentials): Observable<IAccount> {
     // console.log('logging in');
     // console.log(this.api('auth'));
     return this.backend
-      .apiCall<{ account: IAccount; token: string }>(
+      .apiCall<{ account: IAccount; token: string }, ICredentials>(
         'POST',
         this.backend.api.account,
         'auth',
-        credentials
+        credentials as HTTP<ICredentials>
       )
       .pipe(
+        map(({ account, token }) => {
+          return {
+            account: {
+              ...account,
+              balance: BigInt(account.balance)
+            },
+            token: token
+          }
+        }),
         map(({ account, token }) => {
           localStorage.setItem('account', JSON.stringify(account));
           localStorage.setItem('token', token);
@@ -65,7 +75,7 @@ export class AccountService {
     // call reset session on api
     // logs out all instances of account session
     this.backend
-      .apiCall('GET', this.backend.api.account, 'self/resetSession')
+      .apiCall<{}>('GET', this.backend.api.account, 'self/resetSession')
       .subscribe({
         next: () => {
           this.resetClientAccount();
@@ -80,23 +90,34 @@ export class AccountService {
     this.router.navigate(['/']);
   }
 
-  getAccount() {
+  getAccount(): Observable<IAccount> {
     return this.backend.apiCall<IAccount>(
       'GET',
       this.backend.api.account,
       'self'
+    ).pipe(
+      map((account) => {
+        return {
+          ...account,
+          balance: BigInt(account.balance)
+        };
+      })
     );
   }
 
-  getBalance() {
-    return this.backend.apiCall<string>(
+  getBalance(): Observable<ICoin> {
+    return this.backend.apiCall<HTTP<ICoin>>(
       'GET',
       this.backend.api.account,
       'self/balance'
+    ).pipe(
+      map((balance) => {
+        return BigInt(balance);
+      })
     );
   }
 
-  updateAccount(type: "accountDetails" | "password", currentPassword: ICredentials["password"], accountForm: IAccountForm) {
+  updateAccount(type: "settings" | "password", currentPassword: ICredentials["password"], accountForm: IAccountSettingsForm | IAccountPasswordForm) {
     return this.backend.apiCall(
       'PUT',
       this.backend.api.account,
@@ -113,7 +134,7 @@ export class AccountService {
           throw 'Cannot update balance on null account';
         }
         const account = this.accountSubject.value;
-        account.balance = BigInt(balance);
+        account.balance = balance;
         localStorage.setItem('account', JSON.stringify(account));
         this.accountSubject.next(account);
       }
@@ -129,36 +150,67 @@ export class AccountService {
     });
   }
 
-  getTransactions() {
-    return this.backend.apiCall<ITransaction[]>(
+  getTransactions(): Observable<ITransaction[]> {
+    return this.backend.apiCall<HTTP<ITransaction>[]>(
       'GET',
       this.backend.api.account,
       'self/transactions'
+    ).pipe(
+      map((transactions) => {
+        return transactions.map((transaction) => {
+          return {
+            ...transaction,
+            total: BigInt(transaction.total)
+          };
+        });
+      })
     );
   }
 
   requestRefill(method: RefillMethods, amount: string): Observable<IRefill> {
-    return this.backend.apiCall(
+    return this.backend.apiCall<IRefill, { method: RefillMethods; amount: string }>(
       'POST',
       this.backend.api.account,
       'self/refill',
       { method, amount }
+    ).pipe(
+      map((refill) => {
+        return {
+          ...refill,
+          amount: BigInt(refill.amount),
+          cost: BigInt(refill.cost),
+          dateCreated: new Date(refill.dateCreated),
+          dateUpdated: new Date(refill.dateUpdated)
+        };
+      })
     );
   }
 
   cancelRefill(refillId: string) {
-    return this.backend.apiCall(
+    return this.backend.apiCall<{}>(
       'DELETE',
       this.backend.api.account,
       `self/refill/${refillId}`
     );
   }
 
-  getRefillHistory() {
+  getRefillHistory(): Observable<IRefill[]> {
     return this.backend.apiCall<IRefill[]>(
       'GET',
       this.backend.api.account,
       'self/refill'
+    ).pipe(
+      map((refills) => {
+        return refills.map((refill) => {
+          return {
+            ...refill,
+            amount: BigInt(refill.amount),
+            cost: BigInt(refill.cost),
+            dateCreated: new Date(refill.dateCreated),
+            dateUpdated: new Date(refill.dateUpdated)
+          };
+        });
+      })
     );
   }
 

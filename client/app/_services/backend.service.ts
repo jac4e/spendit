@@ -2,6 +2,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppConfigService } from './app-config.service';
+import { Observable } from 'rxjs';
+import { HTTP } from 'typesit/lib/common';
 
 @Injectable({
   providedIn: 'root'
@@ -32,17 +34,19 @@ export class BackendService {
     };
   }
 
-  apiCall<Type>(method: string, api: string, func?: string, data?: any) {
+  apiCall<ResType>(method: string, api: string, func?: string): Observable<HTTP<ResType>>;
+  apiCall<ResType, ReqType>(method: string, api: string, func?: string, data?: HTTP<ReqType>): Observable<HTTP<ResType>>;
+  apiCall<ResType, ReqType = any>(method: string, api: string, func?: string, data?: HTTP<ReqType>): Observable<HTTP<ResType>> {
     const crumb = func === undefined ? '' : `/${func}`;
     switch (method.toUpperCase()) {
       case 'POST':
-        return this.http.post<Type>(`${api}${crumb}`, data);
+        return this.http.post<HTTP<ResType>>(`${api}${crumb}`, data);
       case 'GET':
-        return this.http.get<Type>(`${api}${crumb}`);
+        return this.http.get<HTTP<ResType>>(`${api}${crumb}`);
       case 'PUT':
-        return this.http.put<Type>(`${api}${crumb}`, data);
+        return this.http.put<HTTP<ResType>>(`${api}${crumb}`, data);
       case 'DELETE':
-        return this.http.delete<Type>(`${api}${crumb}`);
+        return this.http.delete<HTTP<ResType>>(`${api}${crumb}`);
       default:
         throw 'invalid http method';
     }

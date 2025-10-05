@@ -20,7 +20,7 @@ import {
   keysIAccount,
   getValues,
   IAccount,
-  IAccountForm,
+  IAccountBaseForm,
   Roles
 } from 'typesit';
 import { ListControl, ListControlType } from 'client/app/_models';

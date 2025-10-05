@@ -1,9 +1,10 @@
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {
   IProduct,
   IProductForm,
   IAccount,
-  IAccountForm,
+  IAccountBaseForm,
   ITransaction,
   ITransactionForm,
   Roles,
@@ -15,10 +16,15 @@ import {
   IRefillStats,
   IStoreStats,
   ITaskLean,
-  StatsDateRange
+  StatsDateRange,
+  isIProductForm,
+  ProductCategories,
+  ProductTypes,
+  getKeys
 } from 'typesit';
 import { BackendService } from '../_services';
-import { retry } from 'rxjs';
+import { Observable, retry } from 'rxjs';
+import { HTTP } from 'typesit/lib/common';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +33,7 @@ export class AdminService {
   // eslint-disable-next-line no-unused-vars
   constructor(private backend: BackendService) {}
 
-  addAccount(accountForm: IAccountForm) {
+  addAccount(accountForm: IAccountBaseForm) {
     return this.backend.apiCall(
       'POST',
       this.backend.api.account,
@@ -40,7 +46,7 @@ export class AdminService {
     return this.backend.apiCall('DELETE', this.backend.api.account, id);
   }
 
-  updateAccount(id: IAccount['id'], account: IAccountForm) {
+  updateAccount(id: IAccount['id'], account: IAccountBaseForm) {
     return this.backend.apiCall('PUT', this.backend.api.account, id, account);
   }
 
@@ -56,22 +62,36 @@ export class AdminService {
   public boundedResetPassword = this.resetPassword.bind(this);
 
   addProduct(product: IProductForm) {
+    // Create a reqProduct object that is HTTP<IProductForm>
+    const reqProduct: HTTP<IProductForm> = {
+      ...product,
+      price: product.price.toString(),
+      stock: product.stock?.toString(),
+      order: product.order
+    };
+
+
     return this.backend.apiCall(
       'POST',
       this.backend.api.store,
       'products',
-      product
+      reqProduct
     );
   }
 
   updateProduct(id: IProduct['id'], product: IProductForm) {
     // console.log(`${this.backend.api.store}/products/${id}`, product);
-    return this.backend.apiCall(
+    return this.backend.apiCall<{}, IProductForm>(
       'PUT',
       this.backend.api.store,
       `products/${id}`,
-      product
-    );
+      {
+        ...product,
+        price: product.price.toString(),
+        stock: product.stock?.toString(),
+        order: product.order
+      }
+    )
   }
   public boundedUpdateProduct = this.updateProduct.bind(this);
 
@@ -152,11 +172,11 @@ export class AdminService {
   }
 
   // Statistics functions
-  getFinanceStats(dateOption: StatsDateRange) {
+  getFinanceStats(dateOption: StatsDateRange): Observable<IFinanceStats> {
     return this.backend.apiCall<IFinanceStats>('GET', this.backend.api.admin, `stats/finance/${dateOption}`);
   }
 
-  getInventoryStats() {
+  getInventoryStats(): Observable<IInventoryStats> {
     return this.backend.apiCall<IInventoryStats>(
       'GET',
       this.backend.api.admin,
@@ -164,7 +184,7 @@ export class AdminService {
     );
   }
 
-  getTransactionStats() {
+  getTransactionStats(): Observable<ITransactionStats> {
     return this.backend.apiCall<ITransactionStats>(
       'GET',
       this.backend.api.admin,
@@ -172,7 +192,7 @@ export class AdminService {
     );
   }
 
-  getAccountStats() {
+  getAccountStats(): Observable<IAccountStats> {
     return this.backend.apiCall<IAccountStats>(
       'GET',
       this.backend.api.admin,
@@ -180,7 +200,7 @@ export class AdminService {
     );
   }
 
-  getRefillStats() {
+  getRefillStats(): Observable<IRefillStats> {
     return this.backend.apiCall<IRefillStats>(
       'GET',
       this.backend.api.admin,
@@ -188,7 +208,7 @@ export class AdminService {
     );
   }
 
-  getStoreStats() {
+  getStoreStats(): Observable<IStoreStats> {
     return this.backend.apiCall<IStoreStats>(
       'GET',
       this.backend.api.admin,
@@ -198,8 +218,8 @@ export class AdminService {
 
   // Task functions
 
-  getTasks() {
-    return this.backend.apiCall<ITaskLean[]>('GET', this.backend.api.admin, 'tasks');
+  getTasks(): Observable<ITaskLean[]> {
+    return this.backend.apiCall<HTTP<ITaskLean>[]>('GET', this.backend.api.admin, 'tasks');
   }
 
   manageTask(taskId: string, command: string, data: any) {

@@ -65,6 +65,9 @@ export class CommonService {
   isNumber(variable: any): boolean {
     return typeof variable === 'number';
   }
+  isBigInt(variable: any): boolean {
+    return typeof variable === 'bigint';
+  }
   isArray(obj: any) {
     return Array.isArray(obj);
   }

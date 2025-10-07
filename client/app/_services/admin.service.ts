@@ -20,7 +20,8 @@ import {
   isIProductForm,
   ProductCategories,
   ProductTypes,
-  getKeys
+  getKeys,
+  IAccountSettingsForm
 } from 'typesit';
 import { BackendService } from '../_services';
 import { Observable, retry } from 'rxjs';
@@ -46,7 +47,7 @@ export class AdminService {
     return this.backend.apiCall('DELETE', this.backend.api.account, id);
   }
 
-  updateAccount(id: IAccount['id'], account: IAccountBaseForm) {
+  updateAccount(id: IAccount['id'], account: IAccountSettingsForm) {
     return this.backend.apiCall('PUT', this.backend.api.account, id, account);
   }
 
@@ -121,12 +122,33 @@ export class AdminService {
     );
   }
 
-  getAllAccounts() {
-    return this.backend.apiCall<IAccount[]>('GET', this.backend.api.account);
+  getAllAccounts(): Observable<IAccount[]> {
+    return this.backend.apiCall<HTTP<IAccount>[]>('GET', this.backend.api.account).pipe(
+      map((accounts) => {
+        return accounts.map((account) => {
+          return {
+            ...account,
+            balance: BigInt(account.balance)
+          };
+        });
+      })
+    );
   }
 
-  getAllRefills() {
-    return this.backend.apiCall<IRefill[]>('GET', this.backend.api.refill, '');
+  getAllRefills(): Observable<IRefill[]> {
+    return this.backend.apiCall<HTTP<IRefill>[]>('GET', this.backend.api.refill, '').pipe(
+      map((refills) => {
+        return refills.map((refill) => {
+          return {
+            ...refill,
+            amount: BigInt(refill.amount),
+            cost: BigInt(refill.cost),
+            createdAt: new Date(refill.createdAt),
+            updatedAt: new Date(refill.updatedAt)
+          };
+        });
+      })
+    );
   }
 
   approveRefill(refillid: string) {
@@ -153,21 +175,54 @@ export class AdminService {
     );
   }
 
-  getAllTransactions() {
+  getAllTransactions(): Observable<ITransaction[]> {
     // console.log('getting transactions');
     // console.log(this.api('transactions'));
-    return this.backend.apiCall<ITransaction[]>(
+    return this.backend.apiCall<HTTP<ITransaction[]>>(
       'GET',
       this.backend.api.admin,
       'transactions'
+    ).pipe(
+      map((transactions) => {
+        return transactions.map((transaction) => {
+          return {
+            ...transaction,
+            createdAt: new Date(transaction.createdAt),
+            updatedAt: new Date(transaction.updatedAt),
+            total: BigInt(transaction.total)
+          };
+        });
+      })
     );
   }
-  getInventory() {
+  getInventory(): Observable<IProduct[]> {
     // console.log(this.api('products'));
-    return this.backend.apiCall<IProduct[]>(
+    return this.backend.apiCall<HTTP<IProduct[]>>(
       'GET',
       this.backend.api.admin,
       'products'
+    ).pipe(
+      map((products) => {
+        return products.map((product) => {
+          const stock = {
+            stock: product.stock ? BigInt(product.stock) : undefined,
+          }
+
+          const order = {
+            order: product.order ? {
+              supplier: product.order.supplier,
+              minimum: BigInt(product.order.minimum),
+              current: BigInt(product.order.current)
+            } : undefined
+          }
+
+          return {
+            ...product,
+            price: BigInt(product.price),
+            ...(product.type === ProductTypes.Stock ? stock : order)
+          };
+        });
+      })
     );
   }
 
@@ -219,7 +274,7 @@ export class AdminService {
   // Task functions
 
   getTasks(): Observable<ITaskLean[]> {
-    return this.backend.apiCall<HTTP<ITaskLean>[]>('GET', this.backend.api.admin, 'tasks');
+    return this.backend.apiCall<HTTP<ITaskLean[]>>('GET', this.backend.api.admin, 'tasks');
   }
 
   manageTask(taskId: string, command: string, data: any) {

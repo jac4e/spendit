@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AccountService } from './account.service';
-import { ICartItem, ICart, ICartSerialized, ICartItemSerialized, IAccount, IProduct } from 'typesit';
-import { BehaviorSubject, retry, catchError } from 'rxjs';
+import { ICartItem, ICart, ICartSerialized, ICartItemSerialized, IAccount, IProduct, AnyProduct, ProductTypes } from 'typesit';
+import { BehaviorSubject, retry, catchError, Observable, map } from 'rxjs';
 import { BackendService } from '../_services';
 import { HttpClient } from '@angular/common/http';
 import { AlertService } from './alert.service';
@@ -98,11 +98,33 @@ export class StoreService {
     this.cart.next(cart);
   }
 
-  getInventory() {
-    return this.backend.apiCall<IProduct[]>(
+  getInventory(): Observable<IProduct[]> {
+    return this.backend.apiCall<HTTP<IProduct[]>>(
       'GET',
       this.backend.api.store,
       'products'
+    ).pipe(
+      map((products) => {
+        return products.map((product) => {
+          const stock = {
+            stock: product.stock ? BigInt(product.stock) : undefined,
+          }
+
+          const order = {
+            order: product.order ? {
+              supplier: product.order.supplier,
+              minimum: BigInt(product.order.minimum),
+              current: BigInt(product.order.current)
+            } : undefined
+          }
+
+          return {
+            ...product,
+            price: BigInt(product.price),
+            ...(product.type === ProductTypes.Stock ? stock : order)
+          };
+        });
+      })
     );
   }
 

@@ -106,7 +106,7 @@ export class AccountService {
   }
 
   getBalance(): Observable<ICoin> {
-    return this.backend.apiCall<HTTP<ICoin>>(
+    return this.backend.apiCall<ICoin>(
       'GET',
       this.backend.api.account,
       'self/balance'
@@ -151,7 +151,7 @@ export class AccountService {
   }
 
   getTransactions(): Observable<ITransaction[]> {
-    return this.backend.apiCall<HTTP<ITransaction>[]>(
+    return this.backend.apiCall<ITransaction[]>(
       'GET',
       this.backend.api.account,
       'self/transactions'

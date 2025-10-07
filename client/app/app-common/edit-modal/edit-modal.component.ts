@@ -1,3 +1,4 @@
+import { FormType, AvailableTypes } from './../../../../node_modules/typesit/src/index';
 import {
   Component,
   Input,
@@ -17,8 +18,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AlertService } from 'client/app/_services';
 import { CommonService } from 'client/app/_services';
-import { getKeys, IAccount, IProduct, isIAccount, ITransaction } from 'typesit';
-import { ListControl, ListControlEdit } from 'client/app/_models';
+import { getKeys, IAccount, IProduct, isIAccount, ITransaction, IRefill, IPreOrder, IStockEntry, isITransaction, isIProduct, keysIAccountSettingsForm, keysIProduct, ProductTypes, keysIProductFormStock, keysIProductFormOrder } from 'typesit';
+import { EditableListForms, EditableListTypes, ListControl, ListControlEdit } from 'client/app/_models';
+
+enum ModalType {
+  IAccount,
+  IProductStock,
+  IProductOrder
+}
+
 
 @Component({
   selector: 'app-edit-modal',
@@ -27,10 +35,11 @@ import { ListControl, ListControlEdit } from 'client/app/_models';
 })
 export class EditModalComponent implements OnInit {
   closeResult = '';
+  modalType: ModalType | undefined;
   modalRef!: NgbModalRef;
   @Input() name!: string;
   @Input() successAlert!: string;
-  @Input() model!: { [key: string]: any };
+  @Input() model!: EditableListTypes;
   @Input() submit!: ListControlEdit['edit']['submit'];
   @Input() secondarySubmit: ListControlEdit['edit']['secondarySubmit'];
   modelProperties!: string[];
@@ -56,23 +65,33 @@ export class EditModalComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.model);
-    this.modelProperties = getKeys(
-      this.model as IAccount | ITransaction | IProduct
-    )
-      .map((key) => {
-        // remove restricted keys
-        if (key === 'id' || key === 'balance' || key === 'gid') {
-          return '';
-        }
-        return key;
-      })
-      .filter((key) => key !== '') as string[];
+    // this.modelProperties = getKeys(
+    //   this.model as IAccount | IProduct
+    // )
+    //   .map((key) => {
+    //     // remove restricted keys
+    //     if (key === 'id' || key === 'balance' || key === 'gid') {
+    //       return '';
+    //     }
+    //     return key;
+    //   })
+    //   .filter((key) => key !== '') as string[];
 
-    // If model is account, add reset password button
+    // Determine modal type
     if (isIAccount(this.model)) {
+      this.modalType = ModalType.IAccount;
+      this.modelProperties = keysIAccountSettingsForm;
       // add keys
       this.hasPassword = true;
       // this.modelProperties.push('confirmPassword');
+    } else if (isIProduct<ProductTypes.Stock>(this.model, ProductTypes.Stock)) {
+      this.modalType = ModalType.IProductStock;
+      this.modelProperties = keysIProductFormStock;
+    } else if (isIProduct<ProductTypes.Order>(this.model, ProductTypes.Order)) {
+      this.modalType = ModalType.IProductOrder;
+      this.modelProperties = keysIProductFormOrder;
+    } else {
+      throw 'Model type not supported';
     }
   }
 
@@ -83,7 +102,7 @@ export class EditModalComponent implements OnInit {
   generateForm() {
     this.modelProperties.forEach((key) => {
       // console.log(key);
-      const value = this.model[key];
+      const value = (this.model as any)[key];
       const validatorsArr = [Validators.required];
       if (key === 'email') {
         validatorsArr.push(Validators.email);
@@ -105,12 +124,7 @@ export class EditModalComponent implements OnInit {
       return;
     }
 
-    // convert to IAccountForm if needed
     const form = this.form.value;
-    // console.log(form);
-    // if (form['confirmPassword']) {
-    //   delete form['confirmPassword'];
-    // }
 
     this.loading = true;
     this.submit(this.model['id'], form).subscribe({

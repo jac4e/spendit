@@ -3,13 +3,13 @@ import { AdminService } from 'client/app/_services/admin.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs';
-import { IProduct } from 'typesit';
+import { IProduct, isIProductForm } from 'typesit';
 import {
   AlertService,
   CommonService,
   StoreService
 } from 'client/app/_services';
-import { ListControl, ListControlType } from 'client/app/_models';
+import { EditableListForms, ListControl, ListControlType } from 'client/app/_models';
 import { ListComponent } from 'client/app/app-common/list/list.component';
 
 @Component({
@@ -41,7 +41,13 @@ export class InventoryComponent implements OnInit {
       },
       edit: {
         successAlert: 'dashboard-alert',
-        submit: this.adminService.boundedUpdateProduct,
+        submit: (id: string, content: EditableListForms) => {
+          if (isIProductForm(content)) {
+            return this.adminService.boundedUpdateProduct(id, content);
+          } else {
+            throw new Error('Invalid form data');
+          }
+        }
       }
     },
     {

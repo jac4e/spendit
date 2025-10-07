@@ -21,9 +21,14 @@ import {
   getValues,
   IAccount,
   IAccountBaseForm,
-  Roles
+  Roles,
+  isIAccountBaseForm,
+  getKeys,
+  keysIAccountBaseForm,
+  isIAccountSettingsForm,
+  keysIAccountSettingsForm
 } from 'typesit';
-import { ListControl, ListControlType } from 'client/app/_models';
+import { EditableListForms, ListControl, ListControlType } from 'client/app/_models';
 import { ListComponent } from 'client/app/app-common/list/list.component';
 
 @Component({
@@ -69,7 +74,17 @@ export class AccountsComponent implements OnInit {
       },
       edit: {
         successAlert: 'dashboard-alert',
-        submit: this.adminService.boundedUpdateAccount,
+        submit: (id: string, content: EditableListForms) => {
+          if(isIAccountSettingsForm(content)) {
+            return this.adminService.boundedUpdateAccount(id, content)
+          } else {
+            // Print invalid form data
+            console.error('Invalid form data', content);
+            // Print keys of correct type
+            console.log('Expected keys:', keysIAccountSettingsForm);
+            throw new Error('Invalid form data');
+          }
+        },
         secondarySubmit: this.adminService.boundedResetPassword
       }
     },
@@ -184,9 +199,19 @@ export class AccountsComponent implements OnInit {
       return;
     }
 
+    const accountForm: IAccountBaseForm = {
+      username: this.form.value.username,
+      role: this.form.value.role,
+      firstName: this.form.value.firstName,
+      lastName: this.form.value.lastName,
+      email: this.form.value.email,
+      password: this.form.value.password,
+      notify: this.form.value.notify
+    }
+
     this.loading = true;
     this.adminService
-      .addAccount(this.form.value)
+      .addAccount(accountForm)
       .pipe(first())
       .subscribe({
         next: () => {

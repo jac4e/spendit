@@ -13,13 +13,16 @@ Edit
                 <ng-container *ngFor="let key of modelProperties">
                     <label for="{{ key }}">{{commonService.titleCase(key)}}:</label>
                     <!-- <label class="sr-only" for="username">username</label> -->
-                    <input *ngIf="commonService.isString(model[key])" type="text" formControlName="{{ key }}"
+                    <input *ngIf="commonService.isString($any(model)[key])" type="text" formControlName="{{ key }}"
                         class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
                         placeholder="{{ key }}" />
-                    <input *ngIf="commonService.isBoolean(model[key])" type="checkbox" formControlName="{{ key }}"
+                    <input *ngIf="commonService.isBoolean($any(model)[key])" type="checkbox" formControlName="{{ key }}"
                         class="form-check-input" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
                         placeholder="{{ key }}" />
-                    <input *ngIf="commonService.isNumber(model[key])" type="number" formControlName="{{ key }}"
+                    <input *ngIf="commonService.isNumber($any(model)[key])" type="number" formControlName="{{ key }}"
+                        class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
+                        placeholder="{{ key }}" />
+                    <input *ngIf="commonService.isBigInt($any(model)[key])" type="number" formControlName="{{ key }}"
                         class="form-control" id="modal_{{ key }}" [ngClass]="{ 'is-invalid': submitted && f[key].errors }"
                         placeholder="{{ key }}" />
                     <div *ngIf="submitted && f[key].errors" class="invalid-feedback">

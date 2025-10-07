@@ -1,7 +1,10 @@
 import { Observable } from "rxjs";
-import { IRefill, ITransaction, IAccount, IProduct, ICartItem, UnionKeys } from "typesit";
+import { IRefill, ITransaction, IAccount, IProduct, ICartItem, UnionKeys, IRefillForm, IProductForm, IPreOrder, ITransactionForm, IStockEntry, IStockEntryForm, IAccountBaseForm, IAccountSettingsForm, IAccountPasswordForm } from "typesit";
 
 export type AllowableListData = IRefill | ITransaction | IAccount | IProduct | ICartItem;
+export type CreatableListForms = ITransactionForm | IAccountBaseForm | IProductForm | IStockEntryForm;
+export type EditableListTypes = IAccount | IProduct;
+export type EditableListForms = IAccountSettingsForm | IProductForm;
 
 export type SortColumn = UnionKeys<AllowableListData> | '';
 export type SortDirection = 'asc' | 'desc' | '';
@@ -31,7 +34,7 @@ export interface ListControlEdit extends listControlBase {
     type: ListControlType.Edit;
     edit: {
         successAlert: string;
-        submit: (id: string, content: any) => Observable<any>;
+        submit: (id: string, content: EditableListForms) => Observable<any>;
         secondarySubmit?: (id: string) => Observable<any>;
     }
 }

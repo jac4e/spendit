@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ITransaction, TransactionType } from 'typesit';
+import { ITransaction, ITransactionForm, LedgerType, TransactionType } from 'typesit';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';
@@ -73,16 +73,22 @@ export class TransactionsComponent implements OnInit {
 
     // Confirmation dialog
     if (!confirm('Are you sure you want to add this transaction?')) {
-      return;
+      return; 
     }
 
     // Convert to ITransactionForm
-    const transactionForm = this.form.value;
-    transactionForm.products = [];
+    const transactionForm: ITransactionForm = {
+      accountId: this.form.value.accountid,
+      type: LedgerType.Transaction,
+      description: this.form.value.reason,
+      total: this.form.value.total.toString(),
+      transactionType: this.form.value.type,
+      products: []
+    };
 
     this.loading = true;
     this.adminService
-      .addTransaction(this.form.value)
+      .addTransaction(transactionForm)
       .pipe(first())
       .subscribe({
         next: () => {

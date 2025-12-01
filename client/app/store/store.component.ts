@@ -34,7 +34,7 @@ export class StoreComponent implements AfterViewInit {
   layout(inv: IProduct[]) {
     // console.log('begin');
     // console.log(inv);
-    const inventory = [...inv];
+    const inventory = [...inv].filter(product => product.stock || -1n > 0n);
     const collectionSize = inventory.length;
     // console.log(inventory.length);
     const wall = document.getElementById('wall');
@@ -87,6 +87,7 @@ export class StoreComponent implements AfterViewInit {
           this.layout(inventory);
         },
         error: (resp) => {
+          console.error(resp);
           this.alertService.error('Could not get store inventory', {autoClose: true});
         }
       });

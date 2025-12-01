@@ -10,48 +10,81 @@
         </div>
       </div>
     </div>
+
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <div class="input-group">
+        <div class="input-group-text">PHYC</div>
+        <input type="number" formControlName="price" class="form-control" id="price"
+          [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" placeholder="0">
+      </div>
+      <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
+        <div *ngIf="f['price'].errors?.['required']">Price is required</div>
+        <div *ngIf="f['price'].errors?.['min']">Price must be at least 0</div>
+        <div *ngIf="f['price'].errors?.['pattern']">Price must be an integer</div>
+      </div>
+    </div>
+
     <div class="mt-2 form-group col-sm-6 col-lg-auto">
       <input type="text" formControlName="description" class="form-control" id="description"
-        [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" placeholder="description">
+        [ngClass]="{ 'is-invalid': submitted && f['description'].errors }" placeholder="Description">
       <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
         <div *ngIf="f['description'].errors?.['required']">
           Description is required
         </div>
       </div>
     </div>
-    <div class="mt-2 form-group col-sm-6 col-lg-auto">
-      <div class="input-group">
-        <div class="input-group-text">#</div>
-        <input type="number" formControlName="stock" class="form-control" id="stock"
-          [ngClass]="{ 'is-invalid': submitted && f['stock'].errors }" placeholder="0">
-      </div>
-      <div *ngIf="submitted && f['stock'].errors" class="invalid-feedback">
-        <div *ngIf="f['stock'].errors?.['required']">
-          Stock is required
-        </div>
-      </div>
-    </div>
-    <div class="mt-2 form-group col-sm-6 col-lg-auto">
-      <div class="input-group">
-        <div class="input-group-text">PHYC</div>
-        <input type="number" formControlName="price" class="form-control" id="price"
-          [ngClass]="{ 'is-invalid': submitted && f['price'].errors }" placeholder="0">
-          <div *ngIf="submitted && f['price'].errors" class="invalid-feedback">
-            <div *ngIf="f['price'].errors?.['required']">
-              Price is required
-            </div>
-          </div>
-      </div>
-    </div>
+
     <div class="mt-2 form-group col-sm-6 col-lg-auto">
       <input type="text" formControlName="image" class="form-control" id="image"
-        [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" placeholder="image">
+        [ngClass]="{ 'is-invalid': submitted && f['image'].errors }" placeholder="Image URL">
       <div *ngIf="submitted && f['image'].errors" class="invalid-feedback">
         <div *ngIf="f['image'].errors?.['required']">
           Image is required
         </div>
       </div>
     </div>
+
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <select class="form-control" formControlName="type" id="type"
+        [ngClass]="{ 'is-invalid': submitted && f['type'].errors }">
+        <option value="">Select type</option>
+        <option *ngFor="let type of types" value="{{type}}">{{type | titlecase}}</option>
+      </select>
+      <div *ngIf="submitted && f['type'].errors" class="invalid-feedback">
+        <div *ngIf="f['type'].errors?.['required']">Type is required</div>
+      </div>
+    </div>
+
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <select class="form-control" formControlName="category" id="category"
+        [ngClass]="{ 'is-invalid': submitted && f['category'].errors }">
+        <option value="">Select category</option>
+        <option *ngFor="let category of categories" value="{{category}}">{{category | titlecase}}</option>
+      </select>
+      <div *ngIf="submitted && f['category'].errors" class="invalid-feedback">
+        <div *ngIf="f['category'].errors?.['required']">Category is required</div>
+      </div>
+    </div>
+
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <input type="text" formControlName="supplier" class="form-control" id="supplier"
+        [ngClass]="{ 'is-invalid': submitted && f['supplier'].errors }" placeholder="Supplier">
+      <div *ngIf="submitted && f['supplier'].errors" class="invalid-feedback">
+        <div *ngIf="f['supplier'].errors?.['required']">Supplier is required</div>
+      </div>
+    </div>
+
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <div class="input-group">
+        <div class="input-group-text">#</div>
+        <input type="number" formControlName="minimum" class="form-control" id="minimum"
+          [ngClass]="{ 'is-invalid': submitted && f['minimum'].errors }" placeholder="Minimum">
+      </div>
+      <div *ngIf="submitted && f['minimum'].errors" class="invalid-feedback">
+        <div *ngIf="f['minimum'].errors?.['min']">Minimum must be at least 0</div>
+      </div>
+    </div>
+
     <div class="form-group col-auto">
       <button [disabled]="loading" class="btn btn-primary">
         <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
@@ -60,37 +93,8 @@
     </div>
   </form>
 </div>
+
 <div class="table-card mt-3 p-3 round bg-ui-main">
   <h5>Products</h5>
-  <!-- <div class="col-12 table-responsive">
-    <table class="table table-hover table-flush">
-      <thead>
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">Price</th>
-          <th scope="col">Description</th>
-          <th scope="col">Stock</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of inventory">
-          <th scope="row">{{ product.id }}</th>
-          <td>{{ product.name }}</td>
-          <td>{{ product.price }} PHYC</td>
-          <td>{{ product.description }}</td>
-          <td>{{ product.stock }}</td>
-          <td>
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <app-view-modal class="btn btn-secondary" [name]="'Product View'" [model]="product">View</app-view-modal>
-              <app-edit-modal successAlert="dashboard-alert" class="btn btn-secondary" [name]="'Product Modify'" [submit]="updateProduct" [model]="product" (modifiedItemEvent)="refreshList()">Modify</app-edit-modal>
-              <button type="button" class="btn btn-secondary" (click)="remove(product.id)">Remove</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div> -->
-  <app-list [controls]="listControl" [exclude]="['image','description']" [getData]="refreshList()" name="inventory"></app-list>
-  <!-- <button class="btn btn-secondary" (click)="export()">Export</button> --> 
+  <app-list [controls]="listControl" [exclude]="['image','description','stock']" [getData]="refreshList()" name="inventory"></app-list>
 </div>

@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminService } from 'client/app/_services/admin.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs';
-import { IProduct, isIProductForm } from 'typesit';
+import { first, min } from 'rxjs';
+import { IProduct, IProductForm, isIProductForm, keysIProductForm, ProductCategories, ProductTypes } from 'typesit';
 import {
   AlertService,
   CommonService,
@@ -22,6 +22,8 @@ export class InventoryComponent implements OnInit {
   private listComponent!: ListComponent;
   inventory!: IProduct[];
   form!: UntypedFormGroup;
+  types = Object.values(ProductTypes);
+  categories = Object.values(ProductCategories);
   loading = false;
   submitted = false;
   updateProduct;
@@ -80,12 +82,12 @@ export class InventoryComponent implements OnInit {
         null,
         [Validators.required, Validators.min(0), Validators.pattern('^[0-9]*$')]
       ],
-      stock: [
-        0,
-        [Validators.required, Validators.min(0), Validators.pattern('^[0-9]*$')]
-      ],
       description: [''],
-      image: ['']
+      image: [''],
+      type: ['', Validators.required],
+      category: ['', Validators.required],
+      supplier: [''],
+      minimum: ['']
     });
   }
   get f() {
@@ -134,13 +136,25 @@ export class InventoryComponent implements OnInit {
     }
 
     // convert form to IProductForm
-    const productForm = this.form.value;
-    productForm.price = BigInt(productForm.price);
-    productForm.stock = BigInt(productForm.stock);
+    const productForm: IProductForm = {
+      name: this.form.value.name,
+      price: BigInt(this.form.value.price),
+      description: this.form.value.description,
+      image: this.form.value.image,
+      category: this.form.value.category,
+      type: this.form.value.type,
+    };
+
+      if (this.form.value.type === ProductTypes.Order) {
+        productForm.order = {
+          supplier: this.form.value.supplier,
+          minimum: BigInt(this.form.value.minimum),
+        };
+      }
 
     this.loading = true;
     this.adminService
-      .addProduct(this.form.value)
+      .addProduct(productForm)
       .pipe(first())
       .subscribe({
         next: () => {

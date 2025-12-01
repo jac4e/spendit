@@ -99,7 +99,9 @@
 </header>
 
 <!-- Global Alerts -->
-<app-common-alerts></app-common-alerts>
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+  <app-common-alerts></app-common-alerts>
+</div>
 
 <!-- Collapsible Cart Container -->
 <div *ngIf="account" class="container">

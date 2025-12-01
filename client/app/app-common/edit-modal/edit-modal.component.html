@@ -8,7 +8,7 @@ Edit
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
         <div class="modal-body">
-            <app-common-alerts id="modal-alert"></app-common-alerts>
+            <!-- <app-common-alerts id="modal-alert"></app-common-alerts> -->
             <div class="row mt-3 gy-2 gx-3 align-items-center">
                 <ng-container *ngFor="let key of modelProperties">
                     <label for="{{ key }}">{{commonService.titleCase(key)}}:</label>

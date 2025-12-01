@@ -67,7 +67,6 @@ export class AdminService {
     const reqProduct: HTTP<IProductForm> = {
       ...product,
       price: product.price.toString(),
-      stock: product.stock?.toString(),
       order: product.order
     };
 
@@ -89,7 +88,6 @@ export class AdminService {
       {
         ...product,
         price: product.price.toString(),
-        stock: product.stock?.toString(),
         order: product.order
       }
     )
@@ -205,7 +203,10 @@ export class AdminService {
       map((products) => {
         return products.map((product) => {
           const stock = {
-            stock: product.stock ? BigInt(product.stock) : undefined,
+            stock: product.stock ? {
+              amount: BigInt(product.stock.amount),
+              cost: BigInt(product.stock.cost)
+            } : undefined
           }
 
           const order = {

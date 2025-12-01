@@ -30,7 +30,7 @@ export class StoreService {
   }
 
   addToCart(product: IProduct, amount: bigint | number) {
-    // censure amount is bigint
+    // ensure amount is bigint
     amount = BigInt(amount);
 
     if (!product) {
@@ -107,7 +107,10 @@ export class StoreService {
       map((products) => {
         return products.map((product) => {
           const stock = {
-            stock: product.stock ? BigInt(product.stock) : undefined,
+            stock: product.stock ? {
+              amount: BigInt(product.stock.amount),
+              cost: BigInt(product.stock.cost)
+            } : undefined
           }
 
           const order = {

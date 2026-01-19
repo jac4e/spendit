@@ -4,6 +4,7 @@ import { AccountsComponent } from './accounts/accounts.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { RefillsComponent } from './refills/refills.component';
+import { StockComponent } from './stock/stock.component';
 import { RouterModule, Routes } from '@angular/router';
 import { OverviewComponent } from './overview/overview.component';
 
@@ -17,7 +18,8 @@ const routes: Routes = [
       { path: 'accounts', component: AccountsComponent },
       { path: 'inventory', component: InventoryComponent },
       { path: 'transactions', component: TransactionsComponent },
-      { path: 'refills', component: RefillsComponent }
+      { path: 'refills', component: RefillsComponent },
+      { path: 'stock', component: StockComponent }
     ]
   }
 ];

@@ -201,6 +201,40 @@ export class AdminService {
       })
     );
   }
+
+  getAllStockEntries(): Observable<IStockEntry[]> {
+    return this.backend.apiCall<HTTP<IStockEntry[]>>(
+      'GET',
+      this.backend.api.admin,
+      'stock'
+    ).pipe(
+      map((entries) => {
+        return entries.map((entry) => {
+          return {
+            ...entry,
+            createdAt: new Date(entry.createdAt),
+            updatedAt: new Date(entry.updatedAt),
+            delta: BigInt(entry.delta),
+            cost: entry.cost ? BigInt(entry.cost) : undefined
+          };
+        });
+      })
+    );
+  }
+
+  addStockEntry(stockEntry: IStockEntryForm) {
+    return this.backend.apiCall(
+      'POST',
+      this.backend.api.admin,
+      'stock',
+      {
+        ...stockEntry,
+        delta: stockEntry.delta.toString(),
+        cost: stockEntry.cost?.toString()
+      }
+    );
+  }
+
   getInventory(): Observable<IProduct[]> {
     // console.log(this.api('products'));
     return this.backend.apiCall<HTTP<IProduct[]>>(

@@ -75,6 +75,7 @@ export class AccountsComponent implements OnInit {
       edit: {
         successAlert: 'dashboard-alert',
         submit: (id: string, content: EditableListForms) => {
+          console.log('Submitted content:', content);
           if(isIAccountSettingsForm(content)) {
             return this.adminService.boundedUpdateAccount(id, content)
           } else {

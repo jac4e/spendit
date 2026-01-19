@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { IRefill, ITransaction, IAccount, IProduct, ICartItem, UnionKeys, IRefillForm, IProductForm, IPreOrder, ITransactionForm, IStockEntry, IStockEntryForm, IAccountBaseForm, IAccountSettingsForm, IAccountPasswordForm } from "typesit";
 
-export type AllowableListData = IRefill | ITransaction | IAccount | IProduct | ICartItem;
+export type AllowableListData = IRefill | ITransaction | IAccount | IProduct | ICartItem | IStockEntry;
 export type CreatableListForms = ITransactionForm | IAccountBaseForm | IProductForm | IStockEntryForm;
 export type EditableListTypes = IAccount | IProduct;
 export type EditableListForms = IAccountSettingsForm | IProductForm;

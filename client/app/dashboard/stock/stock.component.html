@@ -1,0 +1,68 @@
+<div class="form-card p-3 mt-3 round bg-ui-main">
+  <h5 class="card-title">Add stock entry</h5>
+  <form class="row mt-3 gy-2 gx-3 align-items-baseline" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <select formControlName="productId" [ngClass]="{ 'is-invalid': submitted && f['productId'].errors }" class="form-select">
+        <option disabled value="">Select Product</option>
+        <option *ngFor="let product of products" value="{{product.id}}">{{product.name}}</option>
+      </select>
+      <div *ngIf="submitted && f['productId'].errors" class="invalid-feedback">
+        <div *ngIf="f['productId'].errors?.['required']">
+          Product is required
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 form-group col-sm-3 col-lg-auto">
+      <select formControlName="entryType" [ngClass]="{ 'is-invalid': submitted && f['entryType'].errors }" class="form-select">
+        <option disabled value="">Select Type</option>
+        <option *ngFor="let type of entryTypes" value="{{type}}">{{type | titlecase}}</option>
+      </select>
+      <div *ngIf="submitted && f['entryType'].errors" class="invalid-feedback">
+        <div *ngIf="f['entryType'].errors?.['required']">
+          Type is required
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 form-group col-sm-3 col-lg-auto">
+      <input type="text" formControlName="delta" class="form-control" id="delta"
+        [ngClass]="{ 'is-invalid': submitted && f['delta'].errors }" placeholder="Quantity (+/-)">
+      <div *ngIf="submitted && f['delta'].errors" class="invalid-feedback">
+        <div *ngIf="f['delta'].errors?.['required']">
+          Quantity is required
+        </div>
+        <div *ngIf="f['delta'].errors?.['pattern']">
+          Must be a number (can be negative)
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">PHYC</span>
+        </div>
+        <input type="text" formControlName="cost" class="form-control" id="cost"
+          [ngClass]="{ 'is-invalid': submitted && (f['cost'].errors || (isCostRequired && !f['cost'].value)) }" placeholder="Cost per unit">
+        <div *ngIf="submitted && (f['cost'].errors || (isCostRequired && !f['cost'].value))" class="invalid-feedback">
+          <div *ngIf="isCostRequired && !f['cost'].value">
+            Cost is required for purchase entries
+          </div>
+          <div *ngIf="f['cost'].errors?.['pattern']">
+            Must be a positive number
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 form-group col-sm-3 col-lg-auto">
+      <button [disabled]="loading" class="btn btn-primary">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Add Stock Entry
+      </button>
+    </div>
+  </form>
+</div>
+<div class="table-card mt-3 p-3 round bg-ui-main">
+  <h5>Stock Ledger</h5>
+  <div class="row">
+    <app-list [controls]="listControl" [getData]="refreshStockEntries" name="stock" [defaultSort]="listDefaultSort"></app-list>
+  </div>
+</div>

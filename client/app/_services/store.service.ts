@@ -122,7 +122,12 @@ export class StoreService {
           }
 
           return {
-            ...product,
+            name: product.name,
+            id: product.id,
+            category: product.category,
+            description: product.description,
+            image: product.image,
+            type: product.type,
             price: BigInt(product.price),
             ...(product.type === ProductTypes.Stock ? stock : order)
           };

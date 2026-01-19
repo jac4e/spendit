@@ -18,7 +18,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AlertService } from 'client/app/_services';
 import { CommonService } from 'client/app/_services';
-import { getKeys, IAccount, IProduct, isIAccount, ITransaction, IRefill, IPreOrder, IStockEntry, isITransaction, isIProduct, keysIAccountSettingsForm, keysIProduct, ProductTypes, keysIProductFormStock, keysIProductFormOrder } from 'typesit';
+import { getKeys, IAccount, IProduct, isIAccount, ITransaction, IRefill, IPreOrder, IStockEntry, isITransaction, isIProduct, keysIAccountSettingsForm, keysIProduct, ProductTypes, keysIProductFormStock, keysIProductFormOrder, HTML, IProductForm, IAccountSettingsForm } from 'typesit';
 import { EditableListForms, EditableListTypes, ListControl, ListControlEdit } from 'client/app/_models';
 
 enum ModalType {
@@ -124,10 +124,31 @@ export class EditModalComponent implements OnInit {
       return;
     }
 
-    const form = this.form.value;
+    // Create form object for each type
+    let data;
+
+    // Convert HTML form fields back to their original types
+    if (this.modalType === ModalType.IProductStock) {
+      const form = this.form.value as HTML<IProductForm<ProductTypes.Stock>>;
+      data = {
+        ...form,
+        price: BigInt(form.price),
+      } as IProductForm<ProductTypes.Stock>;
+    } else if (this.modalType === ModalType.IProductOrder) {
+      const form = this.form.value as HTML<IProductForm<ProductTypes.Order>>;
+      data = {
+        ...form,
+        price: BigInt(form.price),
+        order: {...form.order, minimum: BigInt(form.order.minimum)}
+      } as IProductForm<ProductTypes.Order>;
+    } else if (this.modalType === ModalType.IAccount) {
+      data = this.form.value as IAccountSettingsForm;
+    } else {
+      throw 'Modal type not supported';
+    }
 
     this.loading = true;
-    this.submit(this.model['id'], form).subscribe({
+    this.submit(this.model['id'], data).subscribe({
       next: () => {
         this.loading = false;
         this.alertService.success(`Successfully updated ${this.model['id']}`, {
@@ -210,5 +231,4 @@ export class EditModalComponent implements OnInit {
       }
     });
   }
-
 }

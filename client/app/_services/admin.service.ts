@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import { last, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {
   IProduct,
@@ -21,7 +21,9 @@ import {
   ProductCategories,
   ProductTypes,
   getKeys,
-  IAccountSettingsForm
+  IAccountSettingsForm,
+  IStockEntry,
+  IStockEntryForm
 } from 'typesit';
 import { BackendService } from '../_services';
 import { Observable, retry } from 'rxjs';
@@ -67,7 +69,10 @@ export class AdminService {
     const reqProduct: HTTP<IProductForm> = {
       ...product,
       price: product.price.toString(),
-      order: product.order
+      order: product.order ? {
+        supplier: product.order.supplier,
+        minimum: product.order.minimum.toString(),
+      } : undefined
     };
 
 
@@ -88,7 +93,10 @@ export class AdminService {
       {
         ...product,
         price: product.price.toString(),
-        order: product.order
+        order: product.order ? {
+          supplier: product.order.supplier,
+          minimum: product.order.minimum.toString(),
+        } : undefined
       }
     )
   }
@@ -218,7 +226,12 @@ export class AdminService {
           }
 
           return {
-            ...product,
+            name: product.name,
+            id: product.id,
+            category: product.category,
+            description: product.description,
+            image: product.image,
+            type: product.type,
             price: BigInt(product.price),
             ...(product.type === ProductTypes.Stock ? stock : order)
           };
@@ -275,7 +288,18 @@ export class AdminService {
   // Task functions
 
   getTasks(): Observable<ITaskLean[]> {
-    return this.backend.apiCall<HTTP<ITaskLean[]>>('GET', this.backend.api.admin, 'tasks');
+    return this.backend.apiCall<HTTP<ITaskLean[]>>('GET', this.backend.api.admin, 'tasks').pipe(
+      map((tasks) => {
+        return tasks.map((task) => {
+          return {
+            stopped: task.stopped,
+            name: task.name,
+            lastRun: task.lastRun ? new Date(task.lastRun) : null,
+            nextRun: task.nextRun ? new Date(task.nextRun) : null,
+          };
+        });
+      }
+    ));
   }
 
   manageTask(taskId: string, command: string, data: any) {

@@ -10,11 +10,11 @@ import { Router } from '@angular/router';
 export class DashboardComponent implements DoCheck {
   links = [
     { title: 'Overview', route: '/dashboard/overview' },
+    { title: 'Products', route: '/dashboard/inventory' },
+    { title: 'Stock', route: '/dashboard/stock' },
     { title: 'Accounts', route: '/dashboard/accounts' },
-    { title: 'Inventory', route: '/dashboard/inventory' },
     { title: 'Refills', route: '/dashboard/refills' },
     { title: 'Transactions', route: '/dashboard/transactions' },
-    { title: 'Stock', route: '/dashboard/stock' },
   ];
   url: string;
 

@@ -2,13 +2,11 @@
   <h5 class="card-title">Add stock entry</h5>
   <form class="row mt-3 gy-2 gx-3 align-items-baseline" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="mt-2 form-group col-sm-6 col-lg-auto">
-      <select formControlName="productId" [ngClass]="{ 'is-invalid': submitted && f['productId'].errors }" class="form-select">
-        <option disabled value="">Select Product</option>
-        <option *ngFor="let product of products" value="{{product.id}}">{{product.name}}</option>
-      </select>
+      <input type="text" formControlName="productId" class="form-control" id="productId"
+        [ngClass]="{ 'is-invalid': submitted && f['productId'].errors }" placeholder="Product ID">
       <div *ngIf="submitted && f['productId'].errors" class="invalid-feedback">
         <div *ngIf="f['productId'].errors?.['required']">
-          Product is required
+          Product ID is required
         </div>
       </div>
     </div>

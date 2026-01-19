@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IStockEntry, IStockEntryForm, IProduct, StockEntryType, ProductTypes } from 'typesit';
+import { IStockEntry, IStockEntryForm, StockEntryType } from 'typesit';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { AdminService, AlertService } from 'client/app/_services';
 import { first, Observable } from 'rxjs';
@@ -17,7 +17,6 @@ export class StockComponent implements OnInit {
   stockEntries!: IStockEntry[];
   form!: UntypedFormGroup;
   entryTypes = Object.values(StockEntryType);
-  products: IProduct[] = [];
   loading = false;
   submitted = false;
 
@@ -46,11 +45,6 @@ export class StockComponent implements OnInit {
     private alertService: AlertService
   ) {
     this.refreshStockEntries = this.adminService.getAllStockEntries();
-    // Load products for the dropdown
-    this.adminService.getInventory().subscribe((products) => {
-      // Filter to only stock-type products
-      this.products = products.filter(p => p.type === ProductTypes.Stock);
-    });
   }
 
   ngOnInit(): void {

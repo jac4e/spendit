@@ -89,8 +89,14 @@ export class ListComponent {
   }
 
   getTableValue(data: AllowableListData, key: string): UnionValues<AllowableListData> {
-    if (!getKeys(data).includes(key as UnionKeys<AllowableListData>)) {
-      throw new Error(`Key ${key} not found in data`);
+    const allowedKeys = this.keys?.length
+      ? (this.keys as UnionKeys<AllowableListData>[])
+      : (getKeys(data) as UnionKeys<AllowableListData>[]);
+    if (!allowedKeys.includes(key as UnionKeys<AllowableListData>)) {
+      const fallbackKeys = Object.keys(data) as UnionKeys<AllowableListData>[];
+      if (!fallbackKeys.includes(key as UnionKeys<AllowableListData>)) {
+        throw new Error(`Key ${key} not found in data`);
+      }
     }
     const value = data[key as keyof AllowableListData] as UnionValues<AllowableListData>;
     if (value instanceof Date) {
@@ -181,7 +187,12 @@ export class ListComponent {
       })));
 
       this.collectionSize = data.length;
-      this.keys = getKeys(data[0]);
+      if (data.length) {
+        const keys = getKeys(data[0]);
+        this.keys = keys.length ? keys : (Object.keys(data[0]) as UnionKeys<AllowableListData>[]);
+      } else {
+        this.keys = [];
+      }
     });
   }
 

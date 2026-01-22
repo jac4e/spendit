@@ -1,0 +1,85 @@
+<div class="form-card p-3 mt-3 round bg-ui-main">
+  <h5 class="card-title">Load API keys</h5>
+  <form class="row align-items-baseline" [formGroup]="selectForm" (ngSubmit)="onSelectUser()">
+    <div class="mt-2 form-group col-sm-8 col-lg-auto">
+      <input
+        type="text"
+        formControlName="userId"
+        class="form-control"
+        id="selectUserId"
+        [ngClass]="{ 'is-invalid': submittedSelect && selectF['userId'].errors }"
+        placeholder="user id"
+      />
+      <div *ngIf="submittedSelect && selectF['userId'].errors" class="invalid-feedback">
+        <div *ngIf="selectF['userId'].errors?.['required']">
+          user id is required
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 form-group col-auto">
+      <button class="btn btn-secondary" type="submit">Load Keys</button>
+    </div>
+  </form>
+</div>
+
+<div class="form-card p-3 mt-3 round bg-ui-main">
+  <h5 class="card-title">Create API key</h5>
+  <form class="row align-items-baseline" [formGroup]="createForm" (ngSubmit)="onCreateKey()">
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <input
+        type="text"
+        formControlName="userId"
+        class="form-control"
+        id="createUserId"
+        [ngClass]="{ 'is-invalid': submittedCreate && createF['userId'].errors }"
+        placeholder="user id"
+      />
+      <div *ngIf="submittedCreate && createF['userId'].errors" class="invalid-feedback">
+        <div *ngIf="createF['userId'].errors?.['required']">
+          user id is required
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 form-group col-sm-6 col-lg-auto">
+      <input
+        type="text"
+        formControlName="name"
+        class="form-control"
+        id="keyName"
+        [ngClass]="{ 'is-invalid': submittedCreate && createF['name'].errors }"
+        placeholder="api key name"
+      />
+      <div *ngIf="submittedCreate && createF['name'].errors" class="invalid-feedback">
+        <div *ngIf="createF['name'].errors?.['required']">
+          api key name is required
+        </div>
+        <div *ngIf="createF['name'].errors?.['maxlength']">
+          api key name is too long
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 form-group col-auto">
+      <button [disabled]="loading" class="btn btn-primary" type="submit">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Create Key
+      </button>
+    </div>
+  </form>
+  <div *ngIf="lastCreatedKey" class="alert alert-info mt-3">
+    <div class="fw-bold">API key created: {{ lastCreatedName }}</div>
+    <div class="api-key-value">{{ lastCreatedKey }}</div>
+    <div class="small text-muted">Copy this now. It will not be shown again.</div>
+  </div>
+</div>
+
+<div class="table-card mt-3 p-3 round bg-ui-main">
+  <h5>API Keys</h5>
+  <div class="row">
+    <app-list
+      [controls]="listControl"
+      [getData]="getData$"
+      [defaultSort]="listDefaultSort"
+      name="apiKeys"
+    ></app-list>
+  </div>
+</div>

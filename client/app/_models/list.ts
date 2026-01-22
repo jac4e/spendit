@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
-import { IRefill, ITransaction, IAccount, IProduct, ICartItem, UnionKeys, IRefillForm, IProductForm, IPreOrder, ITransactionForm, IStockEntry, IStockEntryForm, IAccountBaseForm, IAccountSettingsForm, IAccountPasswordForm } from "typesit";
+import { IRefill, ITransaction, IAccount, IProduct, ICartItem, UnionKeys, IRefillForm, IProductForm, IPreOrder, ITransactionForm, IStockEntry, IStockEntryForm, IAccountBaseForm, IAccountSettingsForm, IAccountPasswordForm, IApiKey } from "typesit";
 
-export type AllowableListData = IRefill | ITransaction | IAccount | IProduct | ICartItem | IStockEntry;
+export type AllowableListData = IRefill | ITransaction | IAccount | IProduct | ICartItem | IStockEntry | IApiKey;
 export type CreatableListForms = ITransactionForm | IAccountBaseForm | IProductForm | IStockEntryForm;
 export type EditableListTypes = IAccount | IProduct;
 export type EditableListForms = IAccountSettingsForm | IProductForm;
@@ -50,4 +50,3 @@ export interface ListControlCustomDropdown extends listControlBase {
 }
 
 export type ListControl = ListControlView | ListControlEdit | ListControlCustomButton | ListControlCustomDropdown;
-

@@ -13,6 +13,7 @@ export class DashboardComponent implements DoCheck {
     { title: 'Products', route: '/dashboard/inventory' },
     { title: 'Stock', route: '/dashboard/stock' },
     { title: 'Accounts', route: '/dashboard/accounts' },
+    { title: 'API Keys', route: '/dashboard/api-keys' },
     { title: 'Refills', route: '/dashboard/refills' },
     { title: 'Transactions', route: '/dashboard/transactions' },
   ];

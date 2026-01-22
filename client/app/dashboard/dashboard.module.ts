@@ -11,6 +11,7 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { RefillsComponent } from './refills/refills.component';
 import { StockComponent } from './stock/stock.component';
 import { OverviewComponent } from './overview/overview.component';
+import { ApiKeysComponent } from './api-keys/api-keys.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { OverviewComponent } from './overview/overview.component';
     TransactionsComponent,
     RefillsComponent,
     StockComponent,
-    OverviewComponent
+    OverviewComponent,
+    ApiKeysComponent
   ]
 })
 export class DashboardModule {}

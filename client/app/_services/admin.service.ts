@@ -23,7 +23,9 @@ import {
   getKeys,
   IAccountSettingsForm,
   IStockEntry,
-  IStockEntryForm
+  IStockEntryForm,
+  IApiKey,
+  IApiKeyCreateForm
 } from 'typesit';
 import { BackendService } from '../_services';
 import { Observable, retry } from 'rxjs';
@@ -63,6 +65,49 @@ export class AdminService {
 
   public boundedUpdateAccount = this.updateAccount.bind(this);
   public boundedResetPassword = this.resetPassword.bind(this);
+
+  createApiKeyForUser(userId: string, name: string) {
+    const payload: IApiKeyCreateForm = { name };
+    return this.backend
+      .apiCall<{ apiKey: string; key: IApiKey }, IApiKeyCreateForm>(
+        'POST',
+        this.backend.api.account,
+        `${userId}/apikeys`,
+        payload
+      )
+      .pipe(
+        map((resp) => ({
+          ...resp,
+          key: {
+            ...resp.key,
+            createdAt: new Date(resp.key.createdAt),
+            lastUsedAt: resp.key.lastUsedAt ? new Date(resp.key.lastUsedAt) : null
+          }
+        }))
+      );
+  }
+
+  deleteApiKeyForUser(userId: string, name: string) {
+    return this.backend.apiCall(
+      'DELETE',
+      this.backend.api.account,
+      `${userId}/apikeys/${name}`
+    );
+  }
+
+  getApiKeysForUser(userId: string): Observable<IApiKey[]> {
+    return this.backend
+      .apiCall<HTTP<IApiKey[]>>('GET', this.backend.api.account, `${userId}/apikeys`)
+      .pipe(
+        map((keys) =>
+          keys.map((key) => ({
+            ...key,
+            createdAt: new Date(key.createdAt),
+            lastUsedAt: key.lastUsedAt ? new Date(key.lastUsedAt) : null
+          }))
+        )
+      );
+  }
 
   addProduct(product: IProductForm) {
     // Create a reqProduct object that is HTTP<IProductForm>
